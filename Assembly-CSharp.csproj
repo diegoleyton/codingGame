@@ -49,27 +49,7 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.26f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/Scritps/Runtime/Core/StepResult.cs" />
-    <Compile Include="Assets/Scritps/Runtime/Games/Moving/Game/Direction.cs" />
-    <Compile Include="Assets/Scritps/Runtime/Instructions/RepeatInstructionDefinition.cs" />
-    <Compile Include="Assets/Scritps/Runtime/Games/Moving/Game/MovingGame.cs" />
-    <Compile Include="Assets/Scritps/Runtime/Core/InstructionInstance.cs" />
-    <Compile Include="Assets/Scritps/Runtime/Core/IInstructionDefinition.cs" />
-    <Compile Include="Assets/Scritps/Runtime/Instructions/InstructionDefinitionBase.cs" />
-    <Compile Include="Assets/Scritps/Runtime/Games/Moving/Instructions/RotateLeftInstructionDefinition.cs" />
-    <Compile Include="Assets/Scritps/Runtime/Instructions/GameInstructionDefinitionBase.cs" />
-    <Compile Include="Assets/Scritps/Runtime/Core/InstructionParameterDefinition.cs" />
-    <Compile Include="Assets/Scritps/Runtime/Games/Moving/Game/IMovingGame.cs" />
-    <Compile Include="Assets/Scritps/Runtime/Core/ProgramDefinition.cs" />
-    <Compile Include="Assets/Scritps/Runtime/Games/Moving/Game/GridPosition.cs" />
     <Compile Include="Assets/TutorialInfo/Scripts/Readme.cs" />
-    <Compile Include="Assets/Scritps/Runtime/Core/StepExecutionStatus.cs" />
-    <Compile Include="Assets/Scritps/Runtime/Instructions/SequenceInstructionDefinition.cs" />
-    <Compile Include="Assets/Scritps/Runtime/Games/Moving/Instructions/RotateRightInstructionDefinition.cs" />
-    <Compile Include="Assets/Scritps/Runtime/Core/ExecutionFrame.cs" />
-    <Compile Include="Assets/Scritps/Runtime/Core/ProgramRunner.cs" />
-    <Compile Include="Assets/Scritps/Runtime/Games/Moving/Instructions/MoveForwardInstructionDefinition.cs" />
-    <Compile Include="Assets/Scritps/Runtime/Core/IGame.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -1250,6 +1230,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="CodingGame.Runtime.csproj" />
+    <ProjectReference Include="CodingGame.Presentation.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>
