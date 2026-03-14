@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using CodingGame.Games.Moving;
-using CodingGame.Core;
-using CodingGame.Instructions;
+using CodingGame.Runtime.Games.Moving;
+using CodingGame.Runtime.Core;
+using CodingGame.Runtime.Instructions;
 
 /// <summary>
 /// Contains unit tests for the program runner and instruction definition system.
