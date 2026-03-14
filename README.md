@@ -1,2 +1,2 @@
-![Architecture](docs/generated/architecture.svg)
-![Execution Flow](docs/generated/execution_flow.svg)
+![Architecture](docs/diagrams/coreArchitecture.svg)
+![Execution Flow](docs/diagrams/coreFlow.svg)
