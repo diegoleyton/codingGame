@@ -28,9 +28,9 @@ end note
 User -> InstructionInstance : create instance (MoveForward)
 InstructionInstance -> Definition : reference definition
 
-User -> ProgramDefinition : add (instruction)
+User -> ProgramDefinition : add instruction
 ProgramDefinition -> InstructionInstance : store instance
-User -> ProgramRunner : load (program definition)
+User -> ProgramRunner : load program definition
 
 == Program execution ==
 
