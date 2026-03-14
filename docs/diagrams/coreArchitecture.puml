@@ -1,0 +1,69 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+left to right direction
+
+package "Core" {
+  interface IGame
+  interface IInstructionDefinition
+  class InstructionInstance
+  class InstructionParameterDefinition
+
+  class ProgramDefinition
+  class ProgramRunner
+  class ExecutionFrame
+  class StepResult
+  enum StepExecutionStatus
+}
+
+package "Instructions" {
+  abstract class InstructionDefinitionBase
+  class SequenceInstructionDefinition
+  class RepeatInstructionDefinition
+}
+
+package "Games / Moving" {
+  interface IMovingGame
+  class MovingGame
+  class MoveForwardInstructionDefinition
+  class RotateLeftInstructionDefinition
+  class RotateRightInstructionDefinition
+}
+
+IGame <|-- IMovingGame
+IMovingGame <|.. MovingGame
+
+IInstructionDefinition <|.. InstructionDefinitionBase
+
+InstructionDefinitionBase <|-- SequenceInstructionDefinition
+InstructionDefinitionBase <|-- RepeatInstructionDefinition
+InstructionDefinitionBase <|-- MoveForwardInstructionDefinition
+InstructionDefinitionBase <|-- RotateLeftInstructionDefinition
+InstructionDefinitionBase <|-- RotateRightInstructionDefinition
+
+ProgramRunner o-- ProgramDefinition : loads
+ProgramRunner *-- ExecutionFrame : manages
+ProgramRunner --> StepResult : returns
+ProgramRunner --> IGame : executes on
+
+ProgramDefinition *-- InstructionInstance : contains
+ExecutionFrame *-- InstructionInstance : tracks
+StepResult --> InstructionInstance : executed
+StepResult --> StepExecutionStatus
+
+InstructionInstance --> IInstructionDefinition : definition
+InstructionInstance *-- InstructionInstance : children
+InstructionInstance --> InstructionParameterDefinition : parameters
+
+SequenceInstructionDefinition ..> InstructionInstance : expands
+RepeatInstructionDefinition ..> InstructionInstance : expands
+
+MoveForwardInstructionDefinition ..> IMovingGame : executes on
+RotateLeftInstructionDefinition ..> IMovingGame : executes on
+RotateRightInstructionDefinition ..> IMovingGame : executes on
+
+MovingGame o-- MoveForwardInstructionDefinition : provides
+MovingGame o-- RotateLeftInstructionDefinition : provides
+MovingGame o-- RotateRightInstructionDefinition : provides
+
+@enduml

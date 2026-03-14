@@ -1,0 +1,52 @@
+@startuml
+autonumber
+skinparam linetype ortho
+
+actor User
+participant MovingGame
+participant IInstructionDefinition as Definition
+participant InstructionInstance
+participant ProgramDefinition
+participant ProgramRunner
+participant ExecutionFrame
+participant IGame as Game
+participant StepResult
+
+== Game initialization ==
+
+User -> MovingGame : create game
+MovingGame -> Definition : create instruction definitions
+note right of MovingGame
+Defines available instructions:
+MoveForward
+RotateLeft
+RotateRight
+end note
+
+== Program creation ==
+
+User -> InstructionInstance : create instance (MoveForward)
+InstructionInstance -> Definition : reference definition
+
+User -> ProgramDefinition : add (instruction)
+ProgramDefinition -> InstructionInstance : store instance
+User -> ProgramRunner : load (program definition)
+
+== Program execution ==
+
+User -> ProgramRunner : ExecuteNextStep(game)
+
+ProgramRunner -> ExecutionFrame : get next instruction
+ExecutionFrame --> ProgramRunner : InstructionInstance
+
+ProgramRunner -> InstructionInstance : get definition
+InstructionInstance --> ProgramRunner : Definition
+
+ProgramRunner -> Definition : Execute(game, instance)
+Definition -> Game : apply action
+Game --> Definition : updated state
+
+ProgramRunner -> StepResult : create result
+ProgramRunner --> User : StepResult
+
+@enduml
