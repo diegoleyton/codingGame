@@ -1,9 +1,12 @@
-/// <summary>
-/// Represents the outcome of a single execution step.
-/// </summary>
-public enum StepExecutionStatus
+namespace CodingGame.Core
 {
-    ExecutedPrimitive,
-    CompletedProgram,
-    BlockedByGameState
+    /// <summary>
+    /// Represents the outcome of a single execution step.
+    /// </summary>
+    public enum StepExecutionStatus
+    {
+        ExecutedPrimitive,
+        CompletedProgram,
+        BlockedByGameState
+    }
 }

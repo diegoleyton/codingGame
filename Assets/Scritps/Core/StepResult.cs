@@ -1,33 +1,36 @@
-/// <summary>
-/// Represents the result of executing one step in the program runner.
-/// </summary>
-public sealed class StepResult
+namespace CodingGame.Core
 {
-    private readonly StepExecutionStatus status_;
-    private readonly InstructionInstance executedInstruction_;
-
     /// <summary>
-    /// Creates a new step result.
+    /// Represents the result of executing one step in the program runner.
     /// </summary>
-    public StepResult(StepExecutionStatus status, InstructionInstance executedInstruction)
+    public sealed class StepResult
     {
-        status_ = status;
-        executedInstruction_ = executedInstruction;
-    }
+        private readonly StepExecutionStatus status_;
+        private readonly InstructionInstance executedInstruction_;
 
-    /// <summary>
-    /// Returns the step execution status.
-    /// </summary>
-    public StepExecutionStatus GetStatus()
-    {
-        return status_;
-    }
+        /// <summary>
+        /// Creates a new step result.
+        /// </summary>
+        public StepResult(StepExecutionStatus status, InstructionInstance executedInstruction)
+        {
+            status_ = status;
+            executedInstruction_ = executedInstruction;
+        }
 
-    /// <summary>
-    /// Returns the instruction instance executed in this step, if any.
-    /// </summary>
-    public InstructionInstance GetExecutedInstruction()
-    {
-        return executedInstruction_;
+        /// <summary>
+        /// Returns the step execution status.
+        /// </summary>
+        public StepExecutionStatus GetStatus()
+        {
+            return status_;
+        }
+
+        /// <summary>
+        /// Returns the instruction instance executed in this step, if any.
+        /// </summary>
+        public InstructionInstance GetExecutedInstruction()
+        {
+            return executedInstruction_;
+        }
     }
 }

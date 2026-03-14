@@ -1,49 +1,53 @@
 using System;
 using System.Collections.Generic;
 
-/// <summary>
-/// Represents the execution state of a list of instruction instances.
-/// </summary>
-internal sealed class ExecutionFrame
+
+namespace CodingGame.Core
 {
-    private readonly IReadOnlyList<InstructionInstance> instructions_;
-    private int currentIndex_;
-
     /// <summary>
-    /// Creates a frame for the given instruction list.
+    /// Represents the execution state of a list of instruction instances.
     /// </summary>
-    public ExecutionFrame(IReadOnlyList<InstructionInstance> instructions)
+    internal sealed class ExecutionFrame
     {
-        instructions_ = instructions ?? throw new ArgumentNullException(nameof(instructions));
-        currentIndex_ = 0;
-    }
+        private readonly IReadOnlyList<InstructionInstance> instructions_;
+        private int currentIndex_;
 
-    /// <summary>
-    /// Returns whether this frame has finished execution.
-    /// </summary>
-    public bool IsComplete()
-    {
-        return currentIndex_ >= instructions_.Count;
-    }
-
-    /// <summary>
-    /// Returns the current instruction in this frame.
-    /// </summary>
-    public InstructionInstance GetCurrentInstruction()
-    {
-        if (IsComplete())
+        /// <summary>
+        /// Creates a frame for the given instruction list.
+        /// </summary>
+        public ExecutionFrame(IReadOnlyList<InstructionInstance> instructions)
         {
-            throw new InvalidOperationException("Frame is complete.");
+            instructions_ = instructions ?? throw new ArgumentNullException(nameof(instructions));
+            currentIndex_ = 0;
         }
 
-        return instructions_[currentIndex_];
-    }
+        /// <summary>
+        /// Returns whether this frame has finished execution.
+        /// </summary>
+        public bool IsComplete()
+        {
+            return currentIndex_ >= instructions_.Count;
+        }
 
-    /// <summary>
-    /// Advances this frame to the next instruction.
-    /// </summary>
-    public void Advance()
-    {
-        currentIndex_++;
+        /// <summary>
+        /// Returns the current instruction in this frame.
+        /// </summary>
+        public InstructionInstance GetCurrentInstruction()
+        {
+            if (IsComplete())
+            {
+                throw new InvalidOperationException("Frame is complete.");
+            }
+
+            return instructions_[currentIndex_];
+        }
+
+        /// <summary>
+        /// Advances this frame to the next instruction.
+        /// </summary>
+        public void Advance()
+        {
+            currentIndex_++;
+        }
     }
 }

@@ -1,31 +1,35 @@
-using System;
+using CodingGame.Instructions;
+using CodingGame.Core;
 
-/// <summary>
-/// Represents a primitive instruction that rotates the agent to the right.
-/// </summary>
-public sealed class RotateRightInstructionDefinition : GameInstructionDefinitionBase<IMovingGame>
+namespace CodingGame.Games.Moving
 {
     /// <summary>
-    /// Returns a unique identifier for this instruction definition.
+    /// Represents a primitive instruction that rotates the agent to the right.
     /// </summary>
-    public override string GetId()
+    public sealed class RotateRightInstructionDefinition : GameInstructionDefinitionBase<IMovingGame>
     {
-        return "rotate_right";
-    }
+        /// <summary>
+        /// Returns a unique identifier for this instruction definition.
+        /// </summary>
+        public override string GetId()
+        {
+            return "rotate_right";
+        }
 
-    /// <summary>
-    /// Returns the display name of this instruction definition.
-    /// </summary>
-    public override string GetDisplayName()
-    {
-        return "Rotate Right";
-    }
+        /// <summary>
+        /// Returns the display name of this instruction definition.
+        /// </summary>
+        public override string GetDisplayName()
+        {
+            return "Rotate Right";
+        }
 
-    /// <summary>
-    /// Executes this instruction instance on the given game.
-    /// </summary>
-    protected override void ExecuteTyped(IMovingGame game, InstructionInstance instance)
-    {
-        game.RotateRight();
+        /// <summary>
+        /// Executes this instruction instance on the given game.
+        /// </summary>
+        protected override void ExecuteTyped(IMovingGame game, InstructionInstance instance)
+        {
+            game.RotateRight();
+        }
     }
 }

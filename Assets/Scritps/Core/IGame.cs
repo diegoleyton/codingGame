@@ -1,27 +1,30 @@
 using System.Collections.Generic;
 
-/// <summary>
-/// Represents the minimal contract for any game that can be used by the instruction runner.
-/// </summary>
-public interface IGame
+namespace CodingGame.Core
 {
     /// <summary>
-    /// Returns whether the game has been completed successfully.
+    /// Represents the minimal contract for any game that can be used by the instruction runner.
     /// </summary>
-    bool HasWon();
+    public interface IGame
+    {
+        /// <summary>
+        /// Returns whether the game has been completed successfully.
+        /// </summary>
+        bool HasWon();
 
-    /// <summary>
-    /// Returns whether the game has reached a failed state.
-    /// </summary>
-    bool HasFailed();
+        /// <summary>
+        /// Returns whether the game has reached a failed state.
+        /// </summary>
+        bool HasFailed();
 
-    /// <summary>
-    /// Resets the game to its initial state.
-    /// </summary>
-    void ResetGame();
+        /// <summary>
+        /// Resets the game to its initial state.
+        /// </summary>
+        void ResetGame();
 
-    /// <summary>
-    /// Returns the instruction definitions available for this game.
-    /// </summary>
-    IReadOnlyList<IInstructionDefinition> GetAvailableInstructionDefinitions();
+        /// <summary>
+        /// Returns the instruction definitions available for this game.
+        /// </summary>
+        IReadOnlyList<IInstructionDefinition> GetAvailableInstructionDefinitions();
+    }
 }

@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using CodingGame.Games.Moving;
+using CodingGame.Core;
+using CodingGame.Instructions;
 
 /// <summary>
 /// A test double for a moving game used by unit tests.
