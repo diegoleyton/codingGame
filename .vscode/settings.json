@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "CodginGame.sln"
+    "dotnet.defaultSolution": "CodginGame.slnx"
 }

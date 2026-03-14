@@ -3,18 +3,10 @@
 [Bb]uild/
 [Bb]uilds/
 [Ll]ogs/
+[Oo]bj/
 UserSettings/
+MemoryCaptures/
 
-*.csproj
-*.unityproj
-*.sln
-*.suo
-*.tmp
-*.user
-*.userprefs
-*.pidb
-*.booproj
-*.svd
-*.pdb
+.vscode/
 
 .DS_Store
