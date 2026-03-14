@@ -19,7 +19,10 @@ public abstract class InstructionDefinitionBase : IInstructionDefinition
     /// <summary>
     /// Returns whether this instruction executes directly without expanding child instructions.
     /// </summary>
-    public abstract bool IsPrimitive();
+    public virtual bool IsPrimitive()
+    {
+        return true;
+    }
 
     /// <summary>
     /// Returns whether this instruction supports child instructions.

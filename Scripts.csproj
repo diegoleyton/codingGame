@@ -65,6 +65,7 @@
     <Compile Include="Assets/Scritps/Core/StepExecutionStatus.cs" />
     <Compile Include="Assets/Scritps/Games/Moving/IMovingGame.cs" />
     <Compile Include="Assets/Scritps/Core/InstructionInstance.cs" />
+    <Compile Include="Assets/Scritps/Instructions/GameInstructionDefinitionBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/Scritps/Scripts.asmdef" />

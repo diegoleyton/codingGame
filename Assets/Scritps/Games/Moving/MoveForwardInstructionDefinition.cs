@@ -4,7 +4,7 @@ using System.Collections.Generic;
 /// <summary>
 /// Represents a primitive instruction that moves the agent forward.
 /// </summary>
-public sealed class MoveForwardInstructionDefinition : InstructionDefinitionBase
+public sealed class MoveForwardInstructionDefinition : GameInstructionDefinitionBase<IMovingGame>
 {
     private readonly InstructionParameterDefinition[] parameterDefinitions_;
 
@@ -36,14 +36,6 @@ public sealed class MoveForwardInstructionDefinition : InstructionDefinitionBase
     }
 
     /// <summary>
-    /// Returns whether this instruction executes directly without expanding child instructions.
-    /// </summary>
-    public override bool IsPrimitive()
-    {
-        return true;
-    }
-
-    /// <summary>
     /// Returns the parameter definitions for this instruction.
     /// </summary>
     public override IReadOnlyList<InstructionParameterDefinition> GetParameterDefinitions()
@@ -54,17 +46,14 @@ public sealed class MoveForwardInstructionDefinition : InstructionDefinitionBase
     /// <summary>
     /// Executes this instruction instance on the given game.
     /// </summary>
-    public override void Execute(IGame game, InstructionInstance instance)
+    protected override void ExecuteTyped(IMovingGame game, InstructionInstance instance)
     {
-        IMovingGame movingGame = game as IMovingGame
-            ?? throw new ArgumentException("Game must implement IMovingGame.", nameof(game));
-
         int steps = (int)instance.GetParameterValue("steps");
         if (steps <= 0)
         {
             throw new InvalidOperationException("Steps must be greater than zero.");
         }
 
-        movingGame.MoveForward(steps);
+        game.MoveForward(steps);
     }
 }
