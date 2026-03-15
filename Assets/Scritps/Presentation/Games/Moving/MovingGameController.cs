@@ -6,18 +6,22 @@ using CodingGame.Runtime.Games.Moving;
 namespace CodingGame.Presentation.Games.Moving
 {
     /// <summary>
-    /// Connects the moving game runtime to the Unity scene and UI.
+    /// Coordinates the moving game runtime, scene view, and execution controls.
     /// </summary>
     public sealed class MovingGameController : MonoBehaviour
     {
-        [Header("Scene References")]
-        [SerializeField] private Transform character_;
-        [SerializeField] private Transform food_;
+        [Header("View References")]
+        [SerializeField] private MovingGameView movingGameView_;
+        [SerializeField] private GridRenderer gridRenderer_;
 
-        [Header("Grid")]
-        [SerializeField] private float cellSize_ = 1.0f;
+        [Header("Game Setup")]
+        [SerializeField] private int gridWidth_ = 5;
+        [SerializeField] private int gridHeight_ = 5;
+        [SerializeField] private Vector2Int startPosition_ = new Vector2Int(0, 0);
+        [SerializeField] private Direction startDirection_ = Direction.Right;
+        [SerializeField] private Vector2Int foodPosition_ = new Vector2Int(3, 1);
 
-        [Header("Run Settings")]
+        [Header("Execution")]
         [SerializeField] private float stepDelaySeconds_ = 0.5f;
 
         private Runtime.Games.Moving.MovingGame game_;
@@ -26,36 +30,32 @@ namespace CodingGame.Presentation.Games.Moving
         private Coroutine runCoroutine_;
 
         /// <summary>
-        /// Initializes the moving game and demo program.
+        /// Initializes the game, demo program, and view.
         /// </summary>
         private void Start()
         {
             CreateGame();
             CreateProgram();
-            UpdateView();
+            InitializeView();
+            RefreshViewImmediate();
         }
 
         /// <summary>
-        /// Executes the next step in the loaded program.
+        /// Executes one program step.
         /// </summary>
         public void Step()
         {
-            if (game_ == null || runner_ == null)
-            {
-                return;
-            }
-
-            if (game_.HasWon() || game_.HasFailed() || runner_.IsFinished())
+            if (!CanExecuteStep())
             {
                 return;
             }
 
             runner_.ExecuteNextStep(game_);
-            UpdateView();
+            RefreshViewAnimated();
         }
 
         /// <summary>
-        /// Runs the loaded program automatically with a delay between steps.
+        /// Runs the loaded program automatically.
         /// </summary>
         public void Run()
         {
@@ -65,6 +65,14 @@ namespace CodingGame.Presentation.Games.Moving
             }
 
             runCoroutine_ = StartCoroutine(RunRoutine());
+        }
+
+        /// <summary>
+        /// Stops automatic execution if it is running.
+        /// </summary>
+        public void Stop()
+        {
+            StopRunning();
         }
 
         /// <summary>
@@ -81,11 +89,11 @@ namespace CodingGame.Presentation.Games.Moving
 
             game_.ResetGame();
             runner_.ResetExecution();
-            UpdateView();
+            RefreshViewImmediate();
         }
 
         /// <summary>
-        /// Rebuilds the demo program and resets execution.
+        /// Rebuilds the demo program and resets the game.
         /// </summary>
         public void RebuildProgram()
         {
@@ -98,17 +106,33 @@ namespace CodingGame.Presentation.Games.Moving
                 game_.ResetGame();
             }
 
-            UpdateView();
+            RefreshViewImmediate();
+        }
+
+        /// <summary>
+        /// Returns the current moving game instance.
+        /// </summary>
+        public Runtime.Games.Moving.MovingGame GetGame()
+        {
+            return game_;
+        }
+
+        /// <summary>
+        /// Returns the current program runner instance.
+        /// </summary>
+        public ProgramRunner GetRunner()
+        {
+            return runner_;
         }
 
         private void CreateGame()
         {
             game_ = new Runtime.Games.Moving.MovingGame(
-                width: 5,
-                height: 5,
-                startCharacterPosition: new GridPosition(0, 0),
-                startCharacterDirection: Direction.Right,
-                foodPosition: new GridPosition(3, 1));
+                width: gridWidth_,
+                height: gridHeight_,
+                startCharacterPosition: new GridPosition(startPosition_.x, startPosition_.y),
+                startCharacterDirection: startDirection_,
+                foodPosition: new GridPosition(foodPosition_.x, foodPosition_.y));
 
             runner_ = new ProgramRunner();
         }
@@ -137,16 +161,45 @@ namespace CodingGame.Presentation.Games.Moving
             runner_.LoadProgram(program_);
         }
 
+        private void InitializeView()
+        {
+            if (gridRenderer_ != null)
+            {
+                gridRenderer_.RenderGrid(gridWidth_, gridHeight_);
+            }
+
+            if (movingGameView_ != null && game_ != null)
+            {
+                movingGameView_.Initialize(gridRenderer_, game_);
+            }
+        }
+
+        private bool CanExecuteStep()
+        {
+            if (game_ == null || runner_ == null)
+            {
+                return false;
+            }
+
+            if (game_.HasWon() || game_.HasFailed())
+            {
+                return false;
+            }
+
+            if (runner_.IsFinished())
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         private IEnumerator RunRoutine()
         {
-            while (game_ != null &&
-                   runner_ != null &&
-                   !runner_.IsFinished() &&
-                   !game_.HasWon() &&
-                   !game_.HasFailed())
+            while (CanExecuteStep())
             {
                 runner_.ExecuteNextStep(game_);
-                UpdateView();
+                RefreshViewAnimated();
 
                 yield return new WaitForSeconds(stepDelaySeconds_);
             }
@@ -165,60 +218,24 @@ namespace CodingGame.Presentation.Games.Moving
             runCoroutine_ = null;
         }
 
-        private void UpdateView()
+        private void RefreshViewImmediate()
         {
-            if (game_ == null)
+            if (movingGameView_ == null || game_ == null)
             {
                 return;
             }
 
-            UpdateCharacterView();
-            UpdateFoodView();
+            movingGameView_.RefreshImmediate(game_);
         }
 
-        private void UpdateCharacterView()
+        private void RefreshViewAnimated()
         {
-            if (character_ == null)
+            if (movingGameView_ == null || game_ == null)
             {
                 return;
             }
 
-            GridPosition characterPosition = game_.GetCharacterPosition();
-
-            character_.position = GridToWorldPosition(characterPosition);
-            character_.rotation = DirectionToWorldRotation(game_.GetCharacterDirection());
-        }
-
-        private void UpdateFoodView()
-        {
-            if (food_ == null)
-            {
-                return;
-            }
-
-            food_.position = GridToWorldPosition(game_.GetFoodPosition());
-        }
-
-        private Vector3 GridToWorldPosition(GridPosition position)
-        {
-            return new Vector3(
-                position.GetX() * cellSize_,
-                0f,
-                position.GetY() * cellSize_);
-        }
-
-        private Quaternion DirectionToWorldRotation(Direction direction)
-        {
-            float yRotation = direction switch
-            {
-                Direction.Up => 0f,
-                Direction.Right => 90f,
-                Direction.Down => 180f,
-                Direction.Left => 270f,
-                _ => 0f
-            };
-
-            return Quaternion.Euler(0f, yRotation, 0f);
+            movingGameView_.RefreshAnimated(game_);
         }
     }
 }
