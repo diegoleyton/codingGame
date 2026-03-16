@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Assets/Tests/EditModeTests/EditModeMocks.cs" />
     <Compile Include="Assets/Tests/EditModeTests/ProgramRunnerTests.cs" />
+    <Compile Include="Assets/Tests/EditModeTests/MovingGameTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/Tests/EditModeTests/CodingGame.EditModeTests.asmdef" />

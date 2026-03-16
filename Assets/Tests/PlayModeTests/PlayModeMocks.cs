@@ -7,178 +7,175 @@ using CodingGame.Runtime.Instructions;
 using CodingGame.Presentation.Games;
 using CodingGame.Runtime.Definitions;
 
-namespace CodingGame.Tests.Presentation.Games
+/// <summary>
+/// Simple fake game used to test the controller.
+/// </summary>
+public sealed class TestGame : IGame
 {
-    /// <summary>
-    /// Simple fake game used to test the controller.
-    /// </summary>
-    public sealed class TestGame : IGame
+    private bool hasWon_;
+    private bool hasFailed_;
+
+    public int TotalExecutedInstructions { get; private set; }
+    public int ResetCallCount { get; private set; }
+
+    public bool HasWon()
     {
-        private bool hasWon_;
-        private bool hasFailed_;
+        return hasWon_;
+    }
 
-        public int TotalExecutedInstructions { get; private set; }
-        public int ResetCallCount { get; private set; }
+    public bool HasFailed()
+    {
+        return hasFailed_;
+    }
 
-        public bool HasWon()
+    public void ResetGame()
+    {
+        hasWon_ = false;
+        hasFailed_ = false;
+        ResetCallCount++;
+    }
+
+    public void MarkWon()
+    {
+        hasWon_ = true;
+    }
+
+    public void MarkFailed()
+    {
+        hasFailed_ = true;
+    }
+
+    public void RegisterExecution()
+    {
+        TotalExecutedInstructions++;
+    }
+}
+
+/// <summary>
+/// Simple primitive instruction used by tests.
+/// </summary>
+public sealed class TestInstructionDefinition
+    : GameInstructionDefinitionBase<TestGame>
+{
+    public override InstructionType GetInstructionType()
+    {
+        return InstructionType.MoveForward;
+    }
+
+    public override string GetDisplayName()
+    {
+        return "Test Instruction";
+    }
+
+    public override bool IsPrimitive()
+    {
+        return true;
+    }
+
+    protected override void ExecuteTyped(TestGame game, InstructionInstance instance)
+    {
+        game.RegisterExecution();
+    }
+}
+
+/// <summary>
+/// Concrete controller used to test GameControllerBase behavior.
+/// </summary>
+public sealed class TestGameController : GameControllerBase<TestGame>
+{
+    private TestGame createdGame_;
+
+    public int InitializeViewCallCount { get; private set; }
+    public int RefreshImmediateCallCount { get; private set; }
+    public int RefreshAnimatedCallCount { get; private set; }
+    public int ClearHighlightCallCount { get; private set; }
+    public int RefreshResultViewCallCount { get; private set; }
+    public int LastHighlightedInstructionIndex { get; private set; } = -1;
+
+    public List<int> HighlightedInstructionIndices { get; } = new List<int>();
+
+    public TestGame CreatedGame => createdGame_;
+
+    public void AddTestInstruction()
+    {
+        AddInstructionToCurrentProgram(new TestInstructionDefinition());
+    }
+
+    public void SetExecutionDelay(float seconds)
+    {
+        SetPrivateFieldInHierarchy(this, "stepDelaySeconds_", seconds);
+    }
+
+    protected override void InitializeView()
+    {
+        InitializeViewCallCount++;
+    }
+
+    protected override TestGame CreateGame()
+    {
+        createdGame_ = new TestGame();
+        return createdGame_;
+    }
+
+    protected override void RefreshViewImmediate()
+    {
+        RefreshImmediateCallCount++;
+    }
+
+    protected override IEnumerator RefreshViewAnimated()
+    {
+        RefreshAnimatedCallCount++;
+        yield break;
+    }
+
+    protected override void HighlightInstruction(int instructionIndex)
+    {
+        base.HighlightInstruction(instructionIndex);
+
+        LastHighlightedInstructionIndex = instructionIndex;
+
+        if (instructionIndex >= 0)
         {
-            return hasWon_;
-        }
-
-        public bool HasFailed()
-        {
-            return hasFailed_;
-        }
-
-        public void ResetGame()
-        {
-            hasWon_ = false;
-            hasFailed_ = false;
-            ResetCallCount++;
-        }
-
-        public void MarkWon()
-        {
-            hasWon_ = true;
-        }
-
-        public void MarkFailed()
-        {
-            hasFailed_ = true;
-        }
-
-        public void RegisterExecution()
-        {
-            TotalExecutedInstructions++;
+            HighlightedInstructionIndices.Add(instructionIndex);
         }
     }
 
-    /// <summary>
-    /// Simple primitive instruction used by tests.
-    /// </summary>
-    public sealed class TestInstructionDefinition
-        : GameInstructionDefinitionBase<TestGame>
+    protected override void ClearInstructionHighlight()
     {
-        public override InstructionType GetInstructionType()
-        {
-            return InstructionType.MoveForward;
-        }
+        base.ClearInstructionHighlight();
 
-        public override string GetDisplayName()
-        {
-            return "Test Instruction";
-        }
-
-        public override bool IsPrimitive()
-        {
-            return true;
-        }
-
-        protected override void ExecuteTyped(TestGame game, InstructionInstance instance)
-        {
-            game.RegisterExecution();
-        }
+        ClearHighlightCallCount++;
+        LastHighlightedInstructionIndex = -1;
     }
 
-    /// <summary>
-    /// Concrete controller used to test GameControllerBase behavior.
-    /// </summary>
-    public sealed class TestGameController : GameControllerBase<TestGame>
+    protected override void RefreshResultView()
     {
-        private TestGame createdGame_;
+        RefreshResultViewCallCount++;
+    }
 
-        public int InitializeViewCallCount { get; private set; }
-        public int RefreshImmediateCallCount { get; private set; }
-        public int RefreshAnimatedCallCount { get; private set; }
-        public int ClearHighlightCallCount { get; private set; }
-        public int RefreshResultViewCallCount { get; private set; }
-        public int LastHighlightedInstructionIndex { get; private set; } = -1;
+    private static void SetPrivateFieldInHierarchy(
+        object target,
+        string fieldName,
+        object value)
+    {
+        Type currentType = target.GetType();
 
-        public List<int> HighlightedInstructionIndices { get; } = new List<int>();
-
-        public TestGame CreatedGame => createdGame_;
-
-        public void AddTestInstruction()
+        while (currentType != null)
         {
-            AddInstructionToCurrentProgram(new TestInstructionDefinition());
-        }
+            FieldInfo field = currentType.GetField(
+                fieldName,
+                BindingFlags.Instance | BindingFlags.NonPublic);
 
-        public void SetExecutionDelay(float seconds)
-        {
-            SetPrivateFieldInHierarchy(this, "stepDelaySeconds_", seconds);
-        }
-
-        protected override void InitializeView()
-        {
-            InitializeViewCallCount++;
-        }
-
-        protected override TestGame CreateGame()
-        {
-            createdGame_ = new TestGame();
-            return createdGame_;
-        }
-
-        protected override void RefreshViewImmediate()
-        {
-            RefreshImmediateCallCount++;
-        }
-
-        protected override IEnumerator RefreshViewAnimated()
-        {
-            RefreshAnimatedCallCount++;
-            yield break;
-        }
-
-        protected override void HighlightInstruction(int instructionIndex)
-        {
-            base.HighlightInstruction(instructionIndex);
-
-            LastHighlightedInstructionIndex = instructionIndex;
-
-            if (instructionIndex >= 0)
+            if (field != null)
             {
-                HighlightedInstructionIndices.Add(instructionIndex);
-            }
-        }
-
-        protected override void ClearInstructionHighlight()
-        {
-            base.ClearInstructionHighlight();
-
-            ClearHighlightCallCount++;
-            LastHighlightedInstructionIndex = -1;
-        }
-
-        protected override void RefreshResultView()
-        {
-            RefreshResultViewCallCount++;
-        }
-
-        private static void SetPrivateFieldInHierarchy(
-            object target,
-            string fieldName,
-            object value)
-        {
-            Type currentType = target.GetType();
-
-            while (currentType != null)
-            {
-                FieldInfo field = currentType.GetField(
-                    fieldName,
-                    BindingFlags.Instance | BindingFlags.NonPublic);
-
-                if (field != null)
-                {
-                    field.SetValue(target, value);
-                    return;
-                }
-
-                currentType = currentType.BaseType;
+                field.SetValue(target, value);
+                return;
             }
 
-            throw new InvalidOperationException(
-                $"Field '{fieldName}' was not found in the type hierarchy.");
+            currentType = currentType.BaseType;
         }
+
+        throw new InvalidOperationException(
+            $"Field '{fieldName}' was not found in the type hierarchy.");
     }
 }
