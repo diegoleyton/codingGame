@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using CodingGame.Runtime.Core;
-using CodingGame.Runtime.Games.Moving;
 using CodingGame.Runtime.Instructions;
 using CodingGame.Presentation.UI;
 
@@ -10,10 +9,12 @@ namespace CodingGame.Presentation.Games
     /// <summary>
     /// Coordinates the game runtime, scene view, and execution controls.
     /// </summary>
-    public abstract class GameControllerBase<TGame> : MonoBehaviour where TGame : IGame
+    public abstract class GameControllerBase<TGame> : MonoBehaviour
+        where TGame : IGame
     {
         [Header("UI")]
         [SerializeField] private ProgramPanelView programPanelView_;
+        [SerializeField] private GameStatusView gameStatusView_;
 
         [Header("Execution")]
         [SerializeField] private float stepDelaySeconds_ = 0.5f;
@@ -22,17 +23,21 @@ namespace CodingGame.Presentation.Games
         private ProgramRunner runner_;
         private ProgramDefinition currentProgram_;
         private Coroutine runCoroutine_;
+        private bool programDirty_;
 
         /// <summary>
-        /// Initializes the game, demo program, and view.
+        /// Initializes the game, program, and view.
         /// </summary>
         private void Start()
         {
             runner_ = new ProgramRunner();
             game_ = CreateGame();
             CreateNewProgram();
+
             InitializeView();
             RefreshViewImmediate();
+            ClearInstructionHighlight();
+            RefreshResultView();
         }
 
         /// <summary>
@@ -45,8 +50,14 @@ namespace CodingGame.Presentation.Games
                 return;
             }
 
+            EnsureRunnerReady();
+
+            int currentInstructionIndex = runner_.GetCurrentInstructionIndex();
+            HighlightInstruction(currentInstructionIndex);
+
             runner_.ExecuteNextStep(game_);
             RefreshViewAnimated();
+            RefreshResultView();
         }
 
         /// <summary>
@@ -59,6 +70,7 @@ namespace CodingGame.Presentation.Games
                 return;
             }
 
+            EnsureRunnerReady();
             runCoroutine_ = StartCoroutine(RunRoutine());
         }
 
@@ -84,16 +96,31 @@ namespace CodingGame.Presentation.Games
 
             game_.ResetGame();
             runner_.ResetExecution();
+            programDirty_ = false;
+
             RefreshViewImmediate();
+            ClearInstructionHighlight();
+            RefreshResultView();
         }
 
         /// <summary>
-        /// Deletes all instructions inside the program
+        /// Deletes all instructions inside the program.
         /// </summary>
         public void CleanProgram()
         {
-            ResetGame();
+            StopRunning();
+
+            if (game_ == null)
+            {
+                return;
+            }
+
+            game_.ResetGame();
             CreateNewProgram();
+
+            RefreshViewImmediate();
+            ClearInstructionHighlight();
+            RefreshResultView();
         }
 
         /// <summary>
@@ -119,19 +146,21 @@ namespace CodingGame.Presentation.Games
         }
 
         /// <summary>
-        /// Add an instruction of the given instruction definition to the current program
+        /// Adds an instruction of the given instruction definition to the current program.
         /// </summary>
-        /// <param name="instructionDefinition"></param>
-        /// <exception cref="System.Exception"></exception>
-        protected void AddInstructionToCurrentProgram(GameInstructionDefinitionBase<TGame> instructionDefinition)
+        protected void AddInstructionToCurrentProgram(
+            GameInstructionDefinitionBase<TGame> instructionDefinition)
         {
             if (currentProgram_ == null)
             {
-                throw new System.Exception("A program has to be created to add instructions.");
+                throw new System.InvalidOperationException(
+                    "A program must be created before adding instructions.");
             }
-            InstructionInstance instructionInstance = new InstructionInstance(instructionDefinition);
-            currentProgram_.AddInstruction(instructionInstance);
 
+            InstructionInstance instructionInstance =
+                new InstructionInstance(instructionDefinition);
+
+            currentProgram_.AddInstruction(instructionInstance);
             OnProgramChanged();
         }
 
@@ -140,12 +169,73 @@ namespace CodingGame.Presentation.Games
         /// </summary>
         protected virtual void OnProgramChanged()
         {
+            programDirty_ = true;
+
+            if (programPanelView_ != null)
+            {
+                programPanelView_.Rebuild(
+                    currentProgram_.GenerateReadOnlyInstructions());
+            }
+
+            ClearInstructionHighlight();
+            RefreshResultView();
+        }
+
+        /// <summary>
+        /// Highlights the instruction at the given index.
+        /// </summary>
+        protected virtual void HighlightInstruction(int instructionIndex)
+        {
             if (programPanelView_ == null)
             {
                 return;
             }
 
-            programPanelView_.Rebuild(GetCurrentProgram().GenerateReadOnlyInstructions());
+            if (instructionIndex < 0)
+            {
+                programPanelView_.ClearHighlight();
+                return;
+            }
+
+            programPanelView_.HighlightIndex(instructionIndex);
+        }
+
+        /// <summary>
+        /// Clears the current instruction highlight.
+        /// </summary>
+        protected virtual void ClearInstructionHighlight()
+        {
+            if (programPanelView_ == null)
+            {
+                return;
+            }
+
+            programPanelView_.ClearHighlight();
+        }
+
+        /// <summary>
+        /// Updates the result icon based on the current game state.
+        /// </summary>
+        protected virtual void RefreshResultView()
+        {
+            if (gameStatusView_ == null || game_ == null)
+            {
+                return;
+            }
+
+            if (game_.HasWon())
+            {
+                gameStatusView_.SetState(GameState.Win);
+                return;
+            }
+
+            if (game_.HasFailed())
+            {
+                gameStatusView_.SetState(GameState.Lose);
+                return;
+            }
+
+            gameStatusView_.SetState(GameState.Idle);
         }
 
         protected abstract void InitializeView();
@@ -160,7 +250,24 @@ namespace CodingGame.Presentation.Games
         {
             currentProgram_ = new ProgramDefinition();
             runner_.LoadProgram(currentProgram_);
-            OnProgramChanged();
+            programDirty_ = false;
+
+            if (programPanelView_ != null)
+            {
+                programPanelView_.Rebuild(
+                    currentProgram_.GenerateReadOnlyInstructions());
+            }
+        }
+
+        private void EnsureRunnerReady()
+        {
+            if (!programDirty_)
+            {
+                return;
+            }
+
+            runner_.ResetExecution();
+            programDirty_ = false;
         }
 
         private bool CanExecuteStep()
@@ -187,8 +294,12 @@ namespace CodingGame.Presentation.Games
         {
             while (CanExecuteStep())
             {
+                int currentInstructionIndex = runner_.GetCurrentInstructionIndex();
+                HighlightInstruction(currentInstructionIndex);
+
                 runner_.ExecuteNextStep(game_);
                 RefreshViewAnimated();
+                RefreshResultView();
 
                 yield return new WaitForSeconds(stepDelaySeconds_);
             }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-
 namespace CodingGame.Runtime.Core
 {
     /// <summary>
@@ -48,6 +47,14 @@ namespace CodingGame.Runtime.Core
         public void Advance()
         {
             currentIndex_++;
+        }
+
+        /// <summary>
+        /// Returns the current instruction index.
+        /// </summary>
+        public int GetCurrentInstructionIndex()
+        {
+            return currentIndex_;
         }
     }
 }

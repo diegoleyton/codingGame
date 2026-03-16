@@ -11,46 +11,29 @@ namespace CodingGame.Runtime.Core
         private readonly Stack<ExecutionFrame> frames_;
         private ProgramDefinition program_;
         private bool isInitialized_;
+        private ExecutionFrame rootExecutionFrame_;
 
-        /// <summary>
-        /// Creates a new program runner.
-        /// </summary>
         public ProgramRunner()
         {
             frames_ = new Stack<ExecutionFrame>();
             program_ = null;
             isInitialized_ = false;
+            rootExecutionFrame_ = null;
         }
 
-        /// <summary>
-        /// Loads a program into the runner and resets execution state.
-        /// </summary>
         public void LoadProgram(ProgramDefinition program)
         {
             program_ = program ?? throw new ArgumentNullException(nameof(program));
             ResetExecution();
         }
 
-        /// <summary>
-        /// Resets execution state without modifying the loaded program.
-        /// </summary>
         public void ResetExecution()
         {
             frames_.Clear();
             isInitialized_ = false;
+            rootExecutionFrame_ = null;
         }
 
-        /// <summary>
-        /// Returns whether a program is currently loaded.
-        /// </summary>
-        public bool HasProgramLoaded()
-        {
-            return program_ != null;
-        }
-
-        /// <summary>
-        /// Returns whether execution has finished for the currently loaded program.
-        /// </summary>
         public bool IsFinished()
         {
             if (program_ == null)
@@ -66,25 +49,16 @@ namespace CodingGame.Runtime.Core
             return frames_.Count == 0;
         }
 
-        /// <summary>
-        /// Executes the next primitive step of the loaded program on the given game.
-        /// </summary>
         public StepResult ExecuteNextStep(IGame game)
         {
             if (game == null)
-            {
                 throw new ArgumentNullException(nameof(game));
-            }
 
             if (program_ == null)
-            {
                 throw new InvalidOperationException("No program loaded.");
-            }
 
             if (game.HasWon() || game.HasFailed())
-            {
                 return new StepResult(StepExecutionStatus.BlockedByGameState, null);
-            }
 
             EnsureInitialized();
 
@@ -107,21 +81,35 @@ namespace CodingGame.Runtime.Core
                     return new StepResult(StepExecutionStatus.ExecutedPrimitive, instruction);
                 }
 
-                IReadOnlyList<InstructionInstance> expanded = instruction.GetDefinition().Expand(instruction);
+                IReadOnlyList<InstructionInstance> expanded =
+                    instruction.GetDefinition().Expand(instruction);
+
                 frames_.Push(new ExecutionFrame(expanded));
             }
 
             return new StepResult(StepExecutionStatus.CompletedProgram, null);
         }
 
+        public int GetCurrentInstructionIndex()
+        {
+            if (program_ == null)
+                return -1;
+
+            EnsureInitialized();
+
+            if (rootExecutionFrame_ == null || rootExecutionFrame_.IsComplete())
+                return -1;
+
+            return rootExecutionFrame_.GetCurrentInstructionIndex();
+        }
+
         private void EnsureInitialized()
         {
             if (isInitialized_)
-            {
                 return;
-            }
 
-            frames_.Push(new ExecutionFrame(program_.GetInstructions()));
+            rootExecutionFrame_ = new ExecutionFrame(program_.GetInstructions());
+            frames_.Push(rootExecutionFrame_);
             isInitialized_ = true;
         }
     }
