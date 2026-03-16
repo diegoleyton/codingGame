@@ -1,5 +1,5 @@
 {
-    "name": "CondingGame.Tests",
+    "name": "CondingGame.EditModeTests",
     "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",

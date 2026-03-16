@@ -18,7 +18,7 @@
     <LangVersion>9.0</LangVersion>
     <RootNamespace></RootNamespace>
     <OutputType>Library</OutputType>
-    <AssemblyName>CondingGame.Tests</AssemblyName>
+    <AssemblyName>CondingGame.EditModeTests</AssemblyName>
     <TargetFramework>netstandard2.1</TargetFramework>
     <BaseDirectory>.</BaseDirectory>
   </PropertyGroup>
@@ -49,7 +49,7 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.26f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/Tests/EditModeTests/FakeMovingGame.cs" />
+    <Compile Include="Assets/Tests/EditModeTests/EditModeMocks.cs" />
     <Compile Include="Assets/Tests/EditModeTests/ProgramRunnerTests.cs" />
   </ItemGroup>
   <ItemGroup>
