@@ -1,5 +1,5 @@
+using System.Collections;
 using UnityEngine;
-using CodingGame.Runtime.Core;
 using CodingGame.Runtime.Games.Moving;
 
 namespace CodingGame.Presentation.Games.Moving
@@ -72,14 +72,14 @@ namespace CodingGame.Presentation.Games.Moving
             movingGameView_.RefreshImmediate(game_);
         }
 
-        protected override void RefreshViewAnimated()
+        protected override IEnumerator RefreshViewAnimated()
         {
             if (movingGameView_ == null || game_ == null)
             {
-                return;
+                yield break;
             }
 
-            movingGameView_.RefreshAnimated(game_);
+            yield return movingGameView_.RefreshAnimated(game_);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using CodingGame.Runtime.Games.Moving;
 
@@ -13,17 +14,18 @@ namespace CodingGame.Presentation.Games.Moving
         [SerializeField] private Transform food_;
 
         [Header("Animation")]
-        [SerializeField] private bool animateTransitions_ = false;
+        [SerializeField] private float moveDurationSeconds_ = 0.2f;
+        [SerializeField] private float rotateDurationSeconds_ = 0.15f;
+        [SerializeField] private bool animateMovement_ = true;
+        [SerializeField] private bool animateRotation_ = true;
 
         private GridRenderer gridRenderer_;
-        private Runtime.Games.Moving.MovingGame game_;
+        private MovingGame game_;
 
         /// <summary>
         /// Initializes the view with the given grid renderer and game.
         /// </summary>
-        public void Initialize(
-            GridRenderer gridRenderer,
-            Runtime.Games.Moving.MovingGame game)
+        public void Initialize(GridRenderer gridRenderer, MovingGame game)
         {
             gridRenderer_ = gridRenderer;
             game_ = game;
@@ -32,28 +34,89 @@ namespace CodingGame.Presentation.Games.Moving
         /// <summary>
         /// Refreshes the scene objects immediately using the given game state.
         /// </summary>
-        public void RefreshImmediate(Runtime.Games.Moving.MovingGame game)
+        public void RefreshImmediate(MovingGame game)
         {
             game_ = game;
-            UpdateFood();
+            UpdateFoodImmediate();
             UpdateCharacterImmediate();
         }
 
         /// <summary>
-        /// Refreshes the scene objects after a game step.
+        /// Refreshes the scene objects with simple animation.
         /// </summary>
-        public void RefreshAnimated(Runtime.Games.Moving.MovingGame game)
+        public IEnumerator RefreshAnimated(MovingGame game)
         {
             game_ = game;
 
-            if (!animateTransitions_)
+            if (game_ == null)
             {
-                RefreshImmediate(game_);
-                return;
+                yield break;
             }
 
-            UpdateFood();
-            UpdateCharacterImmediate();
+            UpdateFoodImmediate();
+
+            if (character_ == null)
+            {
+                yield break;
+            }
+
+            Vector3 targetPosition = GridToWorld(game_.GetCharacterPosition());
+            Quaternion targetRotation = DirectionToRotation(game_.GetCharacterDirection());
+
+            Vector3 startPosition = character_.position;
+            Quaternion startRotation = character_.rotation;
+
+            bool shouldAnimateMovement = animateMovement_ &&
+                                         (startPosition - targetPosition).sqrMagnitude > 0.0001f;
+
+            bool shouldAnimateRotation = animateRotation_ &&
+                                         Quaternion.Angle(startRotation, targetRotation) > 0.1f;
+
+            float duration = 0f;
+
+            if (shouldAnimateMovement && shouldAnimateRotation)
+            {
+                duration = Mathf.Max(moveDurationSeconds_, rotateDurationSeconds_);
+            }
+            else if (shouldAnimateMovement)
+            {
+                duration = moveDurationSeconds_;
+            }
+            else if (shouldAnimateRotation)
+            {
+                duration = rotateDurationSeconds_;
+            }
+
+            if (duration <= 0f)
+            {
+                character_.position = targetPosition;
+                character_.rotation = targetRotation;
+                yield break;
+            }
+
+            float elapsed = 0f;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsed / duration);
+                float easedT = EaseOutQuad(t);
+
+                if (shouldAnimateMovement)
+                {
+                    character_.position = Vector3.Lerp(startPosition, targetPosition, easedT);
+                }
+
+                if (shouldAnimateRotation)
+                {
+                    character_.rotation = Quaternion.Lerp(startRotation, targetRotation, easedT);
+                }
+
+                yield return null;
+            }
+
+            character_.position = targetPosition;
+            character_.rotation = targetRotation;
         }
 
         private void UpdateCharacterImmediate()
@@ -67,7 +130,7 @@ namespace CodingGame.Presentation.Games.Moving
             character_.rotation = DirectionToRotation(game_.GetCharacterDirection());
         }
 
-        private void UpdateFood()
+        private void UpdateFoodImmediate()
         {
             if (food_ == null || game_ == null)
             {
@@ -99,6 +162,11 @@ namespace CodingGame.Presentation.Games.Moving
             };
 
             return Quaternion.Euler(0f, 0f, zRotation);
+        }
+
+        private float EaseOutQuad(float t)
+        {
+            return 1f - ((1f - t) * (1f - t));
         }
     }
 }

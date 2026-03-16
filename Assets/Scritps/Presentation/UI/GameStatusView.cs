@@ -10,6 +10,7 @@ namespace CodingGame.Presentation.UI
     /// </summary>
     public enum GameState
     {
+        None,
         Idle,
         Win,
         Lose
@@ -23,18 +24,36 @@ namespace CodingGame.Presentation.UI
 
         [SerializeField] private GameStateVisualObject[] stateVisuals_;
 
+        private GameState currentState_ = GameState.None;
+
         /// <summary>
         /// Shows the result.
         /// </summary>
         public void SetState(GameState state)
         {
+            if (state == currentState_)
+            {
+                return;
+            }
+
+            currentState_ = state;
+
             for (int i = 0; i < stateVisuals_.Length; i++)
             {
-                stateVisuals_[i].visuals.SetActive(stateVisuals_[i].gameState == state);
+                if (stateVisuals_[i].visuals == null)
+                {
+                    continue;
+                }
+
+                stateVisuals_[i].visuals.SetActive(
+                    stateVisuals_[i].gameState == state);
             }
         }
     }
 
+    /// <summary>
+    /// Defines the visuals for a given game state
+    /// </summary>
     [Serializable]
     public class GameStateVisualObject
     {

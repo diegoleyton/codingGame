@@ -494,7 +494,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   character_: {fileID: 185792419}
   food_: {fileID: 1249490987}
-  animateTransitions_: 1
+  moveDurationSeconds_: 0.2
+  rotateDurationSeconds_: 0.15
+  animateMovement_: 1
+  animateRotation_: 1
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -1871,11 +1874,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateVisuals_:
-  - gameState: 0
-    visuals: {fileID: 1112699048}
   - gameState: 1
-    visuals: {fileID: 949000577}
+    visuals: {fileID: 1112699048}
   - gameState: 2
+    visuals: {fileID: 949000577}
+  - gameState: 3
     visuals: {fileID: 519561657}
 --- !u!1 &1417477914
 GameObject:

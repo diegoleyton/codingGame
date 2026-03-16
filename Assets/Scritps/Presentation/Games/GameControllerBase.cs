@@ -23,6 +23,7 @@ namespace CodingGame.Presentation.Games
         private ProgramRunner runner_;
         private ProgramDefinition currentProgram_;
         private Coroutine runCoroutine_;
+        private Coroutine stepCoroutine_;
         private bool programDirty_;
 
         /// <summary>
@@ -45,19 +46,17 @@ namespace CodingGame.Presentation.Games
         /// </summary>
         public void Step()
         {
+            if (stepCoroutine_ != null || runCoroutine_ != null)
+            {
+                return;
+            }
+
             if (!CanExecuteStep())
             {
                 return;
             }
 
-            EnsureRunnerReady();
-
-            int currentInstructionIndex = runner_.GetCurrentInstructionIndex();
-            HighlightInstruction(currentInstructionIndex);
-
-            runner_.ExecuteNextStep(game_);
-            RefreshViewAnimated();
-            RefreshResultView();
+            stepCoroutine_ = StartCoroutine(StepRoutine());
         }
 
         /// <summary>
@@ -65,7 +64,7 @@ namespace CodingGame.Presentation.Games
         /// </summary>
         public void Run()
         {
-            if (runCoroutine_ != null)
+            if (runCoroutine_ != null || stepCoroutine_ != null)
             {
                 return;
             }
@@ -244,7 +243,7 @@ namespace CodingGame.Presentation.Games
 
         protected abstract void RefreshViewImmediate();
 
-        protected abstract void RefreshViewAnimated();
+        protected abstract IEnumerator RefreshViewAnimated();
 
         private void CreateNewProgram()
         {
@@ -290,6 +289,20 @@ namespace CodingGame.Presentation.Games
             return true;
         }
 
+        private IEnumerator StepRoutine()
+        {
+            EnsureRunnerReady();
+
+            int currentInstructionIndex = runner_.GetCurrentInstructionIndex();
+            HighlightInstruction(currentInstructionIndex);
+
+            runner_.ExecuteNextStep(game_);
+            yield return RefreshViewAnimated();
+            RefreshResultView();
+
+            stepCoroutine_ = null;
+        }
+
         private IEnumerator RunRoutine()
         {
             while (CanExecuteStep())
@@ -298,8 +311,13 @@ namespace CodingGame.Presentation.Games
                 HighlightInstruction(currentInstructionIndex);
 
                 runner_.ExecuteNextStep(game_);
-                RefreshViewAnimated();
+                yield return RefreshViewAnimated();
                 RefreshResultView();
+
+                if (!CanExecuteStep())
+                {
+                    break;
+                }
 
                 yield return new WaitForSeconds(stepDelaySeconds_);
             }
@@ -309,13 +327,17 @@ namespace CodingGame.Presentation.Games
 
         private void StopRunning()
         {
-            if (runCoroutine_ == null)
+            if (runCoroutine_ != null)
             {
-                return;
+                StopCoroutine(runCoroutine_);
+                runCoroutine_ = null;
             }
 
-            StopCoroutine(runCoroutine_);
-            runCoroutine_ = null;
+            if (stepCoroutine_ != null)
+            {
+                StopCoroutine(stepCoroutine_);
+                stepCoroutine_ = null;
+            }
         }
     }
 }
