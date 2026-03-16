@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/Scritps/Presentation/Games/Moving/MovingGameController.cs" />
+    <Compile Include="Assets/Scritps/Presentation/Games/GameControllerBase.cs" />
     <Compile Include="Assets/Scritps/Presentation/Games/Moving/GridRenderer.cs" />
     <Compile Include="Assets/Scritps/Presentation/Games/Moving/MovingGameView.cs" />
   </ItemGroup>

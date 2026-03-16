@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using CodingGame.Runtime.Core;
 
 namespace CodingGame.Runtime.Games.Moving
 {
@@ -15,8 +13,6 @@ namespace CodingGame.Runtime.Games.Moving
         private readonly GridPosition startCharacterPosition_;
         private readonly Direction startCharacterDirection_;
         private readonly GridPosition foodPosition_;
-
-        private readonly List<IInstructionDefinition> availableInstructionDefinitions_;
 
         private GridPosition characterPosition_;
         private Direction characterDirection_;
@@ -51,13 +47,6 @@ namespace CodingGame.Runtime.Games.Moving
 
             ValidatePosition(startCharacterPosition_, nameof(startCharacterPosition));
             ValidatePosition(foodPosition_, nameof(foodPosition));
-
-            availableInstructionDefinitions_ = new List<IInstructionDefinition>
-        {
-            new MoveForwardInstructionDefinition(),
-            new RotateLeftInstructionDefinition(),
-            new RotateRightInstructionDefinition()
-        };
 
             ResetGame();
         }
@@ -129,14 +118,6 @@ namespace CodingGame.Runtime.Games.Moving
             hasFailed_ = false;
 
             UpdateWinState();
-        }
-
-        /// <summary>
-        /// Returns the instruction definitions available for this game.
-        /// </summary>
-        public IReadOnlyList<IInstructionDefinition> GetAvailableInstructionDefinitions()
-        {
-            return availableInstructionDefinitions_;
         }
 
         /// <summary>

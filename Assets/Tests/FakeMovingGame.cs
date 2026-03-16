@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using CodingGame.Runtime.Games.Moving;
-using CodingGame.Runtime.Core;
-using CodingGame.Runtime.Instructions;
 
 /// <summary>
 /// A test double for a moving game used by unit tests.
@@ -9,7 +7,6 @@ using CodingGame.Runtime.Instructions;
 internal sealed class FakeMovingGame : IMovingGame
 {
     private readonly List<string> log_;
-    private readonly List<IInstructionDefinition> availableInstructionDefinitions_;
     private bool hasWon_;
     private bool hasFailed_;
 
@@ -19,14 +16,6 @@ internal sealed class FakeMovingGame : IMovingGame
     public FakeMovingGame()
     {
         log_ = new List<string>();
-        availableInstructionDefinitions_ = new List<IInstructionDefinition>
-        {
-            new MoveForwardInstructionDefinition(),
-            new RotateLeftInstructionDefinition(),
-            new RotateRightInstructionDefinition(),
-            new SequenceInstructionDefinition(),
-            new RepeatInstructionDefinition()
-        };
 
         hasWon_ = false;
         hasFailed_ = false;
@@ -104,13 +93,5 @@ internal sealed class FakeMovingGame : IMovingGame
         log_.Clear();
         hasWon_ = false;
         hasFailed_ = false;
-    }
-
-    /// <summary>
-    /// Returns the instruction definitions available for this game.
-    /// </summary>
-    public IReadOnlyList<IInstructionDefinition> GetAvailableInstructionDefinitions()
-    {
-        return availableInstructionDefinitions_;
     }
 }

@@ -21,10 +21,5 @@ namespace CodingGame.Runtime.Core
         /// Resets the game to its initial state.
         /// </summary>
         void ResetGame();
-
-        /// <summary>
-        /// Returns the instruction definitions available for this game.
-        /// </summary>
-        IReadOnlyList<IInstructionDefinition> GetAvailableInstructionDefinitions();
     }
 }

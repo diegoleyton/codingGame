@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 using CodingGame.Runtime.Games.Moving;
 using CodingGame.Runtime.Core;
@@ -404,19 +403,5 @@ public sealed class ProgramRunnerTests
 
         Assert.Throws<InvalidOperationException>(() =>
             move.AddChild(new InstructionInstance(new RotateLeftInstructionDefinition())));
-    }
-
-    /// <summary>
-    /// Verifies that the game exposes available instruction definitions.
-    /// </summary>
-    [Test]
-    public void Game_ExposesAvailableInstructionDefinitions()
-    {
-        FakeMovingGame game = new FakeMovingGame();
-
-        IReadOnlyList<IInstructionDefinition> definitions = game.GetAvailableInstructionDefinitions();
-
-        Assert.IsNotNull(definitions);
-        Assert.IsNotEmpty(definitions);
     }
 }
