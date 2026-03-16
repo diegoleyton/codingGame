@@ -22,10 +22,14 @@ namespace CodingGame.Presentation.UI
         /// </summary>
         public void SetInstructionView(GameObject instructionView)
         {
-            if (gameObject != null)
+            if (instructionView == null || uiContainer_ == null)
             {
-                instructionView.transform.SetParent(uiContainer_, false);
+                return;
             }
+            instructionView.transform.SetParent(uiContainer_, false);
+            instructionView.transform.localScale = Vector3.one;
+            instructionView.transform.localPosition = Vector3.zero;
+
         }
 
         /// <summary>

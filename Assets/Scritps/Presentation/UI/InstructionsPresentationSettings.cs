@@ -50,6 +50,11 @@ namespace CodingGame.Presentation.UI
 
             foreach (var entry in instructionsUi_)
             {
+                if (instructionsUiPrefabs_.ContainsKey(entry.instructionType))
+                {
+                    throw new Exception(
+                        $"Duplicate UI mapping found for instruction type {entry.instructionType}");
+                }
                 instructionsUiPrefabs_[entry.instructionType] = entry.instructionUiPrefab;
             }
         }

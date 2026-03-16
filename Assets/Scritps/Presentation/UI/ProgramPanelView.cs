@@ -94,6 +94,11 @@ namespace CodingGame.Presentation.UI
                 parts.Add($"{parameter.Key}: {parameter.Value}");
             }
 
+            if (parts.Count == 0)
+            {
+                return displayName;
+            }
+
             return $"{displayName} ({string.Join(", ", parts)})";
         }
     }
