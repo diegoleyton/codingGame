@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f79c356eb95a4fada74c9a61c3322db, type: 3}
+  m_Name: InstructionsPresentationSettings
+  m_EditorClassIdentifier: 
+  instructionsUi_:
+  - instructionType: 2
+    instructionUiPrefab: {fileID: 8364832080427068244, guid: 7b4beb947ee0e4e9db56adf167875917, type: 3}
+  - instructionType: 3
+    instructionUiPrefab: {fileID: 8709884758866276678, guid: a9e109544a19b455494bf52b4f1e2b3a, type: 3}
+  - instructionType: 4
+    instructionUiPrefab: {fileID: 5386369317838930625, guid: 776be9a9c47904f50a1728f93dd7a8da, type: 3}

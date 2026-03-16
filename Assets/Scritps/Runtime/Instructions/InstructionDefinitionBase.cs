@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CodingGame.Runtime.Core;
+using CodingGame.Runtime.Definitions;
 
 namespace CodingGame.Runtime.Instructions
 {
@@ -10,14 +11,14 @@ namespace CodingGame.Runtime.Instructions
     public abstract class InstructionDefinitionBase : IInstructionDefinition
     {
         /// <summary>
-        /// Returns a unique identifier for this instruction definition.
-        /// </summary>
-        public abstract string GetId();
-
-        /// <summary>
         /// Returns the display name of this instruction definition.
         /// </summary>
         public abstract string GetDisplayName();
+
+        /// <summary>
+        /// Returns the instruction type
+        /// </summary>
+        public abstract InstructionType GetInstructionType();
 
         /// <summary>
         /// Returns whether this instruction executes directly without expanding child instructions.

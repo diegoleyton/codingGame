@@ -6,7 +6,7 @@ namespace CodingGame.Runtime.Core
     /// <summary>
     /// Represents one concrete use of an instruction definition inside a program.
     /// </summary>
-    public sealed class InstructionInstance
+    public sealed class InstructionInstance : IReadOnlyInstructionInstance
     {
         private readonly IInstructionDefinition definition_;
         private readonly Dictionary<string, object> parameterValues_;
@@ -107,6 +107,15 @@ namespace CodingGame.Runtime.Core
             }
 
             children_.Add(child);
+        }
+
+        /// <summary>
+        /// Returns all the parameters of this instruction instance, and their values.
+        /// </summary>
+        /// <returns></returns>
+        public IReadOnlyDictionary<string, object> GetParameterValues()
+        {
+            return parameterValues_;
         }
     }
 }

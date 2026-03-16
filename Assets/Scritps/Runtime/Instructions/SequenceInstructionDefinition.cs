@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using CodingGame.Runtime.Core;
+using CodingGame.Runtime.Definitions;
 
 namespace CodingGame.Runtime.Instructions
 {
@@ -9,19 +10,19 @@ namespace CodingGame.Runtime.Instructions
     public sealed class SequenceInstructionDefinition : InstructionDefinitionBase
     {
         /// <summary>
-        /// Returns a unique identifier for this instruction definition.
-        /// </summary>
-        public override string GetId()
-        {
-            return "sequence";
-        }
-
-        /// <summary>
         /// Returns the display name of this instruction definition.
         /// </summary>
         public override string GetDisplayName()
         {
             return "Sequence";
+        }
+
+        /// <summary>
+        /// Returns the instruction type
+        /// </summary>
+        public override InstructionType GetInstructionType()
+        {
+            return InstructionType.Sequence;
         }
 
         /// <summary>

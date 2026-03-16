@@ -43,6 +43,20 @@ namespace CodingGame.Runtime.Core
         }
 
         /// <summary>
+        /// Creates and return the root instructions as a read-only values.
+        /// </summary>
+        public IReadOnlyList<IReadOnlyInstructionInstance> GenerateReadOnlyInstructions()
+        {
+            List<IReadOnlyInstructionInstance> readOnlyInstructions = new List<IReadOnlyInstructionInstance>();
+            foreach (var instructionInstance in instructions_)
+            {
+                readOnlyInstructions.Add(instructionInstance);
+            }
+
+            return readOnlyInstructions;
+        }
+
+        /// <summary>
         /// Adds a root instruction to the end of the program.
         /// </summary>
         public void AddInstruction(InstructionInstance instruction)

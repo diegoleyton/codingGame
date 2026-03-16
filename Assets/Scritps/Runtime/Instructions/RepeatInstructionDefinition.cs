@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CodingGame.Runtime.Core;
+using CodingGame.Runtime.Definitions;
 
 namespace CodingGame.Runtime.Instructions
 {
@@ -23,19 +24,19 @@ namespace CodingGame.Runtime.Instructions
         }
 
         /// <summary>
-        /// Returns a unique identifier for this instruction definition.
-        /// </summary>
-        public override string GetId()
-        {
-            return "repeat";
-        }
-
-        /// <summary>
         /// Returns the display name of this instruction definition.
         /// </summary>
         public override string GetDisplayName()
         {
             return "Repeat";
+        }
+
+        /// <summary>
+        /// Returns the instruction type
+        /// </summary>
+        public override InstructionType GetInstructionType()
+        {
+            return InstructionType.Repeat;
         }
 
         /// <summary>

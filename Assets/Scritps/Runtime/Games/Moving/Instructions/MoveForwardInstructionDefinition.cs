@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using CodingGame.Runtime.Instructions;
 using CodingGame.Runtime.Core;
+using CodingGame.Runtime.Definitions;
 
 namespace CodingGame.Runtime.Games.Moving
 {
@@ -24,11 +25,11 @@ namespace CodingGame.Runtime.Games.Moving
         }
 
         /// <summary>
-        /// Returns a unique identifier for this instruction definition.
+        /// Returns the instruction type
         /// </summary>
-        public override string GetId()
+        public override InstructionType GetInstructionType()
         {
-            return "move_forward";
+            return InstructionType.MoveForward;
         }
 
         /// <summary>

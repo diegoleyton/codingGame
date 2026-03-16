@@ -1,5 +1,6 @@
 using CodingGame.Runtime.Instructions;
 using CodingGame.Runtime.Core;
+using CodingGame.Runtime.Definitions;
 
 namespace CodingGame.Runtime.Games.Moving
 {
@@ -9,11 +10,11 @@ namespace CodingGame.Runtime.Games.Moving
     public sealed class RotateLeftInstructionDefinition : GameInstructionDefinitionBase<IMovingGame>
     {
         /// <summary>
-        /// Returns a unique identifier for this instruction definition.
+        /// Returns the instruction type
         /// </summary>
-        public override string GetId()
+        public override InstructionType GetInstructionType()
         {
-            return "rotate_left";
+            return InstructionType.RotateLeft;
         }
 
         /// <summary>

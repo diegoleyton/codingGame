@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CodingGame.Runtime.Definitions;
 
 namespace CodingGame.Runtime.Core
 {
@@ -7,11 +8,6 @@ namespace CodingGame.Runtime.Core
     /// </summary>
     public interface IInstructionDefinition
     {
-        /// <summary>
-        /// Returns a unique identifier for this instruction definition.
-        /// </summary>
-        string GetId();
-
         /// <summary>
         /// Returns the display name of this instruction definition.
         /// </summary>
@@ -26,6 +22,12 @@ namespace CodingGame.Runtime.Core
         /// Returns whether this instruction supports child instructions.
         /// </summary>
         bool SupportsChildren();
+
+        /// <summary>
+        /// Returns the instruction type
+        /// </summary>
+        /// <returns></returns>
+        InstructionType GetInstructionType();
 
         /// <summary>
         /// Returns the parameter definitions for this instruction.

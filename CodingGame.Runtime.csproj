@@ -58,11 +58,13 @@
     <Compile Include="Assets/Scritps/Runtime/Instructions/InstructionDefinitionBase.cs" />
     <Compile Include="Assets/Scritps/Runtime/Games/Moving/Instructions/RotateLeftInstructionDefinition.cs" />
     <Compile Include="Assets/Scritps/Runtime/Instructions/GameInstructionDefinitionBase.cs" />
+    <Compile Include="Assets/Scritps/Runtime/Definitions/InstructionType.cs" />
     <Compile Include="Assets/Scritps/Runtime/Core/InstructionParameterDefinition.cs" />
     <Compile Include="Assets/Scritps/Runtime/Games/Moving/Game/IMovingGame.cs" />
     <Compile Include="Assets/Scritps/Runtime/Core/ProgramDefinition.cs" />
     <Compile Include="Assets/Scritps/Runtime/Games/Moving/Game/GridPosition.cs" />
     <Compile Include="Assets/Scritps/Runtime/Core/StepExecutionStatus.cs" />
+    <Compile Include="Assets/Scritps/Runtime/Core/IReadOnlyInstructionInstance.cs" />
     <Compile Include="Assets/Scritps/Runtime/Instructions/SequenceInstructionDefinition.cs" />
     <Compile Include="Assets/Scritps/Runtime/Games/Moving/Instructions/RotateRightInstructionDefinition.cs" />
     <Compile Include="Assets/Scritps/Runtime/Core/ExecutionFrame.cs" />

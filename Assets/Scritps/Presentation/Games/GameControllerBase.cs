@@ -3,6 +3,7 @@ using UnityEngine;
 using CodingGame.Runtime.Core;
 using CodingGame.Runtime.Games.Moving;
 using CodingGame.Runtime.Instructions;
+using CodingGame.Presentation.UI;
 
 namespace CodingGame.Presentation.Games
 {
@@ -11,6 +12,9 @@ namespace CodingGame.Presentation.Games
     /// </summary>
     public abstract class GameControllerBase<TGame> : MonoBehaviour where TGame : IGame
     {
+        [Header("UI")]
+        [SerializeField] private ProgramPanelView programPanelView_;
+
         [Header("Execution")]
         [SerializeField] private float stepDelaySeconds_ = 0.5f;
 
@@ -93,6 +97,28 @@ namespace CodingGame.Presentation.Games
         }
 
         /// <summary>
+        /// Removes the last instruction from the current program.
+        /// </summary>
+        public void RemoveLastInstruction()
+        {
+            if (currentProgram_ == null || currentProgram_.GetInstructionCount() == 0)
+            {
+                return;
+            }
+
+            currentProgram_.RemoveLastInstruction();
+            OnProgramChanged();
+        }
+
+        /// <summary>
+        /// Returns the current program definition.
+        /// </summary>
+        protected ProgramDefinition GetCurrentProgram()
+        {
+            return currentProgram_;
+        }
+
+        /// <summary>
         /// Add an instruction of the given instruction definition to the current program
         /// </summary>
         /// <param name="instructionDefinition"></param>
@@ -105,6 +131,21 @@ namespace CodingGame.Presentation.Games
             }
             InstructionInstance instructionInstance = new InstructionInstance(instructionDefinition);
             currentProgram_.AddInstruction(instructionInstance);
+
+            OnProgramChanged();
+        }
+
+        /// <summary>
+        /// Called when the current program changes.
+        /// </summary>
+        protected virtual void OnProgramChanged()
+        {
+            if (programPanelView_ == null)
+            {
+                return;
+            }
+
+            programPanelView_.Rebuild(GetCurrentProgram().GenerateReadOnlyInstructions());
         }
 
         protected abstract void InitializeView();
@@ -119,6 +160,7 @@ namespace CodingGame.Presentation.Games
         {
             currentProgram_ = new ProgramDefinition();
             runner_.LoadProgram(currentProgram_);
+            OnProgramChanged();
         }
 
         private bool CanExecuteStep()
