@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using CodingGame.Runtime.Games.Moving;
 
@@ -20,6 +21,9 @@ namespace CodingGame.Presentation.Games.Moving
         [SerializeField] private Direction startDirection_ = Direction.Right;
         [SerializeField] private Vector2Int foodPosition_ = new Vector2Int(3, 1);
 
+        [Header("Obstacles")]
+        [SerializeField] private Vector2Int[] blockedPositions_;
+
         private MovingGame game_;
 
         public void AddMoveForwardInstruction()
@@ -39,21 +43,36 @@ namespace CodingGame.Presentation.Games.Moving
 
         protected override IMovingGame CreateGame()
         {
+            List<GridPosition> blockedPositions = new List<GridPosition>();
+
+            if (blockedPositions_ != null)
+            {
+                for (int i = 0; i < blockedPositions_.Length; i++)
+                {
+                    blockedPositions.Add(
+                        new GridPosition(blockedPositions_[i].x, blockedPositions_[i].y));
+                }
+            }
+
             game_ = new MovingGame(
                 width: gridWidth_,
                 height: gridHeight_,
                 startCharacterPosition: new GridPosition(startPosition_.x, startPosition_.y),
                 startCharacterDirection: startDirection_,
-                foodPosition: new GridPosition(foodPosition_.x, foodPosition_.y));
+                foodPosition: new GridPosition(foodPosition_.x, foodPosition_.y),
+                blockedPositions: blockedPositions);
 
             return game_;
         }
 
         protected override void InitializeView()
         {
-            if (gridRenderer_ != null)
+            if (gridRenderer_ != null && game_ != null)
             {
-                gridRenderer_.RenderGrid(gridWidth_, gridHeight_);
+                gridRenderer_.RenderGrid(
+                    game_.GetWidth(),
+                    game_.GetHeight(),
+                    game_.GetBlockedPositions());
             }
 
             if (movingGameView_ != null && game_ != null)

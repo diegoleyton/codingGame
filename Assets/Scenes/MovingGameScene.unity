@@ -810,6 +810,9 @@ MonoBehaviour:
   startPosition_: {x: 0, y: 0}
   startDirection_: 1
   foodPosition_: {x: 3, y: 1}
+  blockedPositions_:
+  - {x: 4, y: 0}
+  - {x: 2, y: 1}
 --- !u!1 &519561657
 GameObject:
   m_ObjectHideFlags: 0
@@ -3075,6 +3078,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellPrefab_: {fileID: 2927773417660818734, guid: f93dccbbc71e543ea8b4a8e1ef66b43a, type: 3}
+  blockedCellPrefab_: {fileID: 2927773417660818734, guid: a7e43be8c533a418a96c9eb9a6b87148, type: 3}
   cellsRoot_: {fileID: 0}
   cellSize_: 1
   origin_: {x: 0, y: 0}

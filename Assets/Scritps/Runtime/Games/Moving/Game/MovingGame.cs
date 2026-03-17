@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace CodingGame.Runtime.Games.Moving
 {
@@ -13,6 +14,7 @@ namespace CodingGame.Runtime.Games.Moving
         private readonly GridPosition startCharacterPosition_;
         private readonly Direction startCharacterDirection_;
         private readonly GridPosition foodPosition_;
+        private readonly HashSet<GridPosition> blockedPositions_;
 
         private GridPosition characterPosition_;
         private Direction characterDirection_;
@@ -20,7 +22,7 @@ namespace CodingGame.Runtime.Games.Moving
         private bool hasFailed_;
 
         /// <summary>
-        /// Creates a new moving game.
+        /// Creates a new moving game without obstacles.
         /// </summary>
         public MovingGame(
             int width,
@@ -28,6 +30,26 @@ namespace CodingGame.Runtime.Games.Moving
             GridPosition startCharacterPosition,
             Direction startCharacterDirection,
             GridPosition foodPosition)
+            : this(
+                width,
+                height,
+                startCharacterPosition,
+                startCharacterDirection,
+                foodPosition,
+                Array.Empty<GridPosition>())
+        {
+        }
+
+        /// <summary>
+        /// Creates a new moving game with obstacles.
+        /// </summary>
+        public MovingGame(
+            int width,
+            int height,
+            GridPosition startCharacterPosition,
+            Direction startCharacterDirection,
+            GridPosition foodPosition,
+            IEnumerable<GridPosition> blockedPositions)
         {
             if (width <= 0)
             {
@@ -39,14 +61,41 @@ namespace CodingGame.Runtime.Games.Moving
                 throw new ArgumentOutOfRangeException(nameof(height), "Height must be greater than zero.");
             }
 
+            if (blockedPositions == null)
+            {
+                throw new ArgumentNullException(nameof(blockedPositions));
+            }
+
             width_ = width;
             height_ = height;
             startCharacterPosition_ = startCharacterPosition;
-            startCharacterDirection_ = startCharacterDirection;
+            startCharacterDirection_ = startCharacterDirection_;
             foodPosition_ = foodPosition;
+            blockedPositions_ = new HashSet<GridPosition>();
 
             ValidatePosition(startCharacterPosition_, nameof(startCharacterPosition));
             ValidatePosition(foodPosition_, nameof(foodPosition));
+
+            foreach (GridPosition blockedPosition in blockedPositions)
+            {
+                ValidatePosition(blockedPosition, nameof(blockedPositions));
+
+                if (blockedPosition == startCharacterPosition_)
+                {
+                    throw new ArgumentException(
+                        "Blocked positions cannot contain the start character position.",
+                        nameof(blockedPositions));
+                }
+
+                if (blockedPosition == foodPosition_)
+                {
+                    throw new ArgumentException(
+                        "Blocked positions cannot contain the food position.",
+                        nameof(blockedPositions));
+                }
+
+                blockedPositions_.Add(blockedPosition);
+            }
 
             ResetGame();
         }
@@ -89,6 +138,22 @@ namespace CodingGame.Runtime.Games.Moving
         public GridPosition GetFoodPosition()
         {
             return foodPosition_;
+        }
+
+        /// <summary>
+        /// Returns the blocked positions.
+        /// </summary>
+        public IReadOnlyCollection<GridPosition> GetBlockedPositions()
+        {
+            return blockedPositions_;
+        }
+
+        /// <summary>
+        /// Returns whether the given position is blocked by an obstacle.
+        /// </summary>
+        public bool IsBlocked(GridPosition position)
+        {
+            return blockedPositions_.Contains(position);
         }
 
         /// <summary>
@@ -140,6 +205,12 @@ namespace CodingGame.Runtime.Games.Moving
                 GridPosition nextPosition = GetForwardPosition(characterPosition_, characterDirection_);
 
                 if (!IsInsideBounds(nextPosition))
+                {
+                    hasFailed_ = true;
+                    return;
+                }
+
+                if (IsBlocked(nextPosition))
                 {
                     hasFailed_ = true;
                     return;

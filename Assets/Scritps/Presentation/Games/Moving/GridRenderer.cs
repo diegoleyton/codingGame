@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using CodingGame.Runtime.Games.Moving;
+using System.Linq;
 
 namespace CodingGame.Presentation.Games.Moving
 {
@@ -11,6 +12,7 @@ namespace CodingGame.Presentation.Games.Moving
     {
         [Header("Grid Visuals")]
         [SerializeField] private GameObject cellPrefab_;
+        [SerializeField] private GameObject blockedCellPrefab_;
         [SerializeField] private Transform cellsRoot_;
 
         [Header("Layout")]
@@ -23,9 +25,20 @@ namespace CodingGame.Presentation.Games.Moving
         private int height_;
 
         /// <summary>
-        /// Renders a grid with the given dimensions.
+        /// Renders a grid with no blocked cells.
         /// </summary>
         public void RenderGrid(int width, int height)
+        {
+            RenderGrid(width, height, null);
+        }
+
+        /// <summary>
+        /// Renders a grid with blocked cells.
+        /// </summary>
+        public void RenderGrid(
+            int width,
+            int height,
+            IReadOnlyCollection<GridPosition> blockedPositions)
         {
             width_ = width;
             height_ = height;
@@ -43,9 +56,25 @@ namespace CodingGame.Presentation.Games.Moving
             {
                 for (int x = 0; x < width_; x++)
                 {
-                    Vector3 worldPosition = GridToWorld(new GridPosition(x, y));
-                    GameObject cell = Instantiate(cellPrefab_, worldPosition, Quaternion.identity, parent);
-                    cell.name = $"Cell_{x}_{y}";
+                    GridPosition gridPosition = new GridPosition(x, y);
+                    Vector3 worldPosition = GridToWorld(gridPosition);
+
+                    bool isBlocked =
+                        blockedPositions != null &&
+                        blockedPositions.Contains(gridPosition);
+
+                    GameObject prefabToUse =
+                        isBlocked && blockedCellPrefab_ != null
+                            ? blockedCellPrefab_
+                            : cellPrefab_;
+
+                    GameObject cell =
+                        Instantiate(prefabToUse, worldPosition, Quaternion.identity, parent);
+
+                    cell.name = isBlocked
+                        ? $"BlockedCell_{x}_{y}"
+                        : $"Cell_{x}_{y}";
+
                     cell.transform.localScale = new Vector3(cellSize_, cellSize_, 1f);
                     spawnedCells_.Add(cell);
                 }
