@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Assets/Scritps/Presentation/Games/Moving/MovingGameController.cs" />
     <Compile Include="Assets/Scritps/Presentation/UI/ProgramPanelView.cs" />
+    <Compile Include="Assets/Scritps/Presentation/Character/CharacterAnimation.cs" />
     <Compile Include="Assets/Scritps/Presentation/UI/InstructionListItemView.cs" />
     <Compile Include="Assets/Scritps/Presentation/UI/InstructionsPresentationSettings.cs" />
     <Compile Include="Assets/Scritps/Presentation/Games/GameControllerBase.cs" />

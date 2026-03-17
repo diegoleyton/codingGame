@@ -1,63 +1,39 @@
 using UnityEngine;
-using UnityEngine.UI;
-using System.Collections.Generic;
+using CodingGame.Presentation.Character;
 using System;
 
 namespace CodingGame.Presentation.UI
 {
-    /// <summary>
-    /// Represents the current state of the game
-    /// </summary>
-    public enum GameState
-    {
-        None,
-        Idle,
-        Win,
-        Lose
-    }
-
     /// <summary>
     /// Displays the current status of the game.
     /// </summary>
     public sealed class GameStatusView : MonoBehaviour
     {
 
-        [SerializeField] private GameStateVisualObject[] stateVisuals_;
-
-        private GameState currentState_ = GameState.None;
+        [SerializeField] private CharacterAnimation characterAnimation_;
 
         /// <summary>
-        /// Shows the result.
+        /// Sets the win state
         /// </summary>
-        public void SetState(GameState state)
+        public void Win()
         {
-            if (state == currentState_)
-            {
-                return;
-            }
-
-            currentState_ = state;
-
-            for (int i = 0; i < stateVisuals_.Length; i++)
-            {
-                if (stateVisuals_[i].visuals == null)
-                {
-                    continue;
-                }
-
-                stateVisuals_[i].visuals.SetActive(
-                    stateVisuals_[i].gameState == state);
-            }
+            characterAnimation_.SetState(CharacterAnimationStateType.Celebrate);
         }
-    }
 
-    /// <summary>
-    /// Defines the visuals for a given game state
-    /// </summary>
-    [Serializable]
-    public class GameStateVisualObject
-    {
-        public GameState gameState;
-        public GameObject visuals;
+        /// <summary>
+        /// Sets the lose state
+        /// </summary>
+        public void Lose()
+        {
+            characterAnimation_.SetState(CharacterAnimationStateType.Think);
+        }
+
+        /// <summary>
+        /// Sets the idle state
+        /// </summary>
+        public void Idle()
+        {
+            characterAnimation_.SetState(CharacterAnimationStateType.Idle);
+        }
     }
 }

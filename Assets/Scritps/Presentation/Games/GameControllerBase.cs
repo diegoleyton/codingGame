@@ -224,17 +224,17 @@ namespace CodingGame.Presentation.Games
 
             if (game_.HasWon())
             {
-                gameStatusView_.SetState(GameState.Win);
+                gameStatusView_.Win();
                 return;
             }
 
             if (game_.HasFailed())
             {
-                gameStatusView_.SetState(GameState.Lose);
+                gameStatusView_.Lose();
                 return;
             }
 
-            gameStatusView_.SetState(GameState.Idle);
+            gameStatusView_.Idle();
         }
 
         protected abstract void InitializeView();
