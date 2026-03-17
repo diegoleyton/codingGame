@@ -377,6 +377,259 @@ public sealed class MovingGameTests
         Assert.AreEqual(new GridPosition(3, 2), game.GetCharacterPosition());
     }
 
+    [Test]
+    public void Constructor_WithNullBlockedPositions_TreatedAsEmpty()
+    {
+        MovingGame game = new MovingGame(
+            width: 5,
+            height: 5,
+            startCharacterPosition: new GridPosition(0, 0),
+            startCharacterDirection: Direction.Right,
+            foodPosition: new GridPosition(3, 0),
+            blockedPositions: null);
+
+        Assert.IsNotNull(game.GetBlockedPositions());
+        Assert.AreEqual(0, game.GetBlockedPositions().Count);
+    }
+
+    [Test]
+    public void Constructor_WithBlockedPositionOutsideBounds_Throws()
+    {
+        Assert.Throws<ArgumentException>(() =>
+            new MovingGame(
+                width: 5,
+                height: 5,
+                startCharacterPosition: new GridPosition(0, 0),
+                startCharacterDirection: Direction.Right,
+                foodPosition: new GridPosition(3, 0),
+                blockedPositions: new[]
+                {
+                        new GridPosition(10, 10)
+                }));
+    }
+
+    [Test]
+    public void Constructor_WithBlockedPositionOnStart_Throws()
+    {
+        Assert.Throws<ArgumentException>(() =>
+            new MovingGame(
+                width: 5,
+                height: 5,
+                startCharacterPosition: new GridPosition(0, 0),
+                startCharacterDirection: Direction.Right,
+                foodPosition: new GridPosition(3, 0),
+                blockedPositions: new[]
+                {
+                        new GridPosition(0, 0)
+                }));
+    }
+
+    [Test]
+    public void Constructor_WithBlockedPositionOnFood_Throws()
+    {
+        Assert.Throws<ArgumentException>(() =>
+            new MovingGame(
+                width: 5,
+                height: 5,
+                startCharacterPosition: new GridPosition(0, 0),
+                startCharacterDirection: Direction.Right,
+                foodPosition: new GridPosition(3, 0),
+                blockedPositions: new[]
+                {
+                        new GridPosition(3, 0)
+                }));
+    }
+
+    [Test]
+    public void Constructor_WithBlockedPositions_StoresThemCorrectly()
+    {
+        MovingGame game = new MovingGame(
+            width: 5,
+            height: 5,
+            startCharacterPosition: new GridPosition(0, 0),
+            startCharacterDirection: Direction.Right,
+            foodPosition: new GridPosition(4, 0),
+            blockedPositions: new[]
+            {
+                    new GridPosition(1, 1),
+                    new GridPosition(2, 2)
+            });
+
+        Assert.AreEqual(2, game.GetBlockedPositions().Count);
+        Assert.IsTrue(game.IsBlocked(new GridPosition(1, 1)));
+        Assert.IsTrue(game.IsBlocked(new GridPosition(2, 2)));
+        Assert.IsFalse(game.IsBlocked(new GridPosition(0, 0)));
+    }
+
+    [Test]
+    public void IsBlocked_ReturnsFalse_WhenNoBlockedPositionsExist()
+    {
+        MovingGame game = new MovingGame(
+            width: 5,
+            height: 5,
+            startCharacterPosition: new GridPosition(0, 0),
+            startCharacterDirection: Direction.Right,
+            foodPosition: new GridPosition(4, 0),
+            blockedPositions: Array.Empty<GridPosition>());
+
+        Assert.IsFalse(game.IsBlocked(new GridPosition(1, 0)));
+        Assert.IsFalse(game.IsBlocked(new GridPosition(2, 2)));
+    }
+
+    [Test]
+    public void MoveForward_IntoBlockedCell_SetsFailedAndDoesNotMove()
+    {
+        MovingGame game = new MovingGame(
+            width: 5,
+            height: 5,
+            startCharacterPosition: new GridPosition(0, 0),
+            startCharacterDirection: Direction.Right,
+            foodPosition: new GridPosition(4, 0),
+            blockedPositions: new[]
+            {
+                    new GridPosition(1, 0)
+            });
+
+        game.MoveForward(1);
+
+        Assert.AreEqual(new GridPosition(0, 0), game.GetCharacterPosition());
+        Assert.IsFalse(game.HasWon());
+        Assert.IsTrue(game.HasFailed());
+    }
+
+    [Test]
+    public void MoveForward_StopsBeforeBlockedCell_WhenMovingMultipleSteps()
+    {
+        MovingGame game = new MovingGame(
+            width: 6,
+            height: 5,
+            startCharacterPosition: new GridPosition(0, 0),
+            startCharacterDirection: Direction.Right,
+            foodPosition: new GridPosition(5, 0),
+            blockedPositions: new[]
+            {
+                    new GridPosition(2, 0)
+            });
+
+        game.MoveForward(5);
+
+        Assert.AreEqual(new GridPosition(1, 0), game.GetCharacterPosition());
+        Assert.IsFalse(game.HasWon());
+        Assert.IsTrue(game.HasFailed());
+    }
+
+    [Test]
+    public void MoveForward_AroundBlockedCell_CanStillReachFood()
+    {
+        MovingGame game = new MovingGame(
+            width: 5,
+            height: 5,
+            startCharacterPosition: new GridPosition(0, 0),
+            startCharacterDirection: Direction.Up,
+            foodPosition: new GridPosition(1, 1),
+            blockedPositions: new[]
+            {
+                    new GridPosition(1, 0)
+            });
+
+        game.MoveForward(1);   // (0,1)
+        game.RotateRight();    // Right
+        game.MoveForward(1);   // (1,1)
+
+        Assert.AreEqual(new GridPosition(1, 1), game.GetCharacterPosition());
+        Assert.IsTrue(game.HasWon());
+        Assert.IsFalse(game.HasFailed());
+    }
+
+    [Test]
+    public void RotateLeft_WithBlockedCellAhead_DoesNotFail()
+    {
+        MovingGame game = new MovingGame(
+            width: 5,
+            height: 5,
+            startCharacterPosition: new GridPosition(0, 0),
+            startCharacterDirection: Direction.Right,
+            foodPosition: new GridPosition(4, 4),
+            blockedPositions: new[]
+            {
+                    new GridPosition(1, 0)
+            });
+
+        game.RotateLeft();
+
+        Assert.AreEqual(Direction.Up, game.GetCharacterDirection());
+        Assert.AreEqual(new GridPosition(0, 0), game.GetCharacterPosition());
+        Assert.IsFalse(game.HasWon());
+        Assert.IsFalse(game.HasFailed());
+    }
+
+    [Test]
+    public void RotateRight_WithBlockedCellAhead_DoesNotFail()
+    {
+        MovingGame game = new MovingGame(
+            width: 5,
+            height: 5,
+            startCharacterPosition: new GridPosition(0, 0),
+            startCharacterDirection: Direction.Right,
+            foodPosition: new GridPosition(4, 4),
+            blockedPositions: new[]
+            {
+                    new GridPosition(1, 0)
+            });
+
+        game.RotateRight();
+
+        Assert.AreEqual(Direction.Down, game.GetCharacterDirection());
+        Assert.AreEqual(new GridPosition(0, 0), game.GetCharacterPosition());
+        Assert.IsFalse(game.HasWon());
+        Assert.IsFalse(game.HasFailed());
+    }
+
+    [Test]
+    public void ResetGame_AfterBlockedCollision_ClearsFailedStateAndRestoresStart()
+    {
+        MovingGame game = new MovingGame(
+            width: 5,
+            height: 5,
+            startCharacterPosition: new GridPosition(0, 0),
+            startCharacterDirection: Direction.Right,
+            foodPosition: new GridPosition(4, 0),
+            blockedPositions: new[]
+            {
+                    new GridPosition(1, 0)
+            });
+
+        game.MoveForward(1);
+
+        Assert.IsTrue(game.HasFailed());
+
+        game.ResetGame();
+
+        Assert.AreEqual(new GridPosition(0, 0), game.GetCharacterPosition());
+        Assert.AreEqual(Direction.Right, game.GetCharacterDirection());
+        Assert.IsFalse(game.HasWon());
+        Assert.IsFalse(game.HasFailed());
+    }
+
+    [Test]
+    public void GetBlockedPositions_ReturnsReadOnlyCollectionWithExpectedCount()
+    {
+        MovingGame game = new MovingGame(
+            width: 5,
+            height: 5,
+            startCharacterPosition: new GridPosition(0, 0),
+            startCharacterDirection: Direction.Right,
+            foodPosition: new GridPosition(4, 0),
+            blockedPositions: new[]
+            {
+                    new GridPosition(1, 1),
+                    new GridPosition(2, 1),
+                    new GridPosition(3, 1)
+            });
+
+        Assert.AreEqual(3, game.GetBlockedPositions().Count);
+    }
+
     private static MovingGame CreateDefaultGame()
     {
         return new MovingGame(

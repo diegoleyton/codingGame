@@ -14,7 +14,7 @@ namespace CodingGame.Runtime.Games.Moving
         private readonly GridPosition startCharacterPosition_;
         private readonly Direction startCharacterDirection_;
         private readonly GridPosition foodPosition_;
-        private readonly HashSet<GridPosition> blockedPositions_;
+        private readonly IReadOnlyCollection<GridPosition> blockedPositions_;
 
         private GridPosition characterPosition_;
         private Direction characterDirection_;
@@ -25,77 +25,32 @@ namespace CodingGame.Runtime.Games.Moving
         /// Creates a new moving game without obstacles.
         /// </summary>
         public MovingGame(
-            int width,
-            int height,
-            GridPosition startCharacterPosition,
-            Direction startCharacterDirection,
-            GridPosition foodPosition)
-            : this(
-                width,
-                height,
-                startCharacterPosition,
-                startCharacterDirection,
-                foodPosition,
-                Array.Empty<GridPosition>())
-        {
-        }
-
-        /// <summary>
-        /// Creates a new moving game with obstacles.
-        /// </summary>
-        public MovingGame(
-            int width,
-            int height,
-            GridPosition startCharacterPosition,
-            Direction startCharacterDirection,
-            GridPosition foodPosition,
-            IEnumerable<GridPosition> blockedPositions)
+        int width,
+        int height,
+        GridPosition startCharacterPosition,
+        Direction startCharacterDirection,
+        GridPosition foodPosition,
+        IReadOnlyCollection<GridPosition> blockedPositions = null)
         {
             if (width <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(width), "Width must be greater than zero.");
-            }
+                throw new ArgumentOutOfRangeException(nameof(width));
 
             if (height <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(height), "Height must be greater than zero.");
-            }
-
-            if (blockedPositions == null)
-            {
-                throw new ArgumentNullException(nameof(blockedPositions));
-            }
+                throw new ArgumentOutOfRangeException(nameof(height));
 
             width_ = width;
             height_ = height;
+
             startCharacterPosition_ = startCharacterPosition;
-            startCharacterDirection_ = startCharacterDirection_;
+            startCharacterDirection_ = startCharacterDirection;
             foodPosition_ = foodPosition;
-            blockedPositions_ = new HashSet<GridPosition>();
 
             ValidatePosition(startCharacterPosition_, nameof(startCharacterPosition));
             ValidatePosition(foodPosition_, nameof(foodPosition));
 
-            foreach (GridPosition blockedPosition in blockedPositions)
-            {
-                ValidatePosition(blockedPosition, nameof(blockedPositions));
+            blockedPositions_ = blockedPositions ?? Array.Empty<GridPosition>();
 
-                if (blockedPosition == startCharacterPosition_)
-                {
-                    throw new ArgumentException(
-                        "Blocked positions cannot contain the start character position.",
-                        nameof(blockedPositions));
-                }
-
-                if (blockedPosition == foodPosition_)
-                {
-                    throw new ArgumentException(
-                        "Blocked positions cannot contain the food position.",
-                        nameof(blockedPositions));
-                }
-
-                blockedPositions_.Add(blockedPosition);
-            }
+            ValidateBlockedPositions();
 
             ResetGame();
         }
@@ -153,7 +108,12 @@ namespace CodingGame.Runtime.Games.Moving
         /// </summary>
         public bool IsBlocked(GridPosition position)
         {
-            return blockedPositions_.Contains(position);
+            foreach (var p in blockedPositions_)
+            {
+                if (p == position)
+                    return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -300,6 +260,27 @@ namespace CodingGame.Runtime.Games.Moving
                 Direction.Left => position.Add(-1, 0),
                 _ => position
             };
+        }
+
+        private void ValidateBlockedPositions()
+        {
+            foreach (var pos in blockedPositions_)
+            {
+                if (!IsInsideBounds(pos))
+                {
+                    throw new ArgumentException("Blocked position outside bounds.");
+                }
+
+                if (pos == startCharacterPosition_)
+                {
+                    throw new ArgumentException("Blocked position cannot be on start.");
+                }
+
+                if (pos == foodPosition_)
+                {
+                    throw new ArgumentException("Blocked position cannot be on food.");
+                }
+            }
         }
     }
 }
