@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using CodingGame.Runtime.Games.Moving;
-using System.Linq;
 
 namespace CodingGame.Presentation.Games.Moving
 {
@@ -13,6 +12,7 @@ namespace CodingGame.Presentation.Games.Moving
         [Header("Grid Visuals")]
         [SerializeField] private GameObject cellPrefab_;
         [SerializeField] private GameObject blockedCellPrefab_;
+        [SerializeField] private GameObject breakableBlockedCellPrefab_;
         [SerializeField] private Transform cellsRoot_;
 
         [Header("Layout")]
@@ -29,16 +29,28 @@ namespace CodingGame.Presentation.Games.Moving
         /// </summary>
         public void RenderGrid(int width, int height)
         {
-            RenderGrid(width, height, null);
+            RenderGrid(width, height, null, null);
         }
 
         /// <summary>
-        /// Renders a grid with blocked cells.
+        /// Renders a grid with only solid blocked cells.
         /// </summary>
         public void RenderGrid(
             int width,
             int height,
             IReadOnlyCollection<GridPosition> blockedPositions)
+        {
+            RenderGrid(width, height, blockedPositions, null);
+        }
+
+        /// <summary>
+        /// Renders a grid with solid and breakable blocked cells.
+        /// </summary>
+        public void RenderGrid(
+            int width,
+            int height,
+            IReadOnlyCollection<GridPosition> blockedPositions,
+            IReadOnlyCollection<GridPosition> breakableBlockedPositions)
         {
             width_ = width;
             height_ = height;
@@ -50,6 +62,14 @@ namespace CodingGame.Presentation.Games.Moving
                 return;
             }
 
+            HashSet<GridPosition> blockedLookup = blockedPositions != null
+                ? new HashSet<GridPosition>(blockedPositions)
+                : null;
+
+            HashSet<GridPosition> breakableLookup = breakableBlockedPositions != null
+                ? new HashSet<GridPosition>(breakableBlockedPositions)
+                : null;
+
             Transform parent = cellsRoot_ != null ? cellsRoot_ : transform;
 
             for (int y = 0; y < height_; y++)
@@ -60,20 +80,39 @@ namespace CodingGame.Presentation.Games.Moving
                     Vector3 worldPosition = GridToWorld(gridPosition);
 
                     bool isBlocked =
-                        blockedPositions != null &&
-                        blockedPositions.Contains(gridPosition);
+                        blockedLookup != null &&
+                        blockedLookup.Contains(gridPosition);
 
-                    GameObject prefabToUse =
-                        isBlocked && blockedCellPrefab_ != null
-                            ? blockedCellPrefab_
-                            : cellPrefab_;
+                    bool isBreakableBlocked =
+                        breakableLookup != null &&
+                        breakableLookup.Contains(gridPosition);
+
+                    GameObject prefabToUse = cellPrefab_;
+
+                    if (isBreakableBlocked && breakableBlockedCellPrefab_ != null)
+                    {
+                        prefabToUse = breakableBlockedCellPrefab_;
+                    }
+                    else if (isBlocked && blockedCellPrefab_ != null)
+                    {
+                        prefabToUse = blockedCellPrefab_;
+                    }
 
                     GameObject cell =
                         Instantiate(prefabToUse, worldPosition, Quaternion.identity, parent);
 
-                    cell.name = isBlocked
-                        ? $"BlockedCell_{x}_{y}"
-                        : $"Cell_{x}_{y}";
+                    if (isBreakableBlocked)
+                    {
+                        cell.name = $"BreakableBlockedCell_{x}_{y}";
+                    }
+                    else if (isBlocked)
+                    {
+                        cell.name = $"BlockedCell_{x}_{y}";
+                    }
+                    else
+                    {
+                        cell.name = $"Cell_{x}_{y}";
+                    }
 
                     cell.transform.localScale = new Vector3(cellSize_, cellSize_, 1f);
                     spawnedCells_.Add(cell);

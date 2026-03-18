@@ -14,7 +14,9 @@ namespace CodingGame.Runtime.Games.Moving
         private readonly GridPosition startCharacterPosition_;
         private readonly Direction startCharacterDirection_;
         private readonly GridPosition foodPosition_;
-        private readonly IReadOnlyCollection<GridPosition> blockedPositions_;
+
+        private readonly HashSet<GridPosition> blockedPositions_;
+        private readonly HashSet<GridPosition> breakableBlockedPositions_;
 
         private GridPosition characterPosition_;
         private Direction characterDirection_;
@@ -22,25 +24,29 @@ namespace CodingGame.Runtime.Games.Moving
         private bool hasFailed_;
 
         /// <summary>
-        /// Creates a new moving game without obstacles.
+        /// Creates a new moving game.
         /// </summary>
         public MovingGame(
-        int width,
-        int height,
-        GridPosition startCharacterPosition,
-        Direction startCharacterDirection,
-        GridPosition foodPosition,
-        IReadOnlyCollection<GridPosition> blockedPositions = null)
+            int width,
+            int height,
+            GridPosition startCharacterPosition,
+            Direction startCharacterDirection,
+            GridPosition foodPosition,
+            IReadOnlyCollection<GridPosition> blockedPositions = null,
+            IReadOnlyCollection<GridPosition> breakableBlockedPositions = null)
         {
             if (width <= 0)
-                throw new ArgumentOutOfRangeException(nameof(width));
+            {
+                throw new ArgumentOutOfRangeException(nameof(width), "Width must be greater than zero.");
+            }
 
             if (height <= 0)
-                throw new ArgumentOutOfRangeException(nameof(height));
+            {
+                throw new ArgumentOutOfRangeException(nameof(height), "Height must be greater than zero.");
+            }
 
             width_ = width;
             height_ = height;
-
             startCharacterPosition_ = startCharacterPosition;
             startCharacterDirection_ = startCharacterDirection;
             foodPosition_ = foodPosition;
@@ -48,10 +54,15 @@ namespace CodingGame.Runtime.Games.Moving
             ValidatePosition(startCharacterPosition_, nameof(startCharacterPosition));
             ValidatePosition(foodPosition_, nameof(foodPosition));
 
-            blockedPositions_ = blockedPositions ?? Array.Empty<GridPosition>();
+            blockedPositions_ = blockedPositions != null
+                ? new HashSet<GridPosition>(blockedPositions)
+                : new HashSet<GridPosition>();
+
+            breakableBlockedPositions_ = breakableBlockedPositions != null
+                ? new HashSet<GridPosition>(breakableBlockedPositions)
+                : new HashSet<GridPosition>();
 
             ValidateBlockedPositions();
-
             ResetGame();
         }
 
@@ -96,7 +107,7 @@ namespace CodingGame.Runtime.Games.Moving
         }
 
         /// <summary>
-        /// Returns the blocked positions.
+        /// Returns the solid blocked positions.
         /// </summary>
         public IReadOnlyCollection<GridPosition> GetBlockedPositions()
         {
@@ -104,16 +115,28 @@ namespace CodingGame.Runtime.Games.Moving
         }
 
         /// <summary>
-        /// Returns whether the given position is blocked by an obstacle.
+        /// Returns the breakable blocked positions.
+        /// </summary>
+        public IReadOnlyCollection<GridPosition> GetBreakableBlockedPositions()
+        {
+            return breakableBlockedPositions_;
+        }
+
+        /// <summary>
+        /// Returns whether the given position is blocked by any obstacle.
         /// </summary>
         public bool IsBlocked(GridPosition position)
         {
-            foreach (var p in blockedPositions_)
-            {
-                if (p == position)
-                    return true;
-            }
-            return false;
+            return blockedPositions_.Contains(position) ||
+                   breakableBlockedPositions_.Contains(position);
+        }
+
+        /// <summary>
+        /// Returns whether the given position contains a breakable obstacle.
+        /// </summary>
+        public bool IsBreakableBlocked(GridPosition position)
+        {
+            return breakableBlockedPositions_.Contains(position);
         }
 
         /// <summary>
@@ -227,6 +250,29 @@ namespace CodingGame.Runtime.Games.Moving
         }
 
         /// <summary>
+        /// Breaks the breakable obstacle in the cell directly in front of the character, if one exists.
+        /// </summary>
+        public void BreakForward()
+        {
+            if (hasWon_ || hasFailed_)
+            {
+                return;
+            }
+
+            GridPosition forwardPosition = GetForwardPosition(characterPosition_, characterDirection_);
+
+            if (!IsInsideBounds(forwardPosition))
+            {
+                return;
+            }
+
+            if (breakableBlockedPositions_.Contains(forwardPosition))
+            {
+                breakableBlockedPositions_.Remove(forwardPosition);
+            }
+        }
+
+        /// <summary>
         /// Returns whether the given position is inside the grid bounds.
         /// </summary>
         public bool IsInsideBounds(GridPosition position)
@@ -245,6 +291,44 @@ namespace CodingGame.Runtime.Games.Moving
             }
         }
 
+        private void ValidateBlockedPositions()
+        {
+            foreach (GridPosition blockedPosition in blockedPositions_)
+            {
+                ValidateObstaclePosition(blockedPosition);
+            }
+
+            foreach (GridPosition breakableBlockedPosition in breakableBlockedPositions_)
+            {
+                ValidateObstaclePosition(breakableBlockedPosition);
+
+                if (blockedPositions_.Contains(breakableBlockedPosition))
+                {
+                    throw new ArgumentException(
+                        "A position cannot be both a solid and breakable obstacle.",
+                        nameof(breakableBlockedPositions_));
+                }
+            }
+        }
+
+        private void ValidateObstaclePosition(GridPosition obstaclePosition)
+        {
+            if (!IsInsideBounds(obstaclePosition))
+            {
+                throw new ArgumentException("Obstacle position must be inside the grid bounds.");
+            }
+
+            if (obstaclePosition == startCharacterPosition_)
+            {
+                throw new ArgumentException("Obstacle position cannot be the start position.");
+            }
+
+            if (obstaclePosition == foodPosition_)
+            {
+                throw new ArgumentException("Obstacle position cannot be the food position.");
+            }
+        }
+
         private void UpdateWinState()
         {
             hasWon_ = characterPosition_ == foodPosition_;
@@ -260,27 +344,6 @@ namespace CodingGame.Runtime.Games.Moving
                 Direction.Left => position.Add(-1, 0),
                 _ => position
             };
-        }
-
-        private void ValidateBlockedPositions()
-        {
-            foreach (var pos in blockedPositions_)
-            {
-                if (!IsInsideBounds(pos))
-                {
-                    throw new ArgumentException("Blocked position outside bounds.");
-                }
-
-                if (pos == startCharacterPosition_)
-                {
-                    throw new ArgumentException("Blocked position cannot be on start.");
-                }
-
-                if (pos == foodPosition_)
-                {
-                    throw new ArgumentException("Blocked position cannot be on food.");
-                }
-            }
         }
     }
 }

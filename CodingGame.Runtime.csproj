@@ -70,6 +70,7 @@
     <Compile Include="Assets/Scritps/Runtime/Core/ExecutionFrame.cs" />
     <Compile Include="Assets/Scritps/Runtime/Core/ProgramRunner.cs" />
     <Compile Include="Assets/Scritps/Runtime/Games/Moving/Instructions/MoveForwardInstructionDefinition.cs" />
+    <Compile Include="Assets/Scritps/Runtime/Games/Moving/Instructions/BreakForwardInstructionDefinition.cs" />
     <Compile Include="Assets/Scritps/Runtime/Core/IGame.cs" />
   </ItemGroup>
   <ItemGroup>

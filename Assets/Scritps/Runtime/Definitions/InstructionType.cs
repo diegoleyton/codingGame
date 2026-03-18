@@ -1,7 +1,7 @@
 namespace CodingGame.Runtime.Definitions
 {
     /// <summary>
-    /// Defines the type of a instruction
+    /// Defines the type of an instruction.
     /// </summary>
     public enum InstructionType
     {
@@ -9,6 +9,7 @@ namespace CodingGame.Runtime.Definitions
         Sequence,
         MoveForward,
         RotateLeft,
-        RotateRight
+        RotateRight,
+        BreakForward
     }
 }

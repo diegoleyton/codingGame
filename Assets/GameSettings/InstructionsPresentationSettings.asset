@@ -19,3 +19,5 @@ MonoBehaviour:
     instructionUiPrefab: {fileID: 8709884758866276678, guid: a9e109544a19b455494bf52b4f1e2b3a, type: 3}
   - instructionType: 4
     instructionUiPrefab: {fileID: 5386369317838930625, guid: 776be9a9c47904f50a1728f93dd7a8da, type: 3}
+  - instructionType: 5
+    instructionUiPrefab: {fileID: 5386369317838930625, guid: cb5510f309db14561a77cc948cd8b62a, type: 3}

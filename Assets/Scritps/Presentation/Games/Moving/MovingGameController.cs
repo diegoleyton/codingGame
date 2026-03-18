@@ -23,27 +23,49 @@ namespace CodingGame.Presentation.Games.Moving
 
         [Header("Obstacles")]
         [SerializeField] private Vector2Int[] blockedPositions_;
+        [SerializeField] private Vector2Int[] breakableBlockedPositions_;
 
         private MovingGame game_;
 
+        /// <summary>
+        /// Adds a move-forward instruction to the current program.
+        /// </summary>
         public void AddMoveForwardInstruction()
         {
             AddInstructionToCurrentProgram(new MoveForwardInstructionDefinition());
         }
 
+        /// <summary>
+        /// Adds a rotate-left instruction to the current program.
+        /// </summary>
         public void AddRotateLeftInstruction()
         {
             AddInstructionToCurrentProgram(new RotateLeftInstructionDefinition());
         }
 
+        /// <summary>
+        /// Adds a rotate-right instruction to the current program.
+        /// </summary>
         public void AddRotateRightInstruction()
         {
             AddInstructionToCurrentProgram(new RotateRightInstructionDefinition());
         }
 
+        /// <summary>
+        /// Adds a break-forward instruction to the current program.
+        /// </summary>
+        public void AddBreakForwardInstruction()
+        {
+            AddInstructionToCurrentProgram(new BreakForwardInstructionDefinition());
+        }
+
+        /// <summary>
+        /// Creates the moving game instance.
+        /// </summary>
         protected override IMovingGame CreateGame()
         {
             List<GridPosition> blockedPositions = new List<GridPosition>();
+            List<GridPosition> breakableBlockedPositions = new List<GridPosition>();
 
             if (blockedPositions_ != null)
             {
@@ -54,26 +76,35 @@ namespace CodingGame.Presentation.Games.Moving
                 }
             }
 
+            if (breakableBlockedPositions_ != null)
+            {
+                for (int i = 0; i < breakableBlockedPositions_.Length; i++)
+                {
+                    breakableBlockedPositions.Add(
+                        new GridPosition(
+                            breakableBlockedPositions_[i].x,
+                            breakableBlockedPositions_[i].y));
+                }
+            }
+
             game_ = new MovingGame(
                 width: gridWidth_,
                 height: gridHeight_,
                 startCharacterPosition: new GridPosition(startPosition_.x, startPosition_.y),
                 startCharacterDirection: startDirection_,
                 foodPosition: new GridPosition(foodPosition_.x, foodPosition_.y),
-                blockedPositions: blockedPositions);
+                blockedPositions: blockedPositions,
+                breakableBlockedPositions: breakableBlockedPositions);
 
             return game_;
         }
 
+        /// <summary>
+        /// Initializes the grid and moving game view.
+        /// </summary>
         protected override void InitializeView()
         {
-            if (gridRenderer_ != null && game_ != null)
-            {
-                gridRenderer_.RenderGrid(
-                    game_.GetWidth(),
-                    game_.GetHeight(),
-                    game_.GetBlockedPositions());
-            }
+            RenderGrid();
 
             if (movingGameView_ != null && game_ != null)
             {
@@ -81,6 +112,9 @@ namespace CodingGame.Presentation.Games.Moving
             }
         }
 
+        /// <summary>
+        /// Refreshes the view immediately.
+        /// </summary>
         protected override void RefreshViewImmediate()
         {
             if (movingGameView_ == null || game_ == null)
@@ -88,9 +122,13 @@ namespace CodingGame.Presentation.Games.Moving
                 return;
             }
 
+            RenderGrid();
             movingGameView_.RefreshImmediate(game_);
         }
 
+        /// <summary>
+        /// Refreshes the view with animation.
+        /// </summary>
         protected override IEnumerator RefreshViewAnimated()
         {
             if (movingGameView_ == null || game_ == null)
@@ -98,7 +136,22 @@ namespace CodingGame.Presentation.Games.Moving
                 yield break;
             }
 
+            RenderGrid();
             yield return movingGameView_.RefreshAnimated(game_);
+        }
+
+        private void RenderGrid()
+        {
+            if (gridRenderer_ == null || game_ == null)
+            {
+                return;
+            }
+
+            gridRenderer_.RenderGrid(
+                game_.GetWidth(),
+                game_.GetHeight(),
+                game_.GetBlockedPositions(),
+                game_.GetBreakableBlockedPositions());
         }
     }
 }

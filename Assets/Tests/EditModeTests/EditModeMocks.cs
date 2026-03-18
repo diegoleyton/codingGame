@@ -94,4 +94,19 @@ internal sealed class FakeMovingGame : IMovingGame
         hasWon_ = false;
         hasFailed_ = false;
     }
+
+    public void BreakForward()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public IReadOnlyCollection<GridPosition> GetBlockedPositions()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public IReadOnlyCollection<GridPosition> GetBreakableBlockedPositions()
+    {
+        throw new System.NotImplementedException();
+    }
 }

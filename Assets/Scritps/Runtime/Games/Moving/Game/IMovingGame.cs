@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace CodingGame.Runtime.Games.Moving
 {
     /// <summary>
-    /// Represents a game where an agent can move and rotate.
+    /// Represents a game where an agent can move, rotate, and interact with obstacles.
     /// </summary>
     public interface IMovingGame : IGame
     {
@@ -22,5 +22,20 @@ namespace CodingGame.Runtime.Games.Moving
         /// Rotates the agent to the right.
         /// </summary>
         void RotateRight();
+
+        /// <summary>
+        /// Breaks the breakable obstacle in the cell directly in front of the agent, if one exists.
+        /// </summary>
+        void BreakForward();
+
+        /// <summary>
+        /// Returns the positions of solid obstacles.
+        /// </summary>
+        IReadOnlyCollection<GridPosition> GetBlockedPositions();
+
+        /// <summary>
+        /// Returns the positions of breakable obstacles.
+        /// </summary>
+        IReadOnlyCollection<GridPosition> GetBreakableBlockedPositions();
     }
 }
