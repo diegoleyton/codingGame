@@ -1234,10 +1234,11 @@
     <ProjectReference Include="Flowbit.EngineController.csproj" />
     <ProjectReference Include="Flowbit.GameBase.Definitions.csproj" />
     <ProjectReference Include="Flowbit.Engine.csproj" />
-    <ProjectReference Include="Flowbit.Utilities.csproj" />
+    <ProjectReference Include="Flowbit.Utilities.Core.csproj" />
     <ProjectReference Include="Flowbit.MovingGame.Unity.csproj" />
     <ProjectReference Include="Flowbit.MovingGame.Core.csproj" />
     <ProjectReference Include="Flowbit.GameBase.csproj" />
+    <ProjectReference Include="Flowbit.Utilities.Unity.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>

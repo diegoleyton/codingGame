@@ -1,4 +1,4 @@
-namespace Flowbit.Utilities.Events
+namespace Flowbit.Utilities.Core.Events
 {
     /// <summary>
     /// Represents a strongly typed event.

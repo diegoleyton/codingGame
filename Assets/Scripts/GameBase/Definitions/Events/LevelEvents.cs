@@ -1,4 +1,4 @@
-using Flowbit.Utilities.Events;
+using Flowbit.Utilities.Core.Events;
 
 /// <summary>
 /// Event called when a level has been loaded

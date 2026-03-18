@@ -1086,7 +1086,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Flowbit.Utilities.csproj" />
+    <ProjectReference Include="Flowbit.Utilities.Core.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>

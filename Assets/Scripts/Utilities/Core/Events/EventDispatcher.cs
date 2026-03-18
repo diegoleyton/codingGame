@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Flowbit.Utilities.Events
+namespace Flowbit.Utilities.Core.Events
 {
     /// <summary>
     /// Dispatches events to global listeners and sender-specific listeners.
