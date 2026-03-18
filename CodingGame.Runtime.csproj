@@ -54,6 +54,7 @@
     <Compile Include="Assets/Scritps/Runtime/Instructions/RepeatInstructionDefinition.cs" />
     <Compile Include="Assets/Scritps/Runtime/Games/Moving/Game/MovingGame.cs" />
     <Compile Include="Assets/Scritps/Runtime/Core/InstructionInstance.cs" />
+    <Compile Include="Assets/Scritps/Runtime/Games/Moving/Levels/MovingGameLevelData.cs" />
     <Compile Include="Assets/Scritps/Runtime/Core/IInstructionDefinition.cs" />
     <Compile Include="Assets/Scritps/Runtime/Instructions/InstructionDefinitionBase.cs" />
     <Compile Include="Assets/Scritps/Runtime/Games/Moving/Instructions/RotateLeftInstructionDefinition.cs" />
@@ -62,7 +63,9 @@
     <Compile Include="Assets/Scritps/Runtime/Core/InstructionParameterDefinition.cs" />
     <Compile Include="Assets/Scritps/Runtime/Games/Moving/Game/IMovingGame.cs" />
     <Compile Include="Assets/Scritps/Runtime/Core/ProgramDefinition.cs" />
+    <Compile Include="Assets/Scritps/Runtime/Games/Moving/Levels/MovingGameLevelsParser.cs" />
     <Compile Include="Assets/Scritps/Runtime/Games/Moving/Game/GridPosition.cs" />
+    <Compile Include="Assets/Scritps/Runtime/Games/Moving/Levels/MovingGameLevelsFileData.cs" />
     <Compile Include="Assets/Scritps/Runtime/Core/StepExecutionStatus.cs" />
     <Compile Include="Assets/Scritps/Runtime/Core/IReadOnlyInstructionInstance.cs" />
     <Compile Include="Assets/Scritps/Runtime/Instructions/SequenceInstructionDefinition.cs" />

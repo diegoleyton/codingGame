@@ -1,0 +1,1041 @@
+{
+  "gameType": "moving_game",
+  "version": 1,
+  "levels": [
+    {
+      "id": "level_001",
+      "name": "First Steps",
+      "difficulty": 1,
+      "hint": "Move forward to reach the food.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Right",
+      "foodPositions": [
+        {
+          "x": 2,
+          "y": 0
+        }
+      ],
+      "blockedPositions": [],
+      "breakableBlockedPositions": []
+    },
+    {
+      "id": "level_002",
+      "name": "Straight Line",
+      "difficulty": 1,
+      "hint": "Keep moving forward.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Right",
+      "foodPositions": [
+        {
+          "x": 3,
+          "y": 0
+        }
+      ],
+      "blockedPositions": [],
+      "breakableBlockedPositions": []
+    },
+    {
+      "id": "level_003",
+      "name": "Face Up",
+      "difficulty": 1,
+      "hint": "Going up also works.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Up",
+      "foodPositions": [
+        {
+          "x": 0,
+          "y": 2
+        }
+      ],
+      "blockedPositions": [],
+      "breakableBlockedPositions": []
+    },
+    {
+      "id": "level_004",
+      "name": "One Turn",
+      "difficulty": 1,
+      "hint": "Turn before moving.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Right",
+      "foodPositions": [
+        {
+          "x": 3,
+          "y": 1
+        }
+      ],
+      "blockedPositions": [],
+      "breakableBlockedPositions": []
+    },
+    {
+      "id": "level_005",
+      "name": "Downward Path",
+      "difficulty": 1,
+      "hint": "Think about direction first.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Down",
+      "foodPositions": [
+        {
+          "x": 2,
+          "y": 2
+        }
+      ],
+      "blockedPositions": [],
+      "breakableBlockedPositions": []
+    },
+    {
+      "id": "level_006",
+      "name": "Long Walk",
+      "difficulty": 1,
+      "hint": "Several moves in a row.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Right",
+      "foodPositions": [
+        {
+          "x": 4,
+          "y": 2
+        }
+      ],
+      "blockedPositions": [],
+      "breakableBlockedPositions": []
+    },
+    {
+      "id": "level_007",
+      "name": "Around the Wall",
+      "difficulty": 2,
+      "hint": "You cannot go straight through the wall.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Right",
+      "foodPositions": [
+        {
+          "x": 3,
+          "y": 0
+        }
+      ],
+      "blockedPositions": [
+        {
+          "x": 2,
+          "y": 0
+        }
+      ],
+      "breakableBlockedPositions": []
+    },
+    {
+      "id": "level_008",
+      "name": "Corner Detour",
+      "difficulty": 2,
+      "hint": "Walk around the blocks.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Right",
+      "foodPositions": [
+        {
+          "x": 4,
+          "y": 2
+        }
+      ],
+      "blockedPositions": [
+        {
+          "x": 2,
+          "y": 0
+        },
+        {
+          "x": 2,
+          "y": 1
+        }
+      ],
+      "breakableBlockedPositions": []
+    },
+    {
+      "id": "level_009",
+      "name": "Blocked Above",
+      "difficulty": 2,
+      "hint": "The shortest path is not always open.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Up",
+      "foodPositions": [
+        {
+          "x": 0,
+          "y": 2
+        }
+      ],
+      "blockedPositions": [
+        {
+          "x": 0,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 1
+        }
+      ],
+      "breakableBlockedPositions": []
+    },
+    {
+      "id": "level_010",
+      "name": "Zig Zag",
+      "difficulty": 2,
+      "hint": "Follow the open spaces.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Right",
+      "foodPositions": [
+        {
+          "x": 4,
+          "y": 2
+        }
+      ],
+      "blockedPositions": [
+        {
+          "x": 3,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        }
+      ],
+      "breakableBlockedPositions": []
+    },
+    {
+      "id": "level_011",
+      "name": "Wall Gap",
+      "difficulty": 2,
+      "hint": "There is only one way around.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Right",
+      "foodPositions": [
+        {
+          "x": 4,
+          "y": 2
+        }
+      ],
+      "blockedPositions": [
+        {
+          "x": 1,
+          "y": 1
+        },
+        {
+          "x": 2,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        }
+      ],
+      "breakableBlockedPositions": []
+    },
+    {
+      "id": "level_012",
+      "name": "Split Walls",
+      "difficulty": 2,
+      "hint": "Go around both barriers.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Up",
+      "foodPositions": [
+        {
+          "x": 4,
+          "y": 0
+        }
+      ],
+      "blockedPositions": [
+        {
+          "x": 1,
+          "y": 1
+        },
+        {
+          "x": 2,
+          "y": 1
+        },
+        {
+          "x": 2,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 3
+        }
+      ],
+      "breakableBlockedPositions": []
+    },
+    {
+      "id": "level_013",
+      "name": "First Break",
+      "difficulty": 3,
+      "hint": "Break the object in front of you.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Right",
+      "foodPositions": [
+        {
+          "x": 2,
+          "y": 0
+        }
+      ],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [
+        {
+          "x": 1,
+          "y": 0
+        }
+      ]
+    },
+    {
+      "id": "level_014",
+      "name": "Break Then Move",
+      "difficulty": 3,
+      "hint": "You must break before going forward.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Right",
+      "foodPositions": [
+        {
+          "x": 3,
+          "y": 0
+        }
+      ],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [
+        {
+          "x": 1,
+          "y": 0
+        }
+      ]
+    },
+    {
+      "id": "level_015",
+      "name": "Break Upward",
+      "difficulty": 3,
+      "hint": "The obstacle blocks the only path.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Up",
+      "foodPositions": [
+        {
+          "x": 0,
+          "y": 2
+        }
+      ],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [
+        {
+          "x": 0,
+          "y": 1
+        }
+      ]
+    },
+    {
+      "id": "level_016",
+      "name": "Break in the Hall",
+      "difficulty": 3,
+      "hint": "There is no way around the breakable object.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Right",
+      "foodPositions": [
+        {
+          "x": 4,
+          "y": 0
+        }
+      ],
+      "blockedPositions": [
+        {
+          "x": 0,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 1
+        },
+        {
+          "x": 2,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 1
+        }
+      ],
+      "breakableBlockedPositions": [
+        {
+          "x": 1,
+          "y": 0
+        }
+      ]
+    },
+    {
+      "id": "level_017",
+      "name": "Break to Continue",
+      "difficulty": 3,
+      "hint": "The corridor is blocked. Break it.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Right",
+      "foodPositions": [
+        {
+          "x": 4,
+          "y": 2
+        }
+      ],
+      "blockedPositions": [
+        {
+          "x": 0,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 1
+        },
+        {
+          "x": 2,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        }
+      ],
+      "breakableBlockedPositions": [
+        {
+          "x": 1,
+          "y": 0
+        }
+      ]
+    },
+    {
+      "id": "level_018",
+      "name": "Break or No Progress",
+      "difficulty": 3,
+      "hint": "You cannot reach the food without breaking first.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Up",
+      "foodPositions": [
+        {
+          "x": 4,
+          "y": 0
+        }
+      ],
+      "blockedPositions": [
+        {
+          "x": 1,
+          "y": 1
+        },
+        {
+          "x": 2,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 1
+        }
+      ],
+      "breakableBlockedPositions": [
+        {
+          "x": 0,
+          "y": 1
+        }
+      ]
+    },
+    {
+      "id": "level_019",
+      "name": "Two Foods",
+      "difficulty": 4,
+      "hint": "Eat both foods to win.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Right",
+      "foodPositions": [
+        {
+          "x": 2,
+          "y": 0
+        },
+        {
+          "x": 4,
+          "y": 3
+        }
+      ],
+      "blockedPositions": [],
+      "breakableBlockedPositions": []
+    },
+    {
+      "id": "level_020",
+      "name": "Vertical Double",
+      "difficulty": 4,
+      "hint": "One food is not enough.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Up",
+      "foodPositions": [
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 2
+        }
+      ],
+      "blockedPositions": [],
+      "breakableBlockedPositions": []
+    },
+    {
+      "id": "level_021",
+      "name": "Wall and Two Foods",
+      "difficulty": 4,
+      "hint": "Collect both foods while avoiding the wall.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Right",
+      "foodPositions": [
+        {
+          "x": 3,
+          "y": 0
+        },
+        {
+          "x": 4,
+          "y": 2
+        }
+      ],
+      "blockedPositions": [
+        {
+          "x": 2,
+          "y": 0
+        },
+        {
+          "x": 2,
+          "y": 1
+        },
+        {
+          "x": 2,
+          "y": 2
+        }
+      ],
+      "breakableBlockedPositions": []
+    },
+    {
+      "id": "level_022",
+      "name": "Break for the First Food",
+      "difficulty": 4,
+      "hint": "The first food is behind a breakable object.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Right",
+      "foodPositions": [
+        {
+          "x": 2,
+          "y": 0
+        },
+        {
+          "x": 4,
+          "y": 2
+        }
+      ],
+      "blockedPositions": [
+        {
+          "x": 1,
+          "y": 1
+        },
+        {
+          "x": 2,
+          "y": 1
+        }
+      ],
+      "breakableBlockedPositions": [
+        {
+          "x": 1,
+          "y": 0
+        }
+      ]
+    },
+    {
+      "id": "level_023",
+      "name": "Break and Turn",
+      "difficulty": 4,
+      "hint": "Break first, then turn to get the second food.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Up",
+      "foodPositions": [
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 0,
+          "y": 2
+        }
+      ],
+      "blockedPositions": [
+        {
+          "x": 1,
+          "y": 1
+        }
+      ],
+      "breakableBlockedPositions": [
+        {
+          "x": 0,
+          "y": 1
+        }
+      ]
+    },
+    {
+      "id": "level_024",
+      "name": "Long Route",
+      "difficulty": 4,
+      "hint": "There are two foods far apart.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Right",
+      "foodPositions": [
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 3
+        }
+      ],
+      "blockedPositions": [
+        {
+          "x": 1,
+          "y": 1
+        },
+        {
+          "x": 2,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        }
+      ],
+      "breakableBlockedPositions": []
+    },
+    {
+      "id": "level_025",
+      "name": "Break in the Middle",
+      "difficulty": 4,
+      "hint": "A breakable obstacle blocks one of the foods.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Right",
+      "foodPositions": [
+        {
+          "x": 3,
+          "y": 0
+        },
+        {
+          "x": 4,
+          "y": 2
+        }
+      ],
+      "blockedPositions": [
+        {
+          "x": 1,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        }
+      ],
+      "breakableBlockedPositions": [
+        {
+          "x": 1,
+          "y": 0
+        }
+      ]
+    },
+    {
+      "id": "level_026",
+      "name": "Three-Step Plan",
+      "difficulty": 5,
+      "hint": "Break, move, then collect both foods.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Up",
+      "foodPositions": [
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 0,
+          "y": 2
+        }
+      ],
+      "blockedPositions": [
+        {
+          "x": 0,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 3
+        }
+      ],
+      "breakableBlockedPositions": [
+        {
+          "x": 3,
+          "y": 2
+        }
+      ]
+    },
+    {
+      "id": "level_027",
+      "name": "Three Foods",
+      "difficulty": 5,
+      "hint": "Plan your route carefully.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Right",
+      "foodPositions": [
+        {
+          "x": 3,
+          "y": 0
+        },
+        {
+          "x": 0,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 2
+        }
+      ],
+      "blockedPositions": [
+        {
+          "x": 2,
+          "y": 0
+        },
+        {
+          "x": 2,
+          "y": 1
+        },
+        {
+          "x": 2,
+          "y": 3
+        }
+      ],
+      "breakableBlockedPositions": [
+        {
+          "x": 2,
+          "y": 2
+        }
+      ]
+    },
+    {
+      "id": "level_028",
+      "name": "Breakable Crossroad",
+      "difficulty": 5,
+      "hint": "One breakable block controls the route.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Up",
+      "foodPositions": [
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 0,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 4
+        }
+      ],
+      "blockedPositions": [
+        {
+          "x": 1,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 3
+        }
+      ],
+      "breakableBlockedPositions": [
+        {
+          "x": 0,
+          "y": 1
+        },
+        {
+          "x": 2,
+          "y": 3
+        }
+      ]
+    },
+    {
+      "id": "level_029",
+      "name": "Forced Break",
+      "difficulty": 5,
+      "hint": "You must break to continue to the right side.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Right",
+      "foodPositions": [
+        {
+          "x": 3,
+          "y": 0
+        },
+        {
+          "x": 0,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 2
+        }
+      ],
+      "blockedPositions": [
+        {
+          "x": 2,
+          "y": 0
+        },
+        {
+          "x": 2,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 3
+        },
+        {
+          "x": 2,
+          "y": 3
+        }
+      ],
+      "breakableBlockedPositions": [
+        {
+          "x": 1,
+          "y": 0
+        },
+        {
+          "x": 2,
+          "y": 2
+        }
+      ]
+    },
+    {
+      "id": "level_030",
+      "name": "Final Puzzle",
+      "difficulty": 6,
+      "hint": "Collect every food. At least one break is required.",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Up",
+      "foodPositions": [
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 0,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 3
+        },
+        {
+          "x": 0,
+          "y": 4
+        }
+      ],
+      "blockedPositions": [
+        {
+          "x": 1,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 3
+        }
+      ],
+      "breakableBlockedPositions": [
+        {
+          "x": 0,
+          "y": 1
+        },
+        {
+          "x": 2,
+          "y": 2
+        }
+      ]
+    }
+  ]
+}
