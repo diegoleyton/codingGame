@@ -2,7 +2,8 @@
     "name": "Flowbit.MovingGame.Core",
     "rootNamespace": "",
     "references": [
-        "GUID:e6bbd207d86064553b5f88cce3ea80d3"
+        "GUID:e6bbd207d86064553b5f88cce3ea80d3",
+        "GUID:a58a4ff49dc1044f4abf797b60183622"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

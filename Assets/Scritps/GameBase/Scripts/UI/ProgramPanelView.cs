@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Flowbit.Engine;
 using Flowbit.EngineController;
+using Flowbit.GameBase.Definitions;
 
 namespace Flowbit.GameBase.UI
 {
@@ -35,7 +36,7 @@ namespace Flowbit.GameBase.UI
                 InstructionListItemView item =
                     Instantiate(itemPrefab_, contentRoot_);
 
-                GameObject instructionUi = instructionsPresentationSettings_.CreateInstructionUi(instructions[i].GetDefinition().GetInstructionType());
+                GameObject instructionUi = instructionsPresentationSettings_.CreateInstructionUi((InstructionType)instructions[i].GetDefinition().GetInstructionId());
                 item.SetInstructionView(instructionUi);
                 item.SetInstructionLabel(BuildInstructionLabel(instructions[i]));
                 item.SetHighlighted(false);

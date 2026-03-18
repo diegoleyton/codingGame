@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Flowbit.Engine.Definitions;
 
 namespace Flowbit.Engine
 {
@@ -24,10 +23,10 @@ namespace Flowbit.Engine
         bool SupportsChildren();
 
         /// <summary>
-        /// Returns the instruction type
+        /// Returns the instruction ID
         /// </summary>
         /// <returns></returns>
-        InstructionType GetInstructionType();
+        int GetInstructionId();
 
         /// <summary>
         /// Returns the parameter definitions for this instruction.

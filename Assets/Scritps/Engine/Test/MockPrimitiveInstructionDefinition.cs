@@ -1,5 +1,4 @@
 using Flowbit.Engine;
-using Flowbit.Engine.Definitions;
 using Flowbit.Engine.Instructions;
 using System;
 using System.Collections.Generic;
@@ -52,11 +51,11 @@ internal sealed class MockPrimitiveInstructionDefinition
     }
 
     /// <summary>
-    /// Returns the instruction type.
+    /// Returns the instruction ID.
     /// </summary>
-    public override InstructionType GetInstructionType()
+    public override int GetInstructionId()
     {
-        return InstructionType.MoveForward;
+        return 1;
     }
 
     /// <summary>

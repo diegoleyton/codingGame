@@ -1,6 +1,6 @@
 using Flowbit.Engine.Instructions;
 using Flowbit.Engine;
-using Flowbit.Engine.Definitions;
+using Flowbit.GameBase.Definitions;
 
 namespace Flowbit.MovingGame.Core.Instructions
 {
@@ -10,11 +10,11 @@ namespace Flowbit.MovingGame.Core.Instructions
     public sealed class RotateRightInstructionDefinition : GameInstructionDefinitionBase<IMovingGame>
     {
         /// <summary>
-        /// Returns the instruction type
+        /// Returns the instruction ID.
         /// </summary>
-        public override InstructionType GetInstructionType()
+        public override int GetInstructionId()
         {
-            return InstructionType.RotateRight;
+            return (int)InstructionType.RotateRight;
         }
 
         /// <summary>

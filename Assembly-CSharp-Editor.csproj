@@ -1299,11 +1299,12 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj" />
+    <ProjectReference Include="Flowbit.GameBase.Definitions.csproj" />
     <ProjectReference Include="Flowbit.EngineController.csproj" />
+    <ProjectReference Include="Flowbit.GameBase.csproj" />
     <ProjectReference Include="Flowbit.Engine.csproj" />
     <ProjectReference Include="Flowbit.MovingGame.Core.csproj" />
     <ProjectReference Include="Flowbit.MovingGame.Presentation.csproj" />
-    <ProjectReference Include="Flowbit.GameBase.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>

@@ -1,12 +1,13 @@
 ﻿<Solution>
   <Project Path="Flowbit.EngineController.csproj" />
+  <Project Path="Flowbit.MovingGame.PlayModeTests.csproj" />
   <Project Path="Flowbit.MovingGame.Presentation.csproj" />
   <Project Path="Flowbit.Engine.csproj" />
+  <Project Path="Flowbit.GameBase.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="Flowbit.MovingGame.Core.csproj" />
   <Project Path="Flowbit.Engine.Tests.csproj" />
   <Project Path="Flowbit.MovingGame.EditModeTests.csproj" />
-  <Project Path="Flowbit.GameBase.csproj" />
+  <Project Path="Flowbit.GameBase.Definitions.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
-  <Project Path="Flowbit.MovingGame.PlayModeTests.csproj" />
 </Solution>

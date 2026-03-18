@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Flowbit.Engine;
-using Flowbit.Engine.Definitions;
 
 namespace Flowbit.Engine.Instructions
 {
@@ -16,9 +15,9 @@ namespace Flowbit.Engine.Instructions
         public abstract string GetDisplayName();
 
         /// <summary>
-        /// Returns the instruction type
+        /// Returns the instruction id
         /// </summary>
-        public abstract InstructionType GetInstructionType();
+        public abstract int GetInstructionId();
 
         /// <summary>
         /// Returns whether this instruction executes directly without expanding child instructions.

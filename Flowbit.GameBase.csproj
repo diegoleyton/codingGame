@@ -49,14 +49,14 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.26f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/Scritps/GameBase/UI/GameStatusView.cs" />
-    <Compile Include="Assets/Scritps/GameBase/UI/InstructionListItemView.cs" />
-    <Compile Include="Assets/Scritps/GameBase/UI/InstructionsPresentationSettings.cs" />
-    <Compile Include="Assets/Scritps/GameBase/Character/CharacterAnimation.cs" />
-    <Compile Include="Assets/Scritps/GameBase/UI/ProgramPanelView.cs" />
+    <Compile Include="Assets/Scritps/GameBase/Scripts/UI/ProgramPanelView.cs" />
+    <Compile Include="Assets/Scritps/GameBase/Scripts/UI/InstructionListItemView.cs" />
+    <Compile Include="Assets/Scritps/GameBase/Scripts/Character/CharacterAnimation.cs" />
+    <Compile Include="Assets/Scritps/GameBase/Scripts/UI/InstructionsPresentationSettings.cs" />
+    <Compile Include="Assets/Scritps/GameBase/Scripts/UI/GameStatusView.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets/Scritps/GameBase/Flowbit.GameBase.asmdef" />
+    <None Include="Assets/Scritps/GameBase/Scripts/Flowbit.GameBase.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -1091,6 +1091,7 @@
   <ItemGroup>
     <ProjectReference Include="Flowbit.Engine.csproj" />
     <ProjectReference Include="Flowbit.EngineController.csproj" />
+    <ProjectReference Include="Flowbit.GameBase.Definitions.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>

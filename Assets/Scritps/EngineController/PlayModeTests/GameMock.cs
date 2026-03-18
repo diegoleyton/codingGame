@@ -4,13 +4,12 @@ using System.Collections.Generic;
 using System.Reflection;
 using Flowbit.Engine;
 using Flowbit.Engine.Instructions;
-using Flowbit.Engine.Definitions;
 using Flowbit.EngineController;
 
 /// <summary>
 /// Simple fake game used to test the controller.
 /// </summary>
-public sealed class TestGame : IGame
+public sealed class GameMock : IGame
 {
     private bool hasWon_;
     private bool hasFailed_;
@@ -54,12 +53,12 @@ public sealed class TestGame : IGame
 /// <summary>
 /// Simple primitive instruction used by tests.
 /// </summary>
-public sealed class TestInstructionDefinition
-    : GameInstructionDefinitionBase<TestGame>
+public sealed class InstructionDefinitionMock
+    : GameInstructionDefinitionBase<GameMock>
 {
-    public override InstructionType GetInstructionType()
+    public override int GetInstructionId()
     {
-        return InstructionType.MoveForward;
+        return 1;
     }
 
     public override string GetDisplayName()
@@ -72,7 +71,7 @@ public sealed class TestInstructionDefinition
         return true;
     }
 
-    protected override void ExecuteTyped(TestGame game, InstructionInstance instance)
+    protected override void ExecuteTyped(GameMock game, InstructionInstance instance)
     {
         game.RegisterExecution();
     }
@@ -81,9 +80,9 @@ public sealed class TestInstructionDefinition
 /// <summary>
 /// Concrete controller used to test GameControllerBase behavior.
 /// </summary>
-public sealed class TestGameController : GameControllerBase<TestGame>
+public sealed class GameControllerMock : GameControllerBase<GameMock>
 {
-    private TestGame createdGame_;
+    private GameMock createdGame_;
 
     public int InitializeViewCallCount { get; private set; }
     public int RefreshImmediateCallCount { get; private set; }
@@ -94,11 +93,11 @@ public sealed class TestGameController : GameControllerBase<TestGame>
 
     public List<int> HighlightedInstructionIndices { get; } = new List<int>();
 
-    public TestGame CreatedGame => createdGame_;
+    public GameMock CreatedGame => createdGame_;
 
     public void AddTestInstruction()
     {
-        AddInstructionToCurrentProgram(new TestInstructionDefinition());
+        AddInstructionToCurrentProgram(new InstructionDefinitionMock());
     }
 
     public void SetExecutionDelay(float seconds)
@@ -111,9 +110,9 @@ public sealed class TestGameController : GameControllerBase<TestGame>
         InitializeViewCallCount++;
     }
 
-    protected override TestGame CreateGame()
+    protected override GameMock CreateGame()
     {
-        createdGame_ = new TestGame();
+        createdGame_ = new GameMock();
         return createdGame_;
     }
 

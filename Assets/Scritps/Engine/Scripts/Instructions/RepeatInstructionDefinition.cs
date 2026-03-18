@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Flowbit.Engine;
-using Flowbit.Engine.Definitions;
 
 namespace Flowbit.Engine.Instructions
 {
@@ -32,11 +31,12 @@ namespace Flowbit.Engine.Instructions
         }
 
         /// <summary>
-        /// Returns the instruction type
+        /// Returns the instruction ID
         /// </summary>
-        public override InstructionType GetInstructionType()
+        public override int GetInstructionId()
         {
-            return InstructionType.Repeat;
+            //TODO: I need a way to define this
+            return 20;
         }
 
         /// <summary>

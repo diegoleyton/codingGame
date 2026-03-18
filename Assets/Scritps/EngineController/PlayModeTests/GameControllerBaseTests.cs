@@ -12,7 +12,7 @@ public sealed class GameControllerBaseTests
     public IEnumerator Start_InitializesGameAndRefreshesView()
     {
         GameObject gameObject = new GameObject("TestController");
-        TestGameController controller = gameObject.AddComponent<TestGameController>();
+        GameControllerMock controller = gameObject.AddComponent<GameControllerMock>();
 
         yield return null;
 
@@ -29,7 +29,7 @@ public sealed class GameControllerBaseTests
     public IEnumerator Step_WithInstruction_ExecutesInstructionAndHighlightsIt()
     {
         GameObject gameObject = new GameObject("TestController");
-        TestGameController controller = gameObject.AddComponent<TestGameController>();
+        GameControllerMock controller = gameObject.AddComponent<GameControllerMock>();
 
         yield return null;
 
@@ -49,7 +49,7 @@ public sealed class GameControllerBaseTests
     public IEnumerator Run_WithMultipleInstructions_ExecutesAllInstructionsAndHighlightsEachStep()
     {
         GameObject gameObject = new GameObject("TestController");
-        TestGameController controller = gameObject.AddComponent<TestGameController>();
+        GameControllerMock controller = gameObject.AddComponent<GameControllerMock>();
 
         yield return null;
 
@@ -78,7 +78,7 @@ public sealed class GameControllerBaseTests
     public IEnumerator ResetGame_ClearsHighlight_ResetsGame_AndShowsNoFurtherExecution()
     {
         GameObject gameObject = new GameObject("TestController");
-        TestGameController controller = gameObject.AddComponent<TestGameController>();
+        GameControllerMock controller = gameObject.AddComponent<GameControllerMock>();
 
         yield return null;
 
@@ -103,7 +103,7 @@ public sealed class GameControllerBaseTests
     public IEnumerator AfterReset_AddingMoreInstructions_UsesUpdatedProgram()
     {
         GameObject gameObject = new GameObject("TestController");
-        TestGameController controller = gameObject.AddComponent<TestGameController>();
+        GameControllerMock controller = gameObject.AddComponent<GameControllerMock>();
 
         yield return null;
 
@@ -134,7 +134,7 @@ public sealed class GameControllerBaseTests
     public IEnumerator CleanProgram_RemovesInstructions_AndNextStepDoesNothingUntilNewInstructionIsAdded()
     {
         GameObject gameObject = new GameObject("TestController");
-        TestGameController controller = gameObject.AddComponent<TestGameController>();
+        GameControllerMock controller = gameObject.AddComponent<GameControllerMock>();
 
         yield return null;
 

@@ -63,7 +63,6 @@
     <Compile Include="Assets/Scritps/Engine/Scripts/InstructionParameterDefinition.cs" />
     <Compile Include="Assets/Scritps/Engine/Scripts/Instructions/RepeatInstructionDefinition.cs" />
     <Compile Include="Assets/Scritps/Engine/Scripts/ProgramDefinition.cs" />
-    <Compile Include="Assets/Scritps/Engine/Scripts/Definitions/InstructionType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/Scritps/Engine/Scripts/Flowbit.Engine.asmdef" />

@@ -1,4 +1,4 @@
-using Flowbit.Engine.Definitions;
+using Flowbit.GameBase.Definitions;
 using UnityEngine;
 using System;
 using System.Collections.Generic;

@@ -1,4 +1,4 @@
-namespace Flowbit.Engine.Definitions
+namespace Flowbit.GameBase.Definitions
 {
     /// <summary>
     /// Defines the type of an instruction.
