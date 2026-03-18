@@ -16,11 +16,12 @@ namespace CodingGame.Runtime.Games.Moving
 
         private readonly HashSet<GridPosition> startFoodPositions_;
         private readonly HashSet<GridPosition> blockedPositions_;
-        private readonly HashSet<GridPosition> breakableBlockedPositions_;
+        private readonly HashSet<GridPosition> startBreakableBlockedPositions_;
 
         private GridPosition characterPosition_;
         private Direction characterDirection_;
         private HashSet<GridPosition> foodPositions_;
+        private HashSet<GridPosition> breakableBlockedPositions_;
         private bool hasWon_;
         private bool hasFailed_;
 
@@ -63,7 +64,7 @@ namespace CodingGame.Runtime.Games.Moving
                 ? new HashSet<GridPosition>(blockedPositions)
                 : new HashSet<GridPosition>();
 
-            breakableBlockedPositions_ = breakableBlockedPositions != null
+            startBreakableBlockedPositions_ = breakableBlockedPositions != null
                 ? new HashSet<GridPosition>(breakableBlockedPositions)
                 : new HashSet<GridPosition>();
 
@@ -71,6 +72,8 @@ namespace CodingGame.Runtime.Games.Moving
             ValidateBlockedPositions();
 
             foodPositions_ = new HashSet<GridPosition>();
+            breakableBlockedPositions_ = new HashSet<GridPosition>();
+
             ResetGame();
         }
 
@@ -179,6 +182,7 @@ namespace CodingGame.Runtime.Games.Moving
             characterPosition_ = startCharacterPosition_;
             characterDirection_ = startCharacterDirection_;
             foodPositions_ = new HashSet<GridPosition>(startFoodPositions_);
+            breakableBlockedPositions_ = new HashSet<GridPosition>(startBreakableBlockedPositions_);
             hasWon_ = false;
             hasFailed_ = false;
 
@@ -333,7 +337,7 @@ namespace CodingGame.Runtime.Games.Moving
                 ValidateObstaclePosition(blockedPosition);
             }
 
-            foreach (GridPosition breakableBlockedPosition in breakableBlockedPositions_)
+            foreach (GridPosition breakableBlockedPosition in startBreakableBlockedPositions_)
             {
                 ValidateObstaclePosition(breakableBlockedPosition);
 
@@ -341,7 +345,7 @@ namespace CodingGame.Runtime.Games.Moving
                 {
                     throw new ArgumentException(
                         "A position cannot be both a solid and breakable obstacle.",
-                        nameof(breakableBlockedPositions_));
+                        nameof(startBreakableBlockedPositions_));
                 }
             }
         }

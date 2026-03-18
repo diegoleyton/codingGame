@@ -1220,7 +1220,7 @@ public sealed class MovingGameTests
     }
 
     [Test]
-    public void ResetGame_DoesNotRestoreBrokenObstacle()
+    public void ResetGame_RestoresBrokenObstacle()
     {
         MovingGame game = new MovingGame(
             width: 5,
@@ -1229,22 +1229,20 @@ public sealed class MovingGameTests
             startCharacterDirection: Direction.Right,
             foodPositions: new[]
             {
-                new GridPosition(4, 4)
+            new GridPosition(4, 4)
             },
             blockedPositions: Array.Empty<GridPosition>(),
             breakableBlockedPositions: new[]
             {
-                new GridPosition(1, 0)
+            new GridPosition(1, 0)
             });
 
         game.BreakForward();
+        Assert.IsFalse(game.IsBreakableBlocked(new GridPosition(1, 0)));
+
         game.ResetGame();
 
-        Assert.IsFalse(game.IsBreakableBlocked(new GridPosition(1, 0)));
-        Assert.AreEqual(new GridPosition(0, 0), game.GetCharacterPosition());
-        Assert.AreEqual(Direction.Right, game.GetCharacterDirection());
-        Assert.IsFalse(game.HasWon());
-        Assert.IsFalse(game.HasFailed());
+        Assert.IsTrue(game.IsBreakableBlocked(new GridPosition(1, 0)));
     }
 
     private static MovingGame CreateDefaultGame()
