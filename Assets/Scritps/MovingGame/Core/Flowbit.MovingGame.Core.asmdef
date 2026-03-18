@@ -1,0 +1,16 @@
+{
+    "name": "Flowbit.MovingGame.Core",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e6bbd207d86064553b5f88cce3ea80d3"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -49,12 +49,10 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.26f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/Tests/EditModeTests/EditModeMocks.cs" />
-    <Compile Include="Assets/Tests/EditModeTests/ProgramRunnerTests.cs" />
-    <Compile Include="Assets/Tests/EditModeTests/MovingGameTests.cs" />
+    <Compile Include="Assets/Scritps/MovingGame/Tests/EditModeTests/MovingGameTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets/Tests/EditModeTests/CodingGame.EditModeTests.asmdef" />
+    <None Include="Assets/Scritps/MovingGame/Tests/EditModeTests/Flowbit.MovingGame.EditModeTests.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -1075,7 +1073,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="CodingGame.Runtime.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>

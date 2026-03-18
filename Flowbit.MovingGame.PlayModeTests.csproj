@@ -18,7 +18,7 @@
     <LangVersion>9.0</LangVersion>
     <RootNamespace></RootNamespace>
     <OutputType>Library</OutputType>
-    <AssemblyName>CodingGame.Presentation</AssemblyName>
+    <AssemblyName>Flowbit.MovingGame.PlayModeTests</AssemblyName>
     <TargetFramework>netstandard2.1</TargetFramework>
     <BaseDirectory>.</BaseDirectory>
   </PropertyGroup>
@@ -49,29 +49,11 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.26f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/Scritps/GameBase/Games/Moving/MovingGameLevelsLibrary.cs" />
-    <Compile Include="Assets/Scritps/GameBase/Games 1/Moving/Game/GridPosition.cs" />
-    <Compile Include="Assets/Scritps/GameBase/Games 1/Moving/Levels/MovingGameLevelsParser.cs" />
-    <Compile Include="Assets/Scritps/GameBase/Games 1/Moving/Instructions/BreakForwardInstructionDefinition.cs" />
-    <Compile Include="Assets/Scritps/GameBase/Games 1/Moving/Game/MovingGame.cs" />
-    <Compile Include="Assets/Scritps/GameBase/Games 1/Moving/Game/Direction.cs" />
-    <Compile Include="Assets/Scritps/GameBase/Games/Moving/MovingGameController.cs" />
-    <Compile Include="Assets/Scritps/GameBase/Games/Moving/MovingGameView.cs" />
-    <Compile Include="Assets/Scritps/GameBase/Games 1/Moving/Game/IMovingGame.cs" />
-    <Compile Include="Assets/Scritps/GameBase/UI/GameStatusView.cs" />
-    <Compile Include="Assets/Scritps/GameBase/UI/InstructionListItemView.cs" />
-    <Compile Include="Assets/Scritps/GameBase/Games 1/Moving/Instructions/RotateRightInstructionDefinition.cs" />
-    <Compile Include="Assets/Scritps/GameBase/UI/InstructionsPresentationSettings.cs" />
-    <Compile Include="Assets/Scritps/GameBase/Character/CharacterAnimation.cs" />
-    <Compile Include="Assets/Scritps/GameBase/Games 1/Moving/Instructions/RotateLeftInstructionDefinition.cs" />
-    <Compile Include="Assets/Scritps/GameBase/UI/ProgramPanelView.cs" />
-    <Compile Include="Assets/Scritps/GameBase/Games 1/Moving/Levels/MovingGameLevelData.cs" />
-    <Compile Include="Assets/Scritps/GameBase/Games 1/Moving/Instructions/MoveForwardInstructionDefinition.cs" />
-    <Compile Include="Assets/Scritps/GameBase/Games/Moving/GridRenderer.cs" />
-    <Compile Include="Assets/Scritps/GameBase/Games 1/Moving/Levels/MovingGameLevelsFileData.cs" />
+    <Compile Include="Assets/Scritps/EngineController/PlayModeTests/GameControllerBaseTests.cs" />
+    <Compile Include="Assets/Scritps/EngineController/PlayModeTests/PlayModeMocks.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets/Scritps/GameBase/Flowbit.GameBase.asmdef" />
+    <None Include="Assets/Scritps/EngineController/PlayModeTests/Flowbit.MovingGame.PlayModeTests.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -538,60 +520,8 @@
       <HintPath>/Applications/Unity/Hub/Editor/6000.0.26f1/Unity.app/Contents/Managed/UnityEngine/UnityEditor.XRModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEditor.Graphs">
-      <HintPath>/Applications/Unity/Hub/Editor/6000.0.26f1/Unity.app/Contents/Managed/UnityEditor.Graphs.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEditor.OSXStandalone.Extensions">
-      <HintPath>/Applications/Unity/Hub/Editor/6000.0.26f1/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEditor.Android.Extensions">
-      <HintPath>/Applications/Unity/Hub/Editor/6000.0.26f1/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.YamlDotNet">
-      <HintPath>Library/PackageCache/com.unity.visualscripting/Editor/VisualScripting.Core/Dependencies/YamlDotNet/Unity.VisualScripting.YamlDotNet.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Collections.LowLevel.ILSupport">
-      <HintPath>Library/PackageCache/com.unity.collections/Unity.Collections.LowLevel.ILSupport/Unity.Collections.LowLevel.ILSupport.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>Library/PackageCache/com.unity.ext.nunit/net40/unity-custom/nunit.framework.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="unityplastic">
-      <HintPath>Library/PackageCache/com.unity.collab-proxy/Lib/Editor/PlasticSCM/unityplastic.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Plastic.Antlr3.Runtime">
-      <HintPath>Library/PackageCache/com.unity.collab-proxy/Lib/Editor/PlasticSCM/Unity.Plastic.Antlr3.Runtime.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Plastic.Newtonsoft.Json">
-      <HintPath>Library/PackageCache/com.unity.collab-proxy/Lib/Editor/PlasticSCM/Unity.Plastic.Newtonsoft.Json.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="log4netPlastic">
-      <HintPath>Library/PackageCache/com.unity.collab-proxy/Lib/Editor/PlasticSCM/log4netPlastic.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.IonicZip">
-      <HintPath>Library/PackageCache/com.unity.visualscripting/Editor/VisualScripting.Core/Dependencies/DotNetZip/Unity.VisualScripting.IonicZip.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
-      <HintPath>Library/PackageCache/com.unity.visualscripting/Runtime/VisualScripting.Flow/Dependencies/NCalc/Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.TextureAssets">
-      <HintPath>Library/PackageCache/com.unity.visualscripting/Editor/VisualScripting.Core/EditorAssetResources/Unity.VisualScripting.TextureAssets.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Mono.Cecil">
-      <HintPath>Library/PackageCache/com.unity.nuget.mono-cecil/Mono.Cecil.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Android.Types">
@@ -1094,6 +1024,14 @@
       <HintPath>/Applications/Unity/Hub/Editor/6000.0.26f1/Unity.app/Contents/NetStandard/compat/2.1.0/shims/netfx/mscorlib.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.TestRunner">
+      <HintPath>Library/ScriptAssemblies/UnityEngine.TestRunner.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.TestRunner">
+      <HintPath>Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
       <Private>False</Private>
@@ -1104,6 +1042,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Flowbit.EngineController.csproj" />
     <ProjectReference Include="Flowbit.Engine.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
