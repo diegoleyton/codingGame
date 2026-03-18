@@ -1,5 +1,5 @@
 {
-    "name": "Flowbit.MovingGame.Presentation",
+    "name": "Flowbit.MovingGame.Unity",
     "rootNamespace": "",
     "references": [
         "GUID:8fdd615de74d44f67aab540f720a4f0d",

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Flowbit.MovingGame.Core;
 
-namespace Flowbit.MovingGame.Presentation
+namespace Flowbit.MovingGame.Unity
 {
     /// <summary>
     /// Updates the visual representation of the moving game in the scene.

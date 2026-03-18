@@ -1304,7 +1304,7 @@
     <ProjectReference Include="Flowbit.GameBase.csproj" />
     <ProjectReference Include="Flowbit.Engine.csproj" />
     <ProjectReference Include="Flowbit.MovingGame.Core.csproj" />
-    <ProjectReference Include="Flowbit.MovingGame.Presentation.csproj" />
+    <ProjectReference Include="Flowbit.MovingGame.Unity.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>

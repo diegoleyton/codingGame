@@ -18,7 +18,7 @@
     <LangVersion>9.0</LangVersion>
     <RootNamespace></RootNamespace>
     <OutputType>Library</OutputType>
-    <AssemblyName>Flowbit.MovingGame.Presentation</AssemblyName>
+    <AssemblyName>Flowbit.MovingGame.Unity</AssemblyName>
     <TargetFramework>netstandard2.1</TargetFramework>
     <BaseDirectory>.</BaseDirectory>
   </PropertyGroup>
@@ -49,13 +49,13 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.26f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/Scripts/MovingGame/Presentation/MovingGameController.cs" />
-    <Compile Include="Assets/Scripts/MovingGame/Presentation/MovingGameLevelsLibrary.cs" />
-    <Compile Include="Assets/Scripts/MovingGame/Presentation/GridRenderer.cs" />
-    <Compile Include="Assets/Scripts/MovingGame/Presentation/MovingGameView.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/MovingGameLevelsLibrary.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/MovingGameController.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/GridRenderer.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/MovingGameView.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets/Scripts/MovingGame/Presentation/Flowbit.MovingGame.Presentation.asmdef" />
+    <None Include="Assets/Scripts/MovingGame/Unity/Flowbit.MovingGame.Unity.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

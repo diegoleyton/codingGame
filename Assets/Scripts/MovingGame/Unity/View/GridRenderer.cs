@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Flowbit.MovingGame.Core;
 
-namespace Flowbit.MovingGame.Presentation
+namespace Flowbit.MovingGame.Unity
 {
     /// <summary>
     /// Renders a 2D grid using tile prefabs and provides grid-to-world conversion.
