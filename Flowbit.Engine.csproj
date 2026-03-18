@@ -49,23 +49,23 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.26f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/Scritps/Engine/Scripts/Instructions/InstructionDefinitionBase.cs" />
-    <Compile Include="Assets/Scritps/Engine/Scripts/ExecutionFrame.cs" />
-    <Compile Include="Assets/Scritps/Engine/Scripts/ProgramRunner.cs" />
-    <Compile Include="Assets/Scritps/Engine/Scripts/IReadOnlyInstructionInstance.cs" />
-    <Compile Include="Assets/Scritps/Engine/Scripts/IGame.cs" />
-    <Compile Include="Assets/Scritps/Engine/Scripts/Instructions/GameInstructionDefinitionBase.cs" />
-    <Compile Include="Assets/Scritps/Engine/Scripts/Instructions/SequenceInstructionDefinition.cs" />
-    <Compile Include="Assets/Scritps/Engine/Scripts/InstructionInstance.cs" />
-    <Compile Include="Assets/Scritps/Engine/Scripts/StepResult.cs" />
-    <Compile Include="Assets/Scritps/Engine/Scripts/IInstructionDefinition.cs" />
-    <Compile Include="Assets/Scritps/Engine/Scripts/StepExecutionStatus.cs" />
-    <Compile Include="Assets/Scritps/Engine/Scripts/InstructionParameterDefinition.cs" />
-    <Compile Include="Assets/Scritps/Engine/Scripts/Instructions/RepeatInstructionDefinition.cs" />
-    <Compile Include="Assets/Scritps/Engine/Scripts/ProgramDefinition.cs" />
+    <Compile Include="Assets/Scripts/Engine/Scripts/IReadOnlyInstructionInstance.cs" />
+    <Compile Include="Assets/Scripts/Engine/Scripts/Instructions/RepeatInstructionDefinition.cs" />
+    <Compile Include="Assets/Scripts/Engine/Scripts/IInstructionDefinition.cs" />
+    <Compile Include="Assets/Scripts/Engine/Scripts/InstructionInstance.cs" />
+    <Compile Include="Assets/Scripts/Engine/Scripts/Instructions/InstructionDefinitionBase.cs" />
+    <Compile Include="Assets/Scripts/Engine/Scripts/InstructionParameterDefinition.cs" />
+    <Compile Include="Assets/Scripts/Engine/Scripts/StepResult.cs" />
+    <Compile Include="Assets/Scripts/Engine/Scripts/Instructions/GameInstructionDefinitionBase.cs" />
+    <Compile Include="Assets/Scripts/Engine/Scripts/ExecutionFrame.cs" />
+    <Compile Include="Assets/Scripts/Engine/Scripts/ProgramDefinition.cs" />
+    <Compile Include="Assets/Scripts/Engine/Scripts/Instructions/SequenceInstructionDefinition.cs" />
+    <Compile Include="Assets/Scripts/Engine/Scripts/ProgramRunner.cs" />
+    <Compile Include="Assets/Scripts/Engine/Scripts/IGame.cs" />
+    <Compile Include="Assets/Scripts/Engine/Scripts/StepExecutionStatus.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets/Scritps/Engine/Scripts/Flowbit.Engine.asmdef" />
+    <None Include="Assets/Scripts/Engine/Scripts/Flowbit.Engine.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

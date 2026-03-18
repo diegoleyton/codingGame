@@ -49,10 +49,10 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.26f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/Scritps/GameBase/Definitions/InstructionType.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Definitions/InstructionType.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets/Scritps/GameBase/Definitions/Flowbit.GameBase.Definitions.asmdef" />
+    <None Include="Assets/Scripts/GameBase/Definitions/Flowbit.GameBase.Definitions.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

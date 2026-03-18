@@ -49,11 +49,11 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.26f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/Scritps/EngineController/PlayModeTests/GameMock.cs" />
-    <Compile Include="Assets/Scritps/EngineController/PlayModeTests/GameControllerBaseTests.cs" />
+    <Compile Include="Assets/Scripts/EngineController/PlayModeTests/GameMock.cs" />
+    <Compile Include="Assets/Scripts/EngineController/PlayModeTests/GameControllerBaseTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets/Scritps/EngineController/PlayModeTests/Flowbit.MovingGame.PlayModeTests.asmdef" />
+    <None Include="Assets/Scripts/EngineController/PlayModeTests/Flowbit.MovingGame.PlayModeTests.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
