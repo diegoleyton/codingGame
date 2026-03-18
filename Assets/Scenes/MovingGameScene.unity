@@ -438,8 +438,8 @@ MonoBehaviour:
   character_: {fileID: 185792419}
   foodPrefab_: {fileID: 906667981694400783, guid: 86c3a083775cd4a8f95ca6c4e21086a5, type: 3}
   foodRoot_: {fileID: 0}
-  moveDurationSeconds_: 0.2
-  rotateDurationSeconds_: 0.15
+  moveDurationSeconds_: 0.36
+  rotateDurationSeconds_: 0.28
   animateMovement_: 1
   animateRotation_: 1
 --- !u!1 &330585543
@@ -873,7 +873,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: 2d7b5aa8ca74340338e8999160aa1a4a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
