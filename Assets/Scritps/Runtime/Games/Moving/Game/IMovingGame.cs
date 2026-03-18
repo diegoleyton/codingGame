@@ -29,6 +29,11 @@ namespace CodingGame.Runtime.Games.Moving
         void BreakForward();
 
         /// <summary>
+        /// Returns the positions of all remaining food items.
+        /// </summary>
+        IReadOnlyCollection<GridPosition> GetFoodPositions();
+
+        /// <summary>
         /// Returns the positions of solid obstacles.
         /// </summary>
         IReadOnlyCollection<GridPosition> GetBlockedPositions();

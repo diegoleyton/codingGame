@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace CodingGame.Runtime.Games.Moving
 {
     /// <summary>
-    /// Represents a simple grid-based game where a character must reach food.
+    /// Represents a simple grid-based game where a character must eat all food items.
     /// </summary>
     public sealed class MovingGame : IMovingGame
     {
@@ -13,13 +13,14 @@ namespace CodingGame.Runtime.Games.Moving
 
         private readonly GridPosition startCharacterPosition_;
         private readonly Direction startCharacterDirection_;
-        private readonly GridPosition foodPosition_;
 
+        private readonly HashSet<GridPosition> startFoodPositions_;
         private readonly HashSet<GridPosition> blockedPositions_;
         private readonly HashSet<GridPosition> breakableBlockedPositions_;
 
         private GridPosition characterPosition_;
         private Direction characterDirection_;
+        private HashSet<GridPosition> foodPositions_;
         private bool hasWon_;
         private bool hasFailed_;
 
@@ -31,7 +32,7 @@ namespace CodingGame.Runtime.Games.Moving
             int height,
             GridPosition startCharacterPosition,
             Direction startCharacterDirection,
-            GridPosition foodPosition,
+            IReadOnlyCollection<GridPosition> foodPositions,
             IReadOnlyCollection<GridPosition> blockedPositions = null,
             IReadOnlyCollection<GridPosition> breakableBlockedPositions = null)
         {
@@ -45,15 +46,19 @@ namespace CodingGame.Runtime.Games.Moving
                 throw new ArgumentOutOfRangeException(nameof(height), "Height must be greater than zero.");
             }
 
+            if (foodPositions == null)
+            {
+                throw new ArgumentNullException(nameof(foodPositions));
+            }
+
             width_ = width;
             height_ = height;
             startCharacterPosition_ = startCharacterPosition;
             startCharacterDirection_ = startCharacterDirection;
-            foodPosition_ = foodPosition;
 
             ValidatePosition(startCharacterPosition_, nameof(startCharacterPosition));
-            ValidatePosition(foodPosition_, nameof(foodPosition));
 
+            startFoodPositions_ = new HashSet<GridPosition>(foodPositions);
             blockedPositions_ = blockedPositions != null
                 ? new HashSet<GridPosition>(blockedPositions)
                 : new HashSet<GridPosition>();
@@ -62,7 +67,10 @@ namespace CodingGame.Runtime.Games.Moving
                 ? new HashSet<GridPosition>(breakableBlockedPositions)
                 : new HashSet<GridPosition>();
 
+            ValidateFoodPositions();
             ValidateBlockedPositions();
+
+            foodPositions_ = new HashSet<GridPosition>();
             ResetGame();
         }
 
@@ -99,11 +107,11 @@ namespace CodingGame.Runtime.Games.Moving
         }
 
         /// <summary>
-        /// Returns the food position.
+        /// Returns the positions of all remaining food items.
         /// </summary>
-        public GridPosition GetFoodPosition()
+        public IReadOnlyCollection<GridPosition> GetFoodPositions()
         {
-            return foodPosition_;
+            return foodPositions_;
         }
 
         /// <summary>
@@ -140,6 +148,14 @@ namespace CodingGame.Runtime.Games.Moving
         }
 
         /// <summary>
+        /// Returns whether the given position contains food.
+        /// </summary>
+        public bool HasFoodAt(GridPosition position)
+        {
+            return foodPositions_.Contains(position);
+        }
+
+        /// <summary>
         /// Returns whether the game has been completed successfully.
         /// </summary>
         public bool HasWon()
@@ -162,9 +178,11 @@ namespace CodingGame.Runtime.Games.Moving
         {
             characterPosition_ = startCharacterPosition_;
             characterDirection_ = startCharacterDirection_;
+            foodPositions_ = new HashSet<GridPosition>(startFoodPositions_);
             hasWon_ = false;
             hasFailed_ = false;
 
+            ConsumeFoodAtCurrentPosition();
             UpdateWinState();
         }
 
@@ -200,6 +218,7 @@ namespace CodingGame.Runtime.Games.Moving
                 }
 
                 characterPosition_ = nextPosition;
+                ConsumeFoodAtCurrentPosition();
                 UpdateWinState();
 
                 if (hasWon_)
@@ -291,6 +310,22 @@ namespace CodingGame.Runtime.Games.Moving
             }
         }
 
+        private void ValidateFoodPositions()
+        {
+            foreach (GridPosition foodPosition in startFoodPositions_)
+            {
+                if (!IsInsideBounds(foodPosition))
+                {
+                    throw new ArgumentException("Food position must be inside the grid bounds.", nameof(startFoodPositions_));
+                }
+
+                if (foodPosition == startCharacterPosition_)
+                {
+                    throw new ArgumentException("Food position cannot be the start position.", nameof(startFoodPositions_));
+                }
+            }
+        }
+
         private void ValidateBlockedPositions()
         {
             foreach (GridPosition blockedPosition in blockedPositions_)
@@ -323,15 +358,23 @@ namespace CodingGame.Runtime.Games.Moving
                 throw new ArgumentException("Obstacle position cannot be the start position.");
             }
 
-            if (obstaclePosition == foodPosition_)
+            if (startFoodPositions_.Contains(obstaclePosition))
             {
-                throw new ArgumentException("Obstacle position cannot be the food position.");
+                throw new ArgumentException("Obstacle position cannot contain food.");
+            }
+        }
+
+        private void ConsumeFoodAtCurrentPosition()
+        {
+            if (foodPositions_.Contains(characterPosition_))
+            {
+                foodPositions_.Remove(characterPosition_);
             }
         }
 
         private void UpdateWinState()
         {
-            hasWon_ = characterPosition_ == foodPosition_;
+            hasWon_ = foodPositions_.Count == 0;
         }
 
         private GridPosition GetForwardPosition(GridPosition position, Direction direction)

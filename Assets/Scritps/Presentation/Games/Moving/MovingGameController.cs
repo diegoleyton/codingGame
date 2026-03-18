@@ -19,7 +19,7 @@ namespace CodingGame.Presentation.Games.Moving
         [SerializeField] private int gridHeight_ = 5;
         [SerializeField] private Vector2Int startPosition_ = new Vector2Int(0, 0);
         [SerializeField] private Direction startDirection_ = Direction.Right;
-        [SerializeField] private Vector2Int foodPosition_ = new Vector2Int(3, 1);
+        [SerializeField] private Vector2Int[] foodPositions_;
 
         [Header("Obstacles")]
         [SerializeField] private Vector2Int[] blockedPositions_;
@@ -64,8 +64,18 @@ namespace CodingGame.Presentation.Games.Moving
         /// </summary>
         protected override IMovingGame CreateGame()
         {
+            List<GridPosition> foodPositions = new List<GridPosition>();
             List<GridPosition> blockedPositions = new List<GridPosition>();
             List<GridPosition> breakableBlockedPositions = new List<GridPosition>();
+
+            if (foodPositions_ != null)
+            {
+                for (int i = 0; i < foodPositions_.Length; i++)
+                {
+                    foodPositions.Add(
+                        new GridPosition(foodPositions_[i].x, foodPositions_[i].y));
+                }
+            }
 
             if (blockedPositions_ != null)
             {
@@ -92,7 +102,7 @@ namespace CodingGame.Presentation.Games.Moving
                 height: gridHeight_,
                 startCharacterPosition: new GridPosition(startPosition_.x, startPosition_.y),
                 startCharacterDirection: startDirection_,
-                foodPosition: new GridPosition(foodPosition_.x, foodPosition_.y),
+                foodPositions: foodPositions,
                 blockedPositions: blockedPositions,
                 breakableBlockedPositions: breakableBlockedPositions);
 

@@ -109,4 +109,9 @@ internal sealed class FakeMovingGame : IMovingGame
     {
         throw new System.NotImplementedException();
     }
+
+    public IReadOnlyCollection<GridPosition> GetFoodPositions()
+    {
+        throw new System.NotImplementedException();
+    }
 }

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using CodingGame.Runtime.Games.Moving;
 
@@ -11,13 +12,18 @@ namespace CodingGame.Presentation.Games.Moving
     {
         [Header("Scene References")]
         [SerializeField] private Transform character_;
-        [SerializeField] private Transform food_;
+
+        [Header("Food")]
+        [SerializeField] private GameObject foodPrefab_;
+        [SerializeField] private Transform foodRoot_;
 
         [Header("Animation")]
         [SerializeField] private float moveDurationSeconds_ = 0.2f;
         [SerializeField] private float rotateDurationSeconds_ = 0.15f;
         [SerializeField] private bool animateMovement_ = true;
         [SerializeField] private bool animateRotation_ = true;
+
+        private readonly List<GameObject> spawnedFood_ = new List<GameObject>();
 
         private GridRenderer gridRenderer_;
         private MovingGame game_;
@@ -37,7 +43,7 @@ namespace CodingGame.Presentation.Games.Moving
         public void RefreshImmediate(MovingGame game)
         {
             game_ = game;
-            UpdateFoodImmediate();
+            RebuildFoodVisuals();
             UpdateCharacterImmediate();
         }
 
@@ -53,10 +59,9 @@ namespace CodingGame.Presentation.Games.Moving
                 yield break;
             }
 
-            UpdateFoodImmediate();
-
             if (character_ == null)
             {
+                RebuildFoodVisuals();
                 yield break;
             }
 
@@ -91,6 +96,7 @@ namespace CodingGame.Presentation.Games.Moving
             {
                 character_.position = targetPosition;
                 character_.rotation = targetRotation;
+                RebuildFoodVisuals();
                 yield break;
             }
 
@@ -117,6 +123,7 @@ namespace CodingGame.Presentation.Games.Moving
 
             character_.position = targetPosition;
             character_.rotation = targetRotation;
+            RebuildFoodVisuals();
         }
 
         private void UpdateCharacterImmediate()
@@ -130,14 +137,42 @@ namespace CodingGame.Presentation.Games.Moving
             character_.rotation = DirectionToRotation(game_.GetCharacterDirection());
         }
 
-        private void UpdateFoodImmediate()
+        private void RebuildFoodVisuals()
         {
-            if (food_ == null || game_ == null)
+            ClearFoodVisuals();
+
+            if (foodPrefab_ == null || game_ == null)
             {
                 return;
             }
 
-            food_.position = GridToWorld(game_.GetFoodPosition());
+            Transform parent = foodRoot_ != null ? foodRoot_ : transform;
+            IReadOnlyCollection<GridPosition> foodPositions = game_.GetFoodPositions();
+
+            foreach (GridPosition foodPosition in foodPositions)
+            {
+                GameObject foodObject = Instantiate(
+                    foodPrefab_,
+                    GridToWorld(foodPosition),
+                    Quaternion.identity,
+                    parent);
+
+                foodObject.name = $"Food_{foodPosition.GetX()}_{foodPosition.GetY()}";
+                spawnedFood_.Add(foodObject);
+            }
+        }
+
+        private void ClearFoodVisuals()
+        {
+            for (int i = 0; i < spawnedFood_.Count; i++)
+            {
+                if (spawnedFood_[i] != null)
+                {
+                    Destroy(spawnedFood_[i]);
+                }
+            }
+
+            spawnedFood_.Clear();
         }
 
         private Vector3 GridToWorld(GridPosition position)
