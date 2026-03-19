@@ -1,9 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Flowbit.EngineController;
 using Flowbit.MovingGame.Core;
 using Flowbit.MovingGame.Core.Instructions;
-using Flowbit.EngineController;
+using Flowbit.MovingGame.Core.Levels;
+using Flowbit.Utilities.Core.Events;
+using Flowbit.GameBase.Definitions;
 
 namespace Flowbit.MovingGame.Unity
 {
@@ -16,18 +20,31 @@ namespace Flowbit.MovingGame.Unity
         [SerializeField] private MovingGameView movingGameView_;
         [SerializeField] private GridRenderer gridRenderer_;
 
-        [Header("Game Setup")]
-        [SerializeField] private int gridWidth_ = 5;
-        [SerializeField] private int gridHeight_ = 5;
-        [SerializeField] private Vector2Int startPosition_ = new Vector2Int(0, 0);
-        [SerializeField] private Direction startDirection_ = Direction.Right;
-        [SerializeField] private Vector2Int[] foodPositions_;
-
-        [Header("Obstacles")]
-        [SerializeField] private Vector2Int[] blockedPositions_;
-        [SerializeField] private Vector2Int[] breakableBlockedPositions_;
+        private readonly EventDispatcher eventDispatcher_ =
+            GlobalEventDispatcher.EventDispatcher;
 
         private Core.MovingGame game_;
+        private MovingGameLevelData currentLevelData_;
+        private bool completedEventSent_;
+        private bool failedEventSent_;
+
+        /// <summary>
+        /// Loads the given level into the controller.
+        /// </summary>
+        public void LoadLevel(MovingGameLevelData levelData)
+        {
+            if (levelData == null)
+            {
+                throw new ArgumentNullException(nameof(levelData));
+            }
+
+            currentLevelData_ = levelData;
+            completedEventSent_ = false;
+            failedEventSent_ = false;
+
+            game_ = CreateGameFromLevelData(levelData);
+            LoadGame(game_);
+        }
 
         /// <summary>
         /// Adds a move-forward instruction to the current program.
@@ -62,53 +79,24 @@ namespace Flowbit.MovingGame.Unity
         }
 
         /// <summary>
-        /// Creates the moving game instance.
+        /// Returns whether a game should be created automatically on start.
+        /// </summary>
+        protected override bool ShouldCreateGameOnStart()
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Creates the game instance.
         /// </summary>
         protected override IMovingGame CreateGame()
         {
-            List<GridPosition> foodPositions = new List<GridPosition>();
-            List<GridPosition> blockedPositions = new List<GridPosition>();
-            List<GridPosition> breakableBlockedPositions = new List<GridPosition>();
-
-            if (foodPositions_ != null)
+            if (currentLevelData_ == null)
             {
-                for (int i = 0; i < foodPositions_.Length; i++)
-                {
-                    foodPositions.Add(
-                        new GridPosition(foodPositions_[i].x, foodPositions_[i].y));
-                }
+                throw new InvalidOperationException("No level data has been loaded.");
             }
 
-            if (blockedPositions_ != null)
-            {
-                for (int i = 0; i < blockedPositions_.Length; i++)
-                {
-                    blockedPositions.Add(
-                        new GridPosition(blockedPositions_[i].x, blockedPositions_[i].y));
-                }
-            }
-
-            if (breakableBlockedPositions_ != null)
-            {
-                for (int i = 0; i < breakableBlockedPositions_.Length; i++)
-                {
-                    breakableBlockedPositions.Add(
-                        new GridPosition(
-                            breakableBlockedPositions_[i].x,
-                            breakableBlockedPositions_[i].y));
-                }
-            }
-
-            game_ = new Core.MovingGame(
-                width: gridWidth_,
-                height: gridHeight_,
-                startCharacterPosition: new GridPosition(startPosition_.x, startPosition_.y),
-                startCharacterDirection: startDirection_,
-                foodPositions: foodPositions,
-                blockedPositions: blockedPositions,
-                breakableBlockedPositions: breakableBlockedPositions);
-
-            return game_;
+            return CreateGameFromLevelData(currentLevelData_);
         }
 
         /// <summary>
@@ -152,6 +140,69 @@ namespace Flowbit.MovingGame.Unity
             yield return movingGameView_.RefreshAnimated(game_);
         }
 
+        /// <summary>
+        /// Updates the result UI and emits level state events when needed.
+        /// </summary>
+        protected override void RefreshResultView()
+        {
+            base.RefreshResultView();
+
+            if (game_ == null || currentLevelData_ == null)
+            {
+                return;
+            }
+
+            if (game_.HasWon())
+            {
+                if (!completedEventSent_)
+                {
+                    completedEventSent_ = true;
+                    failedEventSent_ = false;
+
+                    eventDispatcher_.Send(
+                        this,
+                        new LevelCompletedEvent(currentLevelData_.id));
+                }
+
+                return;
+            }
+
+            if (game_.HasFailed())
+            {
+                if (!failedEventSent_)
+                {
+                    failedEventSent_ = true;
+                    completedEventSent_ = false;
+
+                    eventDispatcher_.Send(
+                        this,
+                        new LevelFailedEvent(currentLevelData_.id));
+                }
+
+                return;
+            }
+
+            completedEventSent_ = false;
+            failedEventSent_ = false;
+        }
+
+        private Core.MovingGame CreateGameFromLevelData(MovingGameLevelData levelData)
+        {
+            List<GridPosition> foodPositions = ConvertPositions(levelData.foodPositions);
+            List<GridPosition> blockedPositions = ConvertPositions(levelData.blockedPositions);
+            List<GridPosition> breakableBlockedPositions =
+                ConvertPositions(levelData.breakableBlockedPositions);
+
+            return new Core.MovingGame(
+                width: levelData.width,
+                height: levelData.height,
+                startCharacterPosition: ToGridPosition(levelData.startPosition),
+                startCharacterDirection: ParseDirection(levelData.startDirection),
+                foodPositions: foodPositions,
+                blockedPositions: blockedPositions,
+                breakableBlockedPositions: breakableBlockedPositions);
+        }
+
         private void RenderGrid()
         {
             if (gridRenderer_ == null || game_ == null)
@@ -164,6 +215,46 @@ namespace Flowbit.MovingGame.Unity
                 game_.GetHeight(),
                 game_.GetBlockedPositions(),
                 game_.GetBreakableBlockedPositions());
+        }
+
+        private static List<GridPosition> ConvertPositions(List<PositionData> positions)
+        {
+            List<GridPosition> result = new List<GridPosition>();
+
+            if (positions == null)
+            {
+                return result;
+            }
+
+            for (int i = 0; i < positions.Count; i++)
+            {
+                result.Add(ToGridPosition(positions[i]));
+            }
+
+            return result;
+        }
+
+        private static GridPosition ToGridPosition(PositionData position)
+        {
+            if (position == null)
+            {
+                throw new ArgumentNullException(nameof(position));
+            }
+
+            return new GridPosition(position.x, position.y);
+        }
+
+        private static Direction ParseDirection(string direction)
+        {
+            return direction switch
+            {
+                "Up" => Direction.Up,
+                "Down" => Direction.Down,
+                "Left" => Direction.Left,
+                "Right" => Direction.Right,
+                _ => throw new InvalidOperationException(
+                    $"Unknown direction '{direction}'.")
+            };
         }
     }
 }

@@ -6,7 +6,6 @@
   <Project Path="Flowbit.Utilities.Unity.csproj" />
   <Project Path="Flowbit.MovingGame.Unity.csproj" />
   <Project Path="Flowbit.EngineController.csproj" />
-  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Flowbit.MovingGame.PlayModeTests.csproj" />
   <Project Path="Flowbit.MovingGame.EditModeTests.csproj" />
   <Project Path="Flowbit.Engine.Tests.csproj" />

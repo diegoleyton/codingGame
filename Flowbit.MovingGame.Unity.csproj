@@ -51,7 +51,11 @@
   <ItemGroup>
     <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameController.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/View/GridRenderer.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameNavigationParams.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/View/LevelSelectionButtonView.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameLevelsLibrary.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameSceneController.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameLevelSelectorController.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/View/MovingGameView.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1091,6 +1095,9 @@
     <ProjectReference Include="Flowbit.MovingGame.Core.csproj" />
     <ProjectReference Include="Flowbit.EngineController.csproj" />
     <ProjectReference Include="Flowbit.Engine.csproj" />
+    <ProjectReference Include="Flowbit.Utilities.Unity.csproj" />
+    <ProjectReference Include="Flowbit.Utilities.Core.csproj" />
+    <ProjectReference Include="Flowbit.GameBase.Definitions.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>

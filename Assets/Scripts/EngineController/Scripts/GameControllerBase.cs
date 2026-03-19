@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using Flowbit.Engine;
@@ -9,7 +10,7 @@ namespace Flowbit.EngineController
     /// Coordinates the game runtime, scene view, and execution controls.
     /// </summary>
     public abstract class GameControllerBase<TGame> : MonoBehaviour
-        where TGame : IGame
+        where TGame : class, IGame
     {
         [Header("UI")]
         [SerializeField] private ProgramViewBase programPanelView_;
@@ -26,16 +27,19 @@ namespace Flowbit.EngineController
         private bool programDirty_;
 
         /// <summary>
-        /// Initializes the game, program, and view.
+        /// Initializes the controller.
         /// </summary>
         private void Start()
         {
             runner_ = new ProgramRunner();
-            game_ = CreateGame();
-            CreateNewProgram();
 
-            InitializeView();
-            RefreshViewImmediate();
+            if (ShouldCreateGameOnStart())
+            {
+                LoadGame(CreateGame());
+                return;
+            }
+
+            CreateNewProgram();
             ClearInstructionHighlight();
             RefreshResultView();
         }
@@ -136,11 +140,52 @@ namespace Flowbit.EngineController
         }
 
         /// <summary>
+        /// Returns the current game instance.
+        /// </summary>
+        protected TGame GetGame()
+        {
+            return game_;
+        }
+
+        /// <summary>
         /// Returns the current program definition.
         /// </summary>
         protected ProgramDefinition GetCurrentProgram()
         {
             return currentProgram_;
+        }
+
+        /// <summary>
+        /// Returns whether a game should be created automatically on start.
+        /// </summary>
+        protected virtual bool ShouldCreateGameOnStart()
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Loads a new game instance into the controller.
+        /// </summary>
+        protected void LoadGame(TGame game)
+        {
+            if (game == null)
+            {
+                throw new ArgumentNullException(nameof(game));
+            }
+
+            StopRunning();
+
+            if (runner_ == null)
+            {
+                runner_ = new ProgramRunner();
+            }
+
+            game_ = game;
+            CreateNewProgram();
+            InitializeView();
+            RefreshViewImmediate();
+            ClearInstructionHighlight();
+            RefreshResultView();
         }
 
         /// <summary>
@@ -151,7 +196,7 @@ namespace Flowbit.EngineController
         {
             if (currentProgram_ == null)
             {
-                throw new System.InvalidOperationException(
+                throw new InvalidOperationException(
                     "A program must be created before adding instructions.");
             }
 
@@ -212,7 +257,7 @@ namespace Flowbit.EngineController
         }
 
         /// <summary>
-        /// Updates the result icon based on the current game state.
+        /// Updates the result UI based on the current game state.
         /// </summary>
         protected virtual void RefreshResultView()
         {
@@ -236,12 +281,24 @@ namespace Flowbit.EngineController
             gameStatusView_.Idle();
         }
 
+        /// <summary>
+        /// Initializes the scene view.
+        /// </summary>
         protected abstract void InitializeView();
 
+        /// <summary>
+        /// Creates the initial game instance.
+        /// </summary>
         protected abstract TGame CreateGame();
 
+        /// <summary>
+        /// Refreshes the view immediately.
+        /// </summary>
         protected abstract void RefreshViewImmediate();
 
+        /// <summary>
+        /// Refreshes the view with animation.
+        /// </summary>
         protected abstract IEnumerator RefreshViewAnimated();
 
         private void CreateNewProgram()
