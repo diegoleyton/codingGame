@@ -230,7 +230,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -9.13, y: -8.279999}
+  m_AnchoredPosition: {x: -9.130005, y: -8.280029}
   m_SizeDelta: {x: 55, y: 55}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &71516896
@@ -1413,7 +1413,6 @@ GameObject:
   - component: {fileID: 800599474}
   - component: {fileID: 800599475}
   - component: {fileID: 800599476}
-  - component: {fileID: 800599477}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -1455,7 +1454,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelsLibrary_: {fileID: 800599476}
   movingGameController_: {fileID: 501291889}
-  levelSelectorDestination_: {fileID: 11400000, guid: b3f37531bff2f42e6841e5b1fc639f95, type: 2}
   defaultLevelIndex_: 0
 --- !u!114 &800599476
 MonoBehaviour:
@@ -1470,20 +1468,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelsJson_: {fileID: 4900000, guid: 0c73e0776b3ce4938a87d44700660336, type: 3}
---- !u!114 &800599477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 800599473}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2eec20ebb8ed547b196d2868180c935d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  screenNavigationHost_: {fileID: 0}
-  screenEntries_: []
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0

@@ -1098,6 +1098,7 @@
     <ProjectReference Include="Flowbit.Utilities.Unity.csproj" />
     <ProjectReference Include="Flowbit.Utilities.Core.csproj" />
     <ProjectReference Include="Flowbit.GameBase.Definitions.csproj" />
+    <ProjectReference Include="Flowbit.GameBase.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>

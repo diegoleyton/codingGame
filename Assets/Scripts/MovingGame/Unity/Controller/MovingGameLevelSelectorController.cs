@@ -1,7 +1,9 @@
 using System;
 using UnityEngine;
+using Flowbit.GameBase.Services;
 using Flowbit.MovingGame.Core.Levels;
-using Flowbit.Utilities.Unity.Navigation;
+using Flowbit.GameBase.Definitions;
+using Flowbit.GameBase.Scenes;
 
 namespace Flowbit.MovingGame.Unity
 {
@@ -12,20 +14,22 @@ namespace Flowbit.MovingGame.Unity
     {
         [Header("References")]
         [SerializeField] private MovingGameLevelsLibrary levelsLibrary_;
-        [SerializeField] private NavigationDestinationAsset movingGameSceneDestination_;
         [SerializeField] private Transform contentRoot_;
         [SerializeField] private LevelSelectionButtonView levelButtonPrefab_;
+
+        private GameNavigationService navigationService_;
+
+        private void Awake()
+        {
+            var serviceContainer = GlobalServiceContainer.ServiceContainer;
+            navigationService_ = serviceContainer.Get<GameNavigationService>();
+        }
 
         private void Start()
         {
             if (levelsLibrary_ == null)
             {
                 throw new InvalidOperationException("Levels library is not assigned.");
-            }
-
-            if (movingGameSceneDestination_ == null)
-            {
-                throw new InvalidOperationException("Moving game scene destination is not assigned.");
             }
 
             if (contentRoot_ == null)
@@ -36,12 +40,6 @@ namespace Flowbit.MovingGame.Unity
             if (levelButtonPrefab_ == null)
             {
                 throw new InvalidOperationException("Level button prefab is not assigned.");
-            }
-
-            if (UnityNavigationLocator.Service == null)
-            {
-                throw new InvalidOperationException(
-                    "UnityNavigationLocator.Service is not initialized. Make sure a UnityNavigationInstaller exists in the scene.");
             }
 
             levelsLibrary_.Load();
@@ -70,8 +68,8 @@ namespace Flowbit.MovingGame.Unity
 
         private void OpenLevel(int levelIndex)
         {
-            UnityNavigationLocator.Service.Navigate(
-                movingGameSceneDestination_,
+            navigationService_.Navigate(
+                SceneType.MovingGame,
                 new MovingGameNavigationParams(levelIndex));
         }
 

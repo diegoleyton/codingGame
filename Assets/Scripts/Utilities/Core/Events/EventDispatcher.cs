@@ -177,16 +177,4 @@ namespace Flowbit.Utilities.Core.Events
             eventTableBySender_.Clear();
         }
     }
-
-    // TODO: Avoid this static with a better solution (injection)
-    /// <summary>
-    /// Provides access to the shared global event dispatcher.
-    /// </summary>
-    public static class GlobalEventDispatcher
-    {
-        /// <summary>
-        /// Gets the shared event dispatcher instance.
-        /// </summary>
-        public static EventDispatcher EventDispatcher { get; } = new EventDispatcher();
-    }
 }

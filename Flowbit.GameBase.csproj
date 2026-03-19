@@ -50,9 +50,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/InstructionListItemView.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Scripts/Services/ServiceInitializer.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/SceneSettings.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/InstructionsPresentationSettings.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Scripts/Services/GlobalServiceContainer.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/ProgramPanelView.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Character/CharacterAnimation.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/GameNavigationService.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Scripts/Services/GameResources.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/GameStatusView.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1092,6 +1097,8 @@
     <ProjectReference Include="Flowbit.Engine.csproj" />
     <ProjectReference Include="Flowbit.EngineController.csproj" />
     <ProjectReference Include="Flowbit.GameBase.Definitions.csproj" />
+    <ProjectReference Include="Flowbit.Utilities.Unity.csproj" />
+    <ProjectReference Include="Flowbit.Utilities.Core.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>

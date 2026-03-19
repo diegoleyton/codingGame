@@ -12,7 +12,7 @@ namespace Flowbit.GameBase.UI
     /// This allows designers to configure which UI prefab corresponds to each
     /// instruction without modifying code.
     /// </summary>
-    [CreateAssetMenu(fileName = "InstructionsPresentationSettings", menuName = "CodingGame/Instructions Presentation Settings", order = 0)]
+    [CreateAssetMenu(fileName = "InstructionsPresentationSettings", menuName = "Flowbit/Instructions Presentation Settings", order = 0)]
     public class InstructionsPresentationSettings : ScriptableObject
     {
         /// <summary>

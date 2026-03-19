@@ -2,8 +2,10 @@ using System;
 using UnityEngine;
 using Flowbit.MovingGame.Core.Levels;
 using Flowbit.Utilities.Core.Events;
-using Flowbit.Utilities.Unity.Navigation;
 using Flowbit.GameBase.Definitions;
+using Flowbit.GameBase.Services;
+using Flowbit.GameBase.Scenes;
+using Flowbit.Utilities.Unity.Navigation;
 
 namespace Flowbit.MovingGame.Unity
 {
@@ -16,17 +18,23 @@ namespace Flowbit.MovingGame.Unity
         [Header("References")]
         [SerializeField] private MovingGameLevelsLibrary levelsLibrary_;
         [SerializeField] private MovingGameController movingGameController_;
-        [SerializeField] private NavigationDestinationAsset levelSelectorDestination_;
 
         [Header("Defaults")]
         [SerializeField] private int defaultLevelIndex_ = 0;
 
-        private readonly EventDispatcher eventDispatcher_ =
-            GlobalEventDispatcher.EventDispatcher;
+        private EventDispatcher eventDispatcher_;
+        private GameNavigationService navigationService_;
 
         private int currentLevelIndex_;
         private bool currentLevelCompleted_;
         private bool currentLevelFailed_;
+
+        private void Awake()
+        {
+            var serviceContainer = GlobalServiceContainer.ServiceContainer;
+            eventDispatcher_ = serviceContainer.Get<EventDispatcher>();
+            navigationService_ = serviceContainer.Get<GameNavigationService>();
+        }
 
         private void OnEnable()
         {
@@ -132,19 +140,7 @@ namespace Flowbit.MovingGame.Unity
         /// </summary>
         public void BackToLevelSelector()
         {
-            if (levelSelectorDestination_ == null)
-            {
-                throw new InvalidOperationException(
-                    "Level selector destination is not assigned.");
-            }
-
-            if (UnityNavigationLocator.Service == null)
-            {
-                throw new InvalidOperationException(
-                    "UnityNavigationLocator.Service is not initialized.");
-            }
-
-            UnityNavigationLocator.Service.Navigate(levelSelectorDestination_);
+            navigationService_.Navigate(SceneType.MovingGameLevelSelection);
         }
 
         /// <summary>

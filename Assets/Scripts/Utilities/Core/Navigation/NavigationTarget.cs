@@ -5,7 +5,6 @@ namespace Flowbit.Utilities.Core.Navigation
     /// <summary>
     /// Represents a navigation destination.
     /// </summary>
-    [Serializable]
     public sealed class NavigationTarget
     {
         /// <summary>

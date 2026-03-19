@@ -801,7 +801,6 @@ GameObject:
   - component: {fileID: 1564817245}
   - component: {fileID: 1564817246}
   - component: {fileID: 1564817247}
-  - component: {fileID: 1564817248}
   m_Layer: 0
   m_Name: SceneController
   m_TagString: Untagged
@@ -837,7 +836,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelsLibrary_: {fileID: 1564817247}
-  movingGameSceneDestination_: {fileID: 11400000, guid: fc0283513a0cd475886129f709e7ac76, type: 2}
   contentRoot_: {fileID: 596077613}
   levelButtonPrefab_: {fileID: 1980919660219262266, guid: 654bc997c54a046e7b18f96d96c01424, type: 3}
 --- !u!114 &1564817247
@@ -853,20 +851,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelsJson_: {fileID: 4900000, guid: 0c73e0776b3ce4938a87d44700660336, type: 3}
---- !u!114 &1564817248
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1564817244}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2eec20ebb8ed547b196d2868180c935d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  screenNavigationHost_: {fileID: 0}
-  screenEntries_: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -8,6 +8,7 @@ using Flowbit.MovingGame.Core.Instructions;
 using Flowbit.MovingGame.Core.Levels;
 using Flowbit.Utilities.Core.Events;
 using Flowbit.GameBase.Definitions;
+using Flowbit.GameBase.Services;
 
 namespace Flowbit.MovingGame.Unity
 {
@@ -20,13 +21,19 @@ namespace Flowbit.MovingGame.Unity
         [SerializeField] private MovingGameView movingGameView_;
         [SerializeField] private GridRenderer gridRenderer_;
 
-        private readonly EventDispatcher eventDispatcher_ =
-            GlobalEventDispatcher.EventDispatcher;
+        private EventDispatcher eventDispatcher_;
 
         private Core.MovingGame game_;
         private MovingGameLevelData currentLevelData_;
         private bool completedEventSent_;
         private bool failedEventSent_;
+
+
+        private void Awake()
+        {
+            var serviceContainer = GlobalServiceContainer.ServiceContainer;
+            eventDispatcher_ = serviceContainer.Get<EventDispatcher>();
+        }
 
         /// <summary>
         /// Loads the given level into the controller.

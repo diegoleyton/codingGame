@@ -50,14 +50,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/UnityNavigationInstaller.cs" />
-    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/UnityNavigationService.cs" />
-    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/NavigationDestinationAsset.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/ScreenNavigationStrategy.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/SceneNavigationState.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/SceneNavigationStrategy.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/ScreenNavigationHost.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/IScreen.cs" />
-    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/UnityNavigationLocator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/Scripts/Utilities/Unity/Flowbit.Utilities.Unity.asmdef" />
