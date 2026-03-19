@@ -11,7 +11,6 @@ namespace Flowbit.Utilities.Core.Navigation
     {
         private readonly Dictionary<NavigationTargetType, INavigationStrategy> strategies_;
         private readonly EventDispatcher eventDispatcher_;
-        private readonly NavigationService navigationService_;
 
         /// <summary>
         /// Creates a new navigation service.
