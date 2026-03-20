@@ -52,7 +52,9 @@
     <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameController.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/View/GridRenderer.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameNavigationParams.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameCompletedPopupParams.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/View/LevelSelectionButtonView.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/View/MovingGameCompletedPopupView.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameLevelsLibrary.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameSceneController.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameLevelSelectorController.cs" />

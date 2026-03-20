@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using Flowbit.MovingGame.Core.Levels;
 using Flowbit.Utilities.Core.Events;
@@ -22,12 +23,15 @@ namespace Flowbit.MovingGame.Unity
         [Header("Defaults")]
         [SerializeField] private int defaultLevelIndex_ = 0;
 
+        [Header("Completion Popup")]
+        [SerializeField] private float completedPopupDelaySeconds_ = 1.5f;
+
         private EventDispatcher eventDispatcher_;
         private GameNavigationService navigationService_;
-
         private int currentLevelIndex_;
         private bool currentLevelCompleted_;
         private bool currentLevelFailed_;
+        private Coroutine showCompletedPopupCoroutine_;
 
         private void Awake()
         {
@@ -40,13 +44,8 @@ namespace Flowbit.MovingGame.Unity
         {
             if (movingGameController_ != null)
             {
-                eventDispatcher_.Subscribe<LevelCompletedEvent>(
-                    movingGameController_,
-                    OnLevelCompleted);
-
-                eventDispatcher_.Subscribe<LevelFailedEvent>(
-                    movingGameController_,
-                    OnLevelFailed);
+                eventDispatcher_.Subscribe<LevelCompletedEvent>(movingGameController_, OnLevelCompleted);
+                eventDispatcher_.Subscribe<LevelFailedEvent>(movingGameController_, OnLevelFailed);
             }
         }
 
@@ -54,19 +53,13 @@ namespace Flowbit.MovingGame.Unity
         {
             if (movingGameController_ != null)
             {
-                eventDispatcher_.Unsubscribe<LevelCompletedEvent>(
-                    movingGameController_,
-                    OnLevelCompleted);
-
-                eventDispatcher_.Unsubscribe<LevelFailedEvent>(
-                    movingGameController_,
-                    OnLevelFailed);
+                eventDispatcher_.Unsubscribe<LevelCompletedEvent>(movingGameController_, OnLevelCompleted);
+                eventDispatcher_.Unsubscribe<LevelFailedEvent>(movingGameController_, OnLevelFailed);
             }
+
+            StopCompletedPopupCoroutine();
         }
 
-        /// <summary>
-        /// Loads the initial level for this scene.
-        /// </summary>
         private void Start()
         {
             if (levelsLibrary_ == null)
@@ -91,13 +84,14 @@ namespace Flowbit.MovingGame.Unity
         public void LoadLevel(int levelIndex)
         {
             int levelCount = levelsLibrary_.GetLevelCount();
-
             if (levelIndex < 0 || levelIndex >= levelCount)
             {
                 throw new ArgumentOutOfRangeException(
                     nameof(levelIndex),
                     $"Level index '{levelIndex}' is out of range.");
             }
+
+            StopCompletedPopupCoroutine();
 
             MovingGameLevelData levelData = levelsLibrary_.GetLevelAt(levelIndex);
 
@@ -106,13 +100,11 @@ namespace Flowbit.MovingGame.Unity
             currentLevelIndex_ = levelIndex;
 
             movingGameController_.LoadLevel(levelData);
-
-            eventDispatcher_.Send(
-                new LevelLoadedEvent(levelData.id, levelIndex));
+            eventDispatcher_.Send(new LevelLoadedEvent(levelData.id, levelIndex));
         }
 
         /// <summary>
-        /// Reloads the current level.
+        /// Reloads the current level from scratch.
         /// </summary>
         public void RetryLevel()
         {
@@ -125,7 +117,6 @@ namespace Flowbit.MovingGame.Unity
         public void LoadNextLevel()
         {
             int nextLevelIndex = currentLevelIndex_ + 1;
-
             if (nextLevelIndex >= levelsLibrary_.GetLevelCount())
             {
                 Debug.Log("There is no next level to load.");
@@ -171,12 +162,47 @@ namespace Flowbit.MovingGame.Unity
         {
             currentLevelCompleted_ = true;
             currentLevelFailed_ = false;
+
+            StopCompletedPopupCoroutine();
+            showCompletedPopupCoroutine_ = StartCoroutine(ShowCompletedPopupRoutine());
         }
 
         private void OnLevelFailed(LevelFailedEvent levelFailedEvent)
         {
             currentLevelCompleted_ = false;
             currentLevelFailed_ = true;
+            StopCompletedPopupCoroutine();
+        }
+
+        private IEnumerator ShowCompletedPopupRoutine()
+        {
+            yield return new WaitForSeconds(completedPopupDelaySeconds_);
+
+            int nextLevelIndex = currentLevelIndex_ + 1;
+            bool hasNextLevel = nextLevelIndex < levelsLibrary_.GetLevelCount();
+
+            string nextLevelTitle = hasNextLevel
+                ? BuildLevelTitle(nextLevelIndex, levelsLibrary_.GetLevelAt(nextLevelIndex))
+                : "No more levels";
+
+            navigationService_.Navigate(
+                SceneType.MovingGameLevelCompletedPopup,
+                new MovingGameCompletedPopupParams(
+                    nextLevelTitle: nextLevelTitle,
+                    hasNextLevel: hasNextLevel,
+                    onContinue: hasNextLevel ? LoadNextLevel : BackToLevelSelector,
+                    onRetry: RetryLevel));
+
+            showCompletedPopupCoroutine_ = null;
+        }
+
+        private void StopCompletedPopupCoroutine()
+        {
+            if (showCompletedPopupCoroutine_ != null)
+            {
+                StopCoroutine(showCompletedPopupCoroutine_);
+                showCompletedPopupCoroutine_ = null;
+            }
         }
 
         private int ResolveInitialLevelIndex()
@@ -189,6 +215,15 @@ namespace Flowbit.MovingGame.Unity
             }
 
             return defaultLevelIndex_;
+        }
+
+        private static string BuildLevelTitle(int levelIndex, MovingGameLevelData levelData)
+        {
+            string levelName = string.IsNullOrWhiteSpace(levelData.name)
+                ? $"Level {levelIndex + 1}"
+                : levelData.name;
+
+            return $"{levelIndex + 1}. {levelName}";
         }
     }
 }

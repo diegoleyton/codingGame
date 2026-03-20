@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Flowbit.GameBase.Definitions
 {
     /// <summary>
@@ -8,6 +6,7 @@ namespace Flowbit.GameBase.Definitions
     public enum SceneType
     {
         MovingGameLevelSelection,
-        MovingGame
+        MovingGame,
+        MovingGameLevelCompletedPopup
     }
 }

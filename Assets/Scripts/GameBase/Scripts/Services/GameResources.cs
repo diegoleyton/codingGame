@@ -28,5 +28,11 @@ namespace Flowbit.GameBase.Services
         /// </summary>
         [field: SerializeField]
         public InstructionsPresentationSettings InstructionsPresentationSettings { get; private set; }
+
+        /// <summary>
+        /// Gets the resources that define the presentation of instructions.
+        /// </summary>
+        [field: SerializeField]
+        public ComponentsLoopAnimator ComponentLoopAnimator { get; private set; }
     }
 }

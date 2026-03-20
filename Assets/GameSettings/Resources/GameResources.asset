@@ -15,3 +15,4 @@ MonoBehaviour:
   <SceneSettings>k__BackingField: {fileID: 11400000, guid: 4113b897535a54744ac95d4305138535, type: 2}
   <NavigationInstallerPrefab>k__BackingField: {fileID: 608654602481874583, guid: 12a43ec66690940959b35327552117bb, type: 3}
   <InstructionsPresentationSettings>k__BackingField: {fileID: 11400000, guid: 09fff0e3182004e00846782f271405b3, type: 2}
+  <ComponentLoopAnimator>k__BackingField: {fileID: 5469796037845318584, guid: cfe2723724d8847daac7d680e568a187, type: 3}

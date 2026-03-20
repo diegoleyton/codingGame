@@ -2,6 +2,7 @@ using Flowbit.Utilities.Unity.Navigation;
 using Flowbit.Utilities.Core.Events;
 using Flowbit.Utilities.Core.Services;
 using Flowbit.GameBase.Scenes;
+using Flowbit.GameBase.UI;
 using UnityEngine;
 
 namespace Flowbit.GameBase.Services
@@ -28,6 +29,7 @@ namespace Flowbit.GameBase.Services
             ServiceContainer.Register(dispatcher);
             var res = InitializeGameResources();
             InitializeNavigationService(dispatcher, res);
+            InitializeUIServices(res);
         }
 
         private GameResources InitializeGameResources()
@@ -44,6 +46,13 @@ namespace Flowbit.GameBase.Services
             installer.Install(dispatcher, res.SceneSettings.GetPrefabs());
             GameNavigationService GameNavigationService = new GameNavigationService(installer.GetNavigationService(), res.SceneSettings);
             ServiceContainer.Register(GameNavigationService);
+        }
+
+        private void InitializeUIServices(GameResources res)
+        {
+            var globalAnimator = GameObject.Instantiate<ComponentsLoopAnimator>(res.ComponentLoopAnimator);
+            GameObject.DontDestroyOnLoad(globalAnimator);
+            ServiceContainer.Register(globalAnimator);
         }
     }
 }
