@@ -22,6 +22,7 @@ namespace Flowbit.MovingGame.Core
         private Direction characterDirection_;
         private HashSet<GridPosition> foodPositions_;
         private HashSet<GridPosition> breakableBlockedPositions_;
+        private HashSet<GridPosition> visitedPositions_;
         private bool hasWon_;
         private bool hasFailed_;
 
@@ -73,116 +74,87 @@ namespace Flowbit.MovingGame.Core
 
             foodPositions_ = new HashSet<GridPosition>();
             breakableBlockedPositions_ = new HashSet<GridPosition>();
+            visitedPositions_ = new HashSet<GridPosition>();
 
             ResetGame();
         }
 
-        /// <summary>
-        /// Returns the grid width.
-        /// </summary>
         public int GetWidth()
         {
             return width_;
         }
 
-        /// <summary>
-        /// Returns the grid height.
-        /// </summary>
         public int GetHeight()
         {
             return height_;
         }
 
-        /// <summary>
-        /// Returns the current character position.
-        /// </summary>
         public GridPosition GetCharacterPosition()
         {
             return characterPosition_;
         }
 
-        /// <summary>
-        /// Returns the current character direction.
-        /// </summary>
         public Direction GetCharacterDirection()
         {
             return characterDirection_;
         }
 
-        /// <summary>
-        /// Returns the positions of all remaining food items.
-        /// </summary>
         public IReadOnlyCollection<GridPosition> GetFoodPositions()
         {
             return foodPositions_;
         }
 
-        /// <summary>
-        /// Returns the solid blocked positions.
-        /// </summary>
         public IReadOnlyCollection<GridPosition> GetBlockedPositions()
         {
             return blockedPositions_;
         }
 
-        /// <summary>
-        /// Returns the breakable blocked positions.
-        /// </summary>
         public IReadOnlyCollection<GridPosition> GetBreakableBlockedPositions()
         {
             return breakableBlockedPositions_;
         }
 
         /// <summary>
-        /// Returns whether the given position is blocked by any obstacle.
+        /// Returns the visited positions.
         /// </summary>
+        public IReadOnlyCollection<GridPosition> GetVisitedPositions()
+        {
+            return visitedPositions_;
+        }
+
         public bool IsBlocked(GridPosition position)
         {
             return blockedPositions_.Contains(position) ||
                    breakableBlockedPositions_.Contains(position);
         }
 
-        /// <summary>
-        /// Returns whether the given position contains a breakable obstacle.
-        /// </summary>
         public bool IsBreakableBlocked(GridPosition position)
         {
             return breakableBlockedPositions_.Contains(position);
         }
 
-        /// <summary>
-        /// Returns whether the given position contains food.
-        /// </summary>
         public bool HasFoodAt(GridPosition position)
         {
             return foodPositions_.Contains(position);
         }
 
-        /// <summary>
-        /// Returns whether the game has been completed successfully.
-        /// </summary>
         public bool HasWon()
         {
             return hasWon_;
         }
 
-        /// <summary>
-        /// Returns whether the game has reached a failed state.
-        /// </summary>
         public bool HasFailed()
         {
             return hasFailed_;
         }
 
-        /// <summary>
-        /// Resets the game to its initial state.
-        /// </summary>
         public void ResetGame()
         {
             characterPosition_ = startCharacterPosition_;
             characterDirection_ = startCharacterDirection_;
             foodPositions_ = new HashSet<GridPosition>(startFoodPositions_);
             breakableBlockedPositions_ = new HashSet<GridPosition>(startBreakableBlockedPositions_);
+            visitedPositions_ = new HashSet<GridPosition> { startCharacterPosition_ };
             hasWon_ = false;
             hasFailed_ = false;
 
@@ -190,9 +162,6 @@ namespace Flowbit.MovingGame.Core
             UpdateWinState();
         }
 
-        /// <summary>
-        /// Moves the character forward by the given number of steps.
-        /// </summary>
         public void MoveForward(int steps)
         {
             if (steps <= 0)
@@ -222,6 +191,7 @@ namespace Flowbit.MovingGame.Core
                 }
 
                 characterPosition_ = nextPosition;
+                visitedPositions_.Add(characterPosition_);
                 ConsumeFoodAtCurrentPosition();
                 UpdateWinState();
 
@@ -232,9 +202,6 @@ namespace Flowbit.MovingGame.Core
             }
         }
 
-        /// <summary>
-        /// Rotates the character to the left.
-        /// </summary>
         public void RotateLeft()
         {
             if (hasWon_ || hasFailed_)
@@ -252,9 +219,6 @@ namespace Flowbit.MovingGame.Core
             };
         }
 
-        /// <summary>
-        /// Rotates the character to the right.
-        /// </summary>
         public void RotateRight()
         {
             if (hasWon_ || hasFailed_)
@@ -272,9 +236,6 @@ namespace Flowbit.MovingGame.Core
             };
         }
 
-        /// <summary>
-        /// Breaks the breakable obstacle in the cell directly in front of the character, if one exists.
-        /// </summary>
         public void BreakForward()
         {
             if (hasWon_ || hasFailed_)
@@ -295,14 +256,10 @@ namespace Flowbit.MovingGame.Core
             }
         }
 
-        /// <summary>
-        /// Returns whether the given position is inside the grid bounds.
-        /// </summary>
         public bool IsInsideBounds(GridPosition position)
         {
             int x = position.GetX();
             int y = position.GetY();
-
             return x >= 0 && x < width_ && y >= 0 && y < height_;
         }
 

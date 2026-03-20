@@ -11,6 +11,7 @@ namespace Flowbit.MovingGame.Unity
     {
         [Header("Grid Visuals")]
         [SerializeField] private GameObject cellPrefab_;
+        [SerializeField] private GameObject visitedCellPrefab_;
         [SerializeField] private GameObject blockedCellPrefab_;
         [SerializeField] private GameObject breakableBlockedCellPrefab_;
         [SerializeField] private Transform cellsRoot_;
@@ -24,33 +25,37 @@ namespace Flowbit.MovingGame.Unity
         private int width_;
         private int height_;
 
-        /// <summary>
-        /// Renders a grid with no blocked cells.
-        /// </summary>
         public void RenderGrid(int width, int height)
         {
-            RenderGrid(width, height, null, null);
+            RenderGrid(width, height, null, null, null);
         }
 
-        /// <summary>
-        /// Renders a grid with only solid blocked cells.
-        /// </summary>
         public void RenderGrid(
             int width,
             int height,
             IReadOnlyCollection<GridPosition> blockedPositions)
         {
-            RenderGrid(width, height, blockedPositions, null);
+            RenderGrid(width, height, blockedPositions, null, null);
         }
 
-        /// <summary>
-        /// Renders a grid with solid and breakable blocked cells.
-        /// </summary>
         public void RenderGrid(
             int width,
             int height,
             IReadOnlyCollection<GridPosition> blockedPositions,
             IReadOnlyCollection<GridPosition> breakableBlockedPositions)
+        {
+            RenderGrid(width, height, blockedPositions, breakableBlockedPositions, null);
+        }
+
+        /// <summary>
+        /// Renders a grid with solid obstacles, breakable obstacles, and visited cells.
+        /// </summary>
+        public void RenderGrid(
+            int width,
+            int height,
+            IReadOnlyCollection<GridPosition> blockedPositions,
+            IReadOnlyCollection<GridPosition> breakableBlockedPositions,
+            IReadOnlyCollection<GridPosition> visitedPositions)
         {
             width_ = width;
             height_ = height;
@@ -70,6 +75,10 @@ namespace Flowbit.MovingGame.Unity
                 ? new HashSet<GridPosition>(breakableBlockedPositions)
                 : null;
 
+            HashSet<GridPosition> visitedLookup = visitedPositions != null
+                ? new HashSet<GridPosition>(visitedPositions)
+                : null;
+
             Transform parent = cellsRoot_ != null ? cellsRoot_ : transform;
 
             for (int y = 0; y < height_; y++)
@@ -79,13 +88,9 @@ namespace Flowbit.MovingGame.Unity
                     GridPosition gridPosition = new GridPosition(x, y);
                     Vector3 worldPosition = GridToWorld(gridPosition);
 
-                    bool isBlocked =
-                        blockedLookup != null &&
-                        blockedLookup.Contains(gridPosition);
-
-                    bool isBreakableBlocked =
-                        breakableLookup != null &&
-                        breakableLookup.Contains(gridPosition);
+                    bool isBlocked = blockedLookup != null && blockedLookup.Contains(gridPosition);
+                    bool isBreakableBlocked = breakableLookup != null && breakableLookup.Contains(gridPosition);
+                    bool isVisited = visitedLookup != null && visitedLookup.Contains(gridPosition);
 
                     GameObject prefabToUse = cellPrefab_;
 
@@ -97,9 +102,12 @@ namespace Flowbit.MovingGame.Unity
                     {
                         prefabToUse = blockedCellPrefab_;
                     }
+                    else if (isVisited && visitedCellPrefab_ != null)
+                    {
+                        prefabToUse = visitedCellPrefab_;
+                    }
 
-                    GameObject cell =
-                        Instantiate(prefabToUse, worldPosition, Quaternion.identity, parent);
+                    GameObject cell = Instantiate(prefabToUse, worldPosition, Quaternion.identity, parent);
 
                     if (isBreakableBlocked)
                     {
@@ -108,6 +116,10 @@ namespace Flowbit.MovingGame.Unity
                     else if (isBlocked)
                     {
                         cell.name = $"BlockedCell_{x}_{y}";
+                    }
+                    else if (isVisited)
+                    {
+                        cell.name = $"VisitedCell_{x}_{y}";
                     }
                     else
                     {
@@ -120,30 +132,19 @@ namespace Flowbit.MovingGame.Unity
             }
         }
 
-        /// <summary>
-        /// Converts a grid position to a world position.
-        /// </summary>
         public Vector3 GridToWorld(GridPosition gridPosition)
         {
             Vector2 offset = GetGridOffset();
-
             float x = origin_.x + offset.x + (gridPosition.GetX() * cellSize_);
             float y = origin_.y + offset.y + (gridPosition.GetY() * cellSize_);
-
             return new Vector3(x, y, 0f);
         }
 
-        /// <summary>
-        /// Returns the configured cell size.
-        /// </summary>
         public float GetCellSize()
         {
             return cellSize_;
         }
 
-        /// <summary>
-        /// Clears all currently spawned grid cells.
-        /// </summary>
         public void ClearGrid()
         {
             for (int i = 0; i < spawnedCells_.Count; i++)
@@ -166,7 +167,6 @@ namespace Flowbit.MovingGame.Unity
 
             float widthOffset = -((width_ - 1) * cellSize_) * 0.5f;
             float heightOffset = -((height_ - 1) * cellSize_) * 0.5f;
-
             return new Vector2(widthOffset, heightOffset);
         }
     }

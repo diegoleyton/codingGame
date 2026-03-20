@@ -42,5 +42,10 @@ namespace Flowbit.MovingGame.Core
         /// Returns the positions of breakable obstacles.
         /// </summary>
         IReadOnlyCollection<GridPosition> GetBreakableBlockedPositions();
+
+        /// <summary>
+        /// Returns the positions visited by the character.
+        /// </summary>
+        IReadOnlyCollection<GridPosition> GetVisitedPositions();
     }
 }

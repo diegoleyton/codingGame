@@ -3352,6 +3352,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellPrefab_: {fileID: 2927773417660818734, guid: f93dccbbc71e543ea8b4a8e1ef66b43a, type: 3}
+  visitedCellPrefab_: {fileID: 2927773417660818734, guid: 133336a1983d64226b52a5ec512b3901, type: 3}
   blockedCellPrefab_: {fileID: 2927773417660818734, guid: a7e43be8c533a418a96c9eb9a6b87148, type: 3}
   breakableBlockedCellPrefab_: {fileID: 2927773417660818734, guid: a8539335817c74388965936f9ac83fdd, type: 3}
   cellsRoot_: {fileID: 0}

@@ -221,7 +221,8 @@ namespace Flowbit.MovingGame.Unity
                 game_.GetWidth(),
                 game_.GetHeight(),
                 game_.GetBlockedPositions(),
-                game_.GetBreakableBlockedPositions());
+                game_.GetBreakableBlockedPositions(),
+                game_.GetVisitedPositions());
         }
 
         private static List<GridPosition> ConvertPositions(List<PositionData> positions)
