@@ -59,6 +59,7 @@ namespace Flowbit.EngineController
                 return;
             }
 
+            programPanelView_?.EnableInstructions(false);
             stepCoroutine_ = StartCoroutine(StepRoutine());
         }
 
@@ -72,6 +73,7 @@ namespace Flowbit.EngineController
                 return;
             }
 
+            programPanelView_?.EnableInstructions(false);
             EnsureRunnerReady();
             runCoroutine_ = StartCoroutine(RunRoutine());
         }
@@ -383,6 +385,8 @@ namespace Flowbit.EngineController
 
         private void StopRunning()
         {
+            programPanelView_?.EnableInstructions(true);
+
             if (runCoroutine_ != null)
             {
                 StopCoroutine(runCoroutine_);

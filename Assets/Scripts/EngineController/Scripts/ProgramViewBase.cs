@@ -23,5 +23,10 @@ namespace Flowbit.EngineController
         /// Clears any current highlight.
         /// </summary>
         public abstract void ClearHighlight();
+
+        /// <summary>
+        /// Enable or disable instructions for users.
+        /// </summary>
+        public abstract void EnableInstructions(bool enabled);
     }
 }

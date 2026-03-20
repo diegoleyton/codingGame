@@ -16,6 +16,8 @@ namespace Flowbit.GameBase.UI
 
         [SerializeField] private InstructionsPresentationSettings instructionsPresentationSettings_;
 
+        [SerializeField] private GameObject instructionButtonContainer_;
+
         private readonly List<InstructionListItemView> spawnedItems_ =
             new List<InstructionListItemView>();
 
@@ -65,6 +67,11 @@ namespace Flowbit.GameBase.UI
             {
                 spawnedItems_[i].SetHighlighted(false);
             }
+        }
+
+        public override void EnableInstructions(bool enabled)
+        {
+            instructionButtonContainer_.SetActive(enabled);
         }
 
         private void ClearItems()
