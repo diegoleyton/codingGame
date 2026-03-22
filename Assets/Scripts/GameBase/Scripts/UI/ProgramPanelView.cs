@@ -24,6 +24,8 @@ namespace Flowbit.GameBase.UI
 
         [SerializeField] private float autoScrollTime_ = 0.2f;
 
+        [SerializeField] private GameObject uiBlocker_;
+
         private readonly List<InstructionListItemView> spawnedItems_ =
             new List<InstructionListItemView>();
 
@@ -83,7 +85,8 @@ namespace Flowbit.GameBase.UI
 
         public override void EnableInstructions(bool enabled)
         {
-            instructionButtonContainer_.SetActive(enabled);
+            instructionButtonContainer_?.SetActive(enabled);
+            uiBlocker_?.SetActive(!enabled);
         }
 
         private void ClearItems()

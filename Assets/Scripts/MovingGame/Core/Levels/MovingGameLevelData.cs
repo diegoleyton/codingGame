@@ -20,6 +20,19 @@ namespace Flowbit.MovingGame.Core.Levels
         public List<PositionData> foodPositions;
         public List<PositionData> blockedPositions;
         public List<PositionData> breakableBlockedPositions;
+
+        public Dificulty GetDificulty()
+        {
+            if (difficulty <= 2)
+            {
+                return Dificulty.Easy;
+            }
+            if (difficulty <= 4)
+            {
+                return Dificulty.Normal;
+            }
+            return Dificulty.Hard;
+        }
     }
 
     /// <summary>
@@ -30,5 +43,15 @@ namespace Flowbit.MovingGame.Core.Levels
     {
         public int x;
         public int y;
+    }
+
+    /// <summary>
+    /// Represnts the level of dificulty.
+    /// </summary>
+    public enum Dificulty
+    {
+        Easy,
+        Normal,
+        Hard
     }
 }

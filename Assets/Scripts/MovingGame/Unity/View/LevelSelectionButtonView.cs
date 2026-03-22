@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Flowbit.MovingGame.Core.Levels;
 
 namespace Flowbit.MovingGame.Unity
 {
@@ -11,28 +13,57 @@ namespace Flowbit.MovingGame.Unity
     {
         [SerializeField] private Button button_;
         [SerializeField] private Text titleText_;
-        [SerializeField] private Text subtitleText_;
+        [SerializeField] private Image dificultyImage_;
 
-        /// <summary>
-        /// Sets the main title text.
-        /// </summary>
-        public void SetTitle(string title)
+        [SerializeField] private DificultyVisuals[] dificultyVisuals_;
+
+        private Dictionary<Dificulty, DificultyVisuals> dificultyVisualsMap_;
+
+        private void Awake()
         {
-            if (titleText_ != null)
+            if (dificultyVisualsMap_ != null)
+                return;
+
+            dificultyVisualsMap_ = new Dictionary<Dificulty, DificultyVisuals>();
+
+            foreach (var entry in dificultyVisuals_)
             {
-                titleText_.text = title;
+                if (dificultyVisualsMap_.ContainsKey(entry.Dificulty))
+                {
+                    throw new Exception(
+                        $"Duplicate UI mapping found for dificulty type {entry.Dificulty}");
+                }
+                dificultyVisualsMap_[entry.Dificulty] = entry;
             }
         }
 
         /// <summary>
-        /// Sets the subtitle text.
+        /// Sets the main title text.
         /// </summary>
-        public void SetSubtitle(string subtitle)
+        public void SetTitle(string title, int index)
         {
-            if (subtitleText_ != null)
+            if (titleText_ != null)
             {
-                subtitleText_.text = subtitle;
+                titleText_.text = "" + (index + 1);
             }
+        }
+
+        /// <summary>
+        /// Sets the dificulty.
+        /// </summary>
+        public void SetDificulty(Dificulty dificulty)
+        {
+            if (dificultyImage_ == null)
+            {
+                return;
+            }
+
+            if (!dificultyVisualsMap_.TryGetValue(dificulty, out var dificultyVisual))
+            {
+                throw new Exception($"No UI visual registered for dificulty type {dificulty}");
+            }
+
+            dificultyImage_.color = dificultyVisual.Color;
         }
 
         /// <summary>
@@ -52,5 +83,12 @@ namespace Flowbit.MovingGame.Unity
                 button_.onClick.AddListener(() => onClick.Invoke());
             }
         }
+    }
+
+    [Serializable]
+    public class DificultyVisuals
+    {
+        public Dificulty Dificulty;
+        public Color Color;
     }
 }

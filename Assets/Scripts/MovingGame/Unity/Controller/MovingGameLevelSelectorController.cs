@@ -60,8 +60,8 @@ namespace Flowbit.MovingGame.Unity
                 LevelSelectionButtonView buttonView =
                     Instantiate(levelButtonPrefab_, contentRoot_);
 
-                buttonView.SetTitle(BuildLevelTitle(levelIndex, levelData));
-                buttonView.SetSubtitle(BuildLevelSubtitle(levelData));
+                buttonView.SetTitle(levelData.name, levelIndex);
+                buttonView.SetDificulty(levelData.GetDificulty());
                 buttonView.SetOnClick(() => OpenLevel(levelIndex));
             }
         }
@@ -71,25 +71,6 @@ namespace Flowbit.MovingGame.Unity
             navigationService_.Navigate(
                 SceneType.MovingGame,
                 new MovingGameNavigationParams(levelIndex));
-        }
-
-        private static string BuildLevelTitle(int levelIndex, MovingGameLevelData levelData)
-        {
-            string levelName = string.IsNullOrWhiteSpace(levelData.name)
-                ? $"Level {levelIndex + 1}"
-                : levelData.name;
-
-            return $"{levelIndex + 1}. {levelName}";
-        }
-
-        private static string BuildLevelSubtitle(MovingGameLevelData levelData)
-        {
-            if (string.IsNullOrWhiteSpace(levelData.hint))
-            {
-                return $"Difficulty {levelData.difficulty}";
-            }
-
-            return $"Difficulty {levelData.difficulty} • {levelData.hint}";
         }
 
         private void ClearButtons()
