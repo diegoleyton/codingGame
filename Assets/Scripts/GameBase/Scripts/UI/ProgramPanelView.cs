@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Flowbit.Engine;
 using Flowbit.EngineController;
 using Flowbit.GameBase.Definitions;
+using Flowbit.Utilities.Unity.UI;
 
 namespace Flowbit.GameBase.UI
 {
@@ -17,6 +19,10 @@ namespace Flowbit.GameBase.UI
         [SerializeField] private InstructionsPresentationSettings instructionsPresentationSettings_;
 
         [SerializeField] private GameObject instructionButtonContainer_;
+
+        [SerializeField] private ScrollRect scrollRect_;
+
+        [SerializeField] private float autoScrollTime_ = 0.2f;
 
         private readonly List<InstructionListItemView> spawnedItems_ =
             new List<InstructionListItemView>();
@@ -40,6 +46,7 @@ namespace Flowbit.GameBase.UI
 
                 GameObject instructionUi = instructionsPresentationSettings_.CreateInstructionUi((InstructionType)instructions[i].GetDefinition().GetInstructionId());
                 item.SetInstructionView(instructionUi);
+                item.SetInstructionIndex("" + (i + 1));
                 item.SetInstructionLabel(BuildInstructionLabel(instructions[i]));
                 item.SetHighlighted(false);
 
@@ -54,7 +61,12 @@ namespace Flowbit.GameBase.UI
         {
             for (int i = 0; i < spawnedItems_.Count; i++)
             {
-                spawnedItems_[i].SetHighlighted(i == index);
+                bool highlighted = i == index;
+                if (highlighted)
+                {
+                    StartCoroutine(scrollRect_.ScrollItemToTopSlotAnimated(spawnedItems_[i].GetRectTransform(), autoScrollTime_));
+                }
+                spawnedItems_[i].SetHighlighted(highlighted);
             }
         }
 

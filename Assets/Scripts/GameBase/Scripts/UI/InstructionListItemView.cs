@@ -11,6 +11,7 @@ namespace Flowbit.GameBase.UI
         [SerializeField] private Transform uiContainer_;
 
         [SerializeField] private Text text_;
+        [SerializeField] private Text indexText_;
         [SerializeField] private Image background_;
 
         [Header("Colors")]
@@ -30,6 +31,14 @@ namespace Flowbit.GameBase.UI
             instructionView.transform.localScale = Vector3.one;
             instructionView.transform.localPosition = Vector3.zero;
 
+        }
+
+        public void SetInstructionIndex(string index)
+        {
+            if (indexText_ != null)
+            {
+                indexText_.text = index;
+            }
         }
 
         /// <summary>
@@ -52,6 +61,11 @@ namespace Flowbit.GameBase.UI
             {
                 background_.color = highlighted ? highlightedColor_ : normalColor_;
             }
+        }
+
+        public RectTransform GetRectTransform()
+        {
+            return GetComponent<RectTransform>();
         }
     }
 }
