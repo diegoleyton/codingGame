@@ -62,12 +62,20 @@ namespace Flowbit.MovingGame.Unity
 
                 buttonView.SetTitle(levelData.name, levelIndex);
                 buttonView.SetDificulty(levelData.GetDificulty());
-                buttonView.SetOnClick(() => OpenLevel(levelIndex));
+                buttonView.SetOnClick(() => OpenLevelDetails(levelData, levelIndex));
             }
+        }
+
+        private void OpenLevelDetails(MovingGameLevelData levelData, int levelIndex)
+        {
+            navigationService_.Navigate(
+                SceneType.MovingGameLevelSelectionPopup,
+                new MovingGameLevelSelectionPopupParams(levelData, levelIndex, () => OpenLevel(levelIndex)));
         }
 
         private void OpenLevel(int levelIndex)
         {
+            UnityEngine.Debug.LogError("WAAAAAAA: " + levelIndex);
             navigationService_.Navigate(
                 SceneType.MovingGame,
                 new MovingGameNavigationParams(levelIndex));

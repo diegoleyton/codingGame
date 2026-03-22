@@ -49,6 +49,7 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.26f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameLevelSelectionPopupParams.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameController.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/View/GridRenderer.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameNavigationParams.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameSceneController.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameLevelSelectorController.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/View/MovingGameView.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/View/MovingGameLevelSelectionPopupView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/Scripts/MovingGame/Unity/Flowbit.MovingGame.Unity.asmdef" />

@@ -3,8 +3,8 @@
   <Project Path="Flowbit.GameBase.csproj" />
   <Project Path="Flowbit.Utilities.Core.csproj" />
   <Project Path="Flowbit.Engine.csproj" />
-  <Project Path="Flowbit.Utilities.Unity.csproj" />
   <Project Path="Flowbit.MovingGame.Unity.csproj" />
+  <Project Path="Flowbit.Utilities.Unity.csproj" />
   <Project Path="Flowbit.EngineController.csproj" />
   <Project Path="Flowbit.MovingGame.PlayModeTests.csproj" />
   <Project Path="Flowbit.MovingGame.EditModeTests.csproj" />

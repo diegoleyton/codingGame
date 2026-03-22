@@ -7,6 +7,7 @@ namespace Flowbit.GameBase.Definitions
     {
         MovingGameLevelSelection,
         MovingGame,
-        MovingGameLevelCompletedPopup
+        MovingGameLevelCompletedPopup,
+        MovingGameLevelSelectionPopup
     }
 }
