@@ -16,12 +16,14 @@ namespace Flowbit.MovingGame.Unity
             string nextLevelTitle,
             bool hasNextLevel,
             Action onContinue,
-            Action onRetry)
+            Action onRetry,
+            Action onClose)
         {
             NextLevelTitle = nextLevelTitle;
             HasNextLevel = hasNextLevel;
             OnContinue = onContinue;
             OnRetry = onRetry;
+            OnClose = onClose;
         }
 
         /// <summary>
@@ -43,5 +45,10 @@ namespace Flowbit.MovingGame.Unity
         /// Gets the action executed when retry is pressed.
         /// </summary>
         public Action OnRetry { get; }
+
+        /// <summary>
+        /// Gets the action executed when close is pressed.
+        /// </summary>
+        public Action OnClose { get; }
     }
 }

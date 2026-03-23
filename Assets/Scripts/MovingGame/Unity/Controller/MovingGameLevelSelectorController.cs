@@ -75,7 +75,6 @@ namespace Flowbit.MovingGame.Unity
 
         private void OpenLevel(int levelIndex)
         {
-            UnityEngine.Debug.LogError("WAAAAAAA: " + levelIndex);
             navigationService_.Navigate(
                 SceneType.MovingGame,
                 new MovingGameNavigationParams(levelIndex));

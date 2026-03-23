@@ -191,7 +191,8 @@ namespace Flowbit.MovingGame.Unity
                     nextLevelTitle: nextLevelTitle,
                     hasNextLevel: hasNextLevel,
                     onContinue: hasNextLevel ? LoadNextLevel : BackToLevelSelector,
-                    onRetry: RetryLevel));
+                    onRetry: RetryLevel,
+                    onClose: BackToLevelSelector));
 
             showCompletedPopupCoroutine_ = null;
         }

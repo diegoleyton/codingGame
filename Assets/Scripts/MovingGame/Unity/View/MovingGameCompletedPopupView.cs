@@ -16,11 +16,14 @@ namespace Flowbit.MovingGame.Unity
         [SerializeField] private Text titleText_;
         [SerializeField] private Button continueButton_;
         [SerializeField] private Button retryButton_;
+        [SerializeField] private Button closeButton_;
 
         [SerializeField] private CharacterAnimation characterAnimation_;
 
         private Action continueAction_;
         private Action retryAction_;
+
+        private Action closeAction_;
 
         /// <summary>
         /// Initializes the popup with navigation parameters.
@@ -35,6 +38,7 @@ namespace Flowbit.MovingGame.Unity
 
             continueAction_ = popupParams.OnContinue;
             retryAction_ = popupParams.OnRetry;
+            closeAction_ = popupParams.OnClose;
 
             if (titleText_ != null)
             {
@@ -56,6 +60,12 @@ namespace Flowbit.MovingGame.Unity
                 retryButton_.onClick.AddListener(OnRetryPressed);
             }
 
+            if (closeButton_ != null)
+            {
+                closeButton_.onClick.RemoveAllListeners();
+                closeButton_.onClick.AddListener(OnClosePressed);
+            }
+
             if (characterAnimation_ != null)
             {
                 characterAnimation_.SetState(CharacterAnimationStateType.Celebrate);
@@ -71,6 +81,12 @@ namespace Flowbit.MovingGame.Unity
         private void OnRetryPressed()
         {
             retryAction_?.Invoke();
+            Close();
+        }
+
+        private void OnClosePressed()
+        {
+            closeAction_?.Invoke();
             Close();
         }
 

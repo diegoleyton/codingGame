@@ -2388,7 +2388,7 @@ GameObject:
   - component: {fileID: 1441899871}
   - component: {fileID: 1441899872}
   m_Layer: 0
-  m_Name: cartoon_sheet_tile
+  m_Name: background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
