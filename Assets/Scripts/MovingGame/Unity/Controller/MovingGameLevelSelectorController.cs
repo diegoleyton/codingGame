@@ -17,12 +17,12 @@ namespace Flowbit.MovingGame.Unity
         [SerializeField] private Transform contentRoot_;
         [SerializeField] private LevelSelectionButtonView levelButtonPrefab_;
 
-        private GameNavigationService navigationService_;
+        private IGameNavigationService navigationService_;
 
         private void Awake()
         {
             var serviceContainer = GlobalServiceContainer.ServiceContainer;
-            navigationService_ = serviceContainer.Get<GameNavigationService>();
+            navigationService_ = serviceContainer.Get<IGameNavigationService>();
         }
 
         private void Start()

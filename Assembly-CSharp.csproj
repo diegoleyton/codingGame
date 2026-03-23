@@ -49,8 +49,10 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.26f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/Scripts/MovingGame/Presentation/MovingGameController.cs" />
-    <Compile Include="Assets/Scripts/MovingGame/Presentation/MovingGameLevelsLibrary.cs" />
+    <Compile Include="Assets/Materials/UIPaperCrumple/PaperCrumpleUi.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets/Materials/UIPaperCrumple/UI_PaperCrumple.shader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

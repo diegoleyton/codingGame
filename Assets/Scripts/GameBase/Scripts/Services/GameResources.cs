@@ -34,5 +34,11 @@ namespace Flowbit.GameBase.Services
         /// </summary>
         [field: SerializeField]
         public ComponentsLoopAnimator ComponentLoopAnimator { get; private set; }
+
+        /// <summary>
+        /// Gets the scene transition overlay for scene navigation
+        /// </summary>
+        [field: SerializeField]
+        public SceneTransitionOverlay SceneTransitionOverlay { get; private set; }
     }
 }

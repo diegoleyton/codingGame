@@ -1,0 +1,15 @@
+using System;
+
+namespace Flowbit.GameBase.Scenes
+{
+    /// <summary>
+    /// Handles the transition between one scene and another.
+    /// </summary>
+    public interface ISceneTransitionStrategy
+    {
+        /// <summary>
+        /// Play the transition animation and call the next scene action when it is required.
+        /// </summary>
+        public void RunTransition(Action goToNextSceneAction);
+    }
+}

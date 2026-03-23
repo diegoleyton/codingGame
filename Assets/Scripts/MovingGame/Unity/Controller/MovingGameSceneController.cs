@@ -27,7 +27,7 @@ namespace Flowbit.MovingGame.Unity
         [SerializeField] private float completedPopupDelaySeconds_ = 1.5f;
 
         private EventDispatcher eventDispatcher_;
-        private GameNavigationService navigationService_;
+        private IGameNavigationService navigationService_;
         private int currentLevelIndex_;
         private bool currentLevelCompleted_;
         private bool currentLevelFailed_;
@@ -37,7 +37,7 @@ namespace Flowbit.MovingGame.Unity
         {
             var serviceContainer = GlobalServiceContainer.ServiceContainer;
             eventDispatcher_ = serviceContainer.Get<EventDispatcher>();
-            navigationService_ = serviceContainer.Get<GameNavigationService>();
+            navigationService_ = serviceContainer.Get<IGameNavigationService>();
         }
 
         private void OnEnable()
