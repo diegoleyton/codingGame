@@ -49,18 +49,18 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.26f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameLevelSelectionPopupParams.cs" />
-    <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameController.cs" />
-    <Compile Include="Assets/Scripts/MovingGame/Unity/View/GridRenderer.cs" />
-    <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameNavigationParams.cs" />
-    <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameCompletedPopupParams.cs" />
-    <Compile Include="Assets/Scripts/MovingGame/Unity/View/LevelSelectionButtonView.cs" />
-    <Compile Include="Assets/Scripts/MovingGame/Unity/View/MovingGameCompletedPopupView.cs" />
-    <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameLevelsLibrary.cs" />
-    <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameSceneController.cs" />
-    <Compile Include="Assets/Scripts/MovingGame/Unity/Controller/MovingGameLevelSelectorController.cs" />
-    <Compile Include="Assets/Scripts/MovingGame/Unity/View/MovingGameView.cs" />
-    <Compile Include="Assets/Scripts/MovingGame/Unity/View/MovingGameLevelSelectionPopupView.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/MovingGameLevelsLibrary.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/Game/MovingGameNavigationParams.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/Game/View/MovingGameView.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/LevelSelection/MovingGameLevelSelectorController.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/Game/MovingGameController.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/Game/MovingGameCompletedPopupView.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/Game/View/LevelSelectionButtonView.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/Game/View/GridRenderer.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/Game/MovingGameCompletedPopupParams.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/Game/MovingGameSceneController.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/LevelSelection/MovingGameLevelSelectionPopupView.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/LevelSelection/MovingGameLevelSelectionPopupParams.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/Scripts/MovingGame/Unity/Flowbit.MovingGame.Unity.asmdef" />

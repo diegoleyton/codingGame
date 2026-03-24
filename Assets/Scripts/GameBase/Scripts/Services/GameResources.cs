@@ -18,12 +18,6 @@ namespace Flowbit.GameBase.Services
         public SceneSettings SceneSettings { get; private set; }
 
         /// <summary>
-        /// Gets the game navigation installer prefab.
-        /// </summary>
-        [field: SerializeField]
-        public UnityNavigationInstaller NavigationInstallerPrefab { get; private set; }
-
-        /// <summary>
         /// Gets the resources that define the presentation of instructions.
         /// </summary>
         [field: SerializeField]

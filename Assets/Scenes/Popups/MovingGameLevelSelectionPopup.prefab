@@ -265,7 +265,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5c49b3e74a80449b83ebeb760d53f8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  root_: {fileID: 7232530100803552376}
+  sceneType_: 3
   titleText_: {fileID: 9031366349014193463}
   indexText_: {fileID: 7877681912841600596}
   hintText_: {fileID: 6365180935989876230}

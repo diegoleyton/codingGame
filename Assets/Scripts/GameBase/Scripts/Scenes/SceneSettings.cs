@@ -21,18 +21,26 @@ namespace Flowbit.GameBase.Scenes
         private SceneDefinition[] scenes_;
 
         Dictionary<SceneType, NavigationTarget> navigationTargetMap_;
+        Dictionary<string, NavigationTarget> navigationTargetMapPerName_;
 
         private Dictionary<string, GameObject> prefabs_;
 
         /// <summary>
         /// Gets a navigation target for the scene type.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         public NavigationTarget GetTarget(SceneType id)
         {
             CreateNavigationTargets();
             return navigationTargetMap_[id];
+        }
+
+        /// <summary>
+        /// Gets a navigation target for the scene name.
+        /// </summary>
+        public NavigationTarget GetTarget(string id)
+        {
+            CreateNavigationTargets();
+            return navigationTargetMapPerName_[id];
         }
 
         /// <summary>
@@ -53,12 +61,15 @@ namespace Flowbit.GameBase.Scenes
                 return;
             }
             navigationTargetMap_ = new Dictionary<SceneType, NavigationTarget>();
+            navigationTargetMapPerName_ = new Dictionary<string, NavigationTarget>();
             prefabs_ = new Dictionary<string, GameObject>();
 
             for (int i = 0; i < scenes_.Length; i++)
             {
                 SceneDefinition scene = scenes_[i];
-                navigationTargetMap_[scene.SceneType] = new NavigationTarget(scene.GetName(), scene.TargetType);
+                var target = new NavigationTarget(scene.GetName(), scene.TargetType);
+                navigationTargetMap_[scene.SceneType] = target;
+                navigationTargetMapPerName_[scene.GetName()] = target;
                 if (scene.Prefab != null)
                 {
                     prefabs_[scene.GetName()] = scene.Prefab;
@@ -82,12 +93,6 @@ namespace Flowbit.GameBase.Scenes
             public NavigationTargetType TargetType { get; private set; }
 
             /// <summary>
-            /// Gets the destination scene.
-            /// </summary>
-            [field: SerializeField]
-            public string SceneName { get; private set; }
-
-            /// <summary>
             /// Gets the destination prefab.
             /// </summary>
             [field: SerializeField]
@@ -95,7 +100,7 @@ namespace Flowbit.GameBase.Scenes
 
             public string GetName()
             {
-                return SceneName != null ? SceneName : Prefab.name;
+                return SceneType.GetId();
             }
         }
     }

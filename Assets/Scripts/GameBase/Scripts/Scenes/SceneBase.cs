@@ -1,22 +1,25 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
+using Flowbit.GameBase.Services;
+using Flowbit.GameBase.Definitions;
+using Flowbit.Utilities.Navigation;
 
-namespace Flowbit.Utilities.Navigation
+namespace Flowbit.GameBase.Scenes
 {
     /// <summary>
     /// Base MonoBehaviour implementation for screens.
     /// </summary>
-    public class SceneBase : MonoBehaviour, INavigationTransitionTargetProvider
+    public abstract class SceneBase : MonoBehaviour, INavigationNode
     {
-        [SerializeField] private GameObject root_;
+        [SerializeField]
+        protected SceneType sceneType_;
+
+        public string Id => sceneType_.GetId();
 
         /// <summary>
-        /// Returns the objects that should participate in the navigation transition.
+        /// Initializes the screen with navigation parameters.
         /// </summary>
-        public IReadOnlyList<GameObject> GetTransitionTargets()
-        {
-            return new List<GameObject>() { root_ };
-        }
+        public abstract void Initialize(NavigationParams navigationParams);
+
+        protected IGameNavigationService NavigationService => GlobalServiceContainer.ServiceContainer.Get<IGameNavigationService>();
     }
 }

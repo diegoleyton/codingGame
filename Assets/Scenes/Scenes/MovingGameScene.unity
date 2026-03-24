@@ -1641,6 +1641,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caf163762e7a24e85a48a5a96a4b0a65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneType_: 1
   levelsLibrary_: {fileID: 800599476}
   movingGameController_: {fileID: 501291889}
   defaultLevelIndex_: 0
