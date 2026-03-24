@@ -1,0 +1,22 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Flowbit.Utilities.Navigation
+{
+    /// <summary>
+    /// Base MonoBehaviour implementation for screens.
+    /// </summary>
+    public class SceneBase : MonoBehaviour, INavigationTransitionTargetProvider
+    {
+        [SerializeField] private GameObject root_;
+
+        /// <summary>
+        /// Returns the objects that should participate in the navigation transition.
+        /// </summary>
+        public IReadOnlyList<GameObject> GetTransitionTargets()
+        {
+            return new List<GameObject>() { root_ };
+        }
+    }
+}

@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/InstructionListItemView.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Services/ServiceInitializer.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/SceneBase.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/SceneSettings.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/InstructionsPresentationSettings.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Services/GlobalServiceContainer.cs" />

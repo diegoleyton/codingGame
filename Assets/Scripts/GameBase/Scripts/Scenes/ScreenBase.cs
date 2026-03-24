@@ -7,10 +7,8 @@ namespace Flowbit.Utilities.Navigation
     /// <summary>
     /// Base MonoBehaviour implementation for screens.
     /// </summary>
-    public abstract class ScreenBase : MonoBehaviour, IScreen, INavigationTransitionTargetProvider
+    public abstract class ScreenBase : SceneBase, IScreen
     {
-        [SerializeField] private GameObject root_;
-
         private Action closeAction_;
 
         /// <summary>
@@ -32,14 +30,6 @@ namespace Flowbit.Utilities.Navigation
         public void Close()
         {
             closeAction_?.Invoke();
-        }
-
-        /// <summary>
-        /// Returns the objects that should participate in the navigation transition.
-        /// </summary>
-        public IReadOnlyList<GameObject> GetTransitionTargets()
-        {
-            return new List<GameObject>() { root_ };
         }
     }
 }
