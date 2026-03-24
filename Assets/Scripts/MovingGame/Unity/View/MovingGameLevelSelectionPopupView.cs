@@ -2,14 +2,14 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using Flowbit.Utilities.Core.Navigation;
-using Flowbit.Utilities.Unity.Navigation;
+using Flowbit.GameBase.Scenes;
 
 namespace Flowbit.MovingGame.Unity
 {
     /// <summary>
     /// Popup shown for selecting a level.
     /// </summary>
-    public sealed class MovingGameLevelSelectionPopupView : MonoBehaviour, IScreen
+    public sealed class MovingGameLevelSelectionPopupView : AnimatedScreenBase
     {
         [Header("UI")]
         [SerializeField] private Text titleText_;
@@ -23,7 +23,7 @@ namespace Flowbit.MovingGame.Unity
         /// <summary>
         /// Initializes the popup with navigation parameters.
         /// </summary>
-        public void Initialize(NavigationParams navigationParams)
+        public override void Initialize(NavigationParams navigationParams)
         {
             if (navigationParams is not MovingGameLevelSelectionPopupParams popupParams)
             {
@@ -57,19 +57,14 @@ namespace Flowbit.MovingGame.Unity
             if (closeButton_ != null)
             {
                 closeButton_.onClick.RemoveAllListeners();
-                closeButton_.onClick.AddListener(Close);
+                closeButton_.onClick.AddListener(RequestClose);
             }
         }
 
         private void OnContinuePressed()
         {
             continueAction_?.Invoke();
-            Close();
-        }
-
-        private void Close()
-        {
-            Destroy(gameObject);
+            RequestClose();
         }
     }
 }

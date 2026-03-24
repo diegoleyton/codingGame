@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Flowbit.Utilities.Core.Navigation;
 using Flowbit.Utilities.Unity.Navigation;
+using Flowbit.GameBase.Scenes;
 using Flowbit.GameBase.Character;
 
 namespace Flowbit.MovingGame.Unity
@@ -10,7 +11,7 @@ namespace Flowbit.MovingGame.Unity
     /// <summary>
     /// Popup shown after completing a level.
     /// </summary>
-    public sealed class MovingGameCompletedPopupView : MonoBehaviour, IScreen
+    public sealed class MovingGameCompletedPopupView : AnimatedScreenBase
     {
         [Header("UI")]
         [SerializeField] private Text titleText_;
@@ -20,15 +21,15 @@ namespace Flowbit.MovingGame.Unity
 
         [SerializeField] private CharacterAnimation characterAnimation_;
 
-        private Action continueAction_;
-        private Action retryAction_;
+        private Action onContinueAction_;
+        private Action onRetryAction_;
 
-        private Action closeAction_;
+        private Action onCloseAction_;
 
         /// <summary>
         /// Initializes the popup with navigation parameters.
         /// </summary>
-        public void Initialize(NavigationParams navigationParams)
+        public override void Initialize(NavigationParams navigationParams)
         {
             if (navigationParams is not MovingGameCompletedPopupParams popupParams)
             {
@@ -36,9 +37,9 @@ namespace Flowbit.MovingGame.Unity
                     $"Expected {nameof(MovingGameCompletedPopupParams)} but got {navigationParams?.GetType().Name ?? "null"}.");
             }
 
-            continueAction_ = popupParams.OnContinue;
-            retryAction_ = popupParams.OnRetry;
-            closeAction_ = popupParams.OnClose;
+            onContinueAction_ = popupParams.OnContinue;
+            onRetryAction_ = popupParams.OnRetry;
+            onCloseAction_ = popupParams.OnClose;
 
             if (titleText_ != null)
             {
@@ -74,25 +75,20 @@ namespace Flowbit.MovingGame.Unity
 
         private void OnContinuePressed()
         {
-            continueAction_?.Invoke();
-            Close();
+            onContinueAction_?.Invoke();
+            RequestClose();
         }
 
         private void OnRetryPressed()
         {
-            retryAction_?.Invoke();
-            Close();
+            onRetryAction_?.Invoke();
+            RequestClose();
         }
 
         private void OnClosePressed()
         {
-            closeAction_?.Invoke();
-            Close();
-        }
-
-        private void Close()
-        {
-            Destroy(gameObject);
+            onCloseAction_?.Invoke();
+            RequestClose();
         }
     }
 }

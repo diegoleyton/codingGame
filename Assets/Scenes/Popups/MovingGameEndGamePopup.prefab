@@ -352,6 +352,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a2fa268ab2b446b0a0bd1d2779a6fdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  container_: {fileID: 7111953016098804830}
+  enterDuration_: 0.4
+  exitDuration_: 0.4
+  enterOffsetY_: 1200
   titleText_: {fileID: 2495044356739381738}
   continueButton_: {fileID: 788400766372951820}
   retryButton_: {fileID: 844654120682511016}

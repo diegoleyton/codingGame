@@ -32,9 +32,17 @@ namespace Flowbit.GameBase.Scenes
             SceneType sceneType,
             NavigationParams navigationParams = null)
         {
-            sceneTransitionStrategy_.RunTransition(
-                () => navigationService_.Navigate(sceneSettings_.GetTarget(sceneType), navigationParams)
-            );
+            var sceneTarget = sceneSettings_.GetTarget(sceneType);
+
+            if (sceneTarget.TargetType == NavigationTargetType.Scene)
+            {
+                sceneTransitionStrategy_.RunTransition(
+                    () => navigationService_.Navigate(sceneTarget, navigationParams)
+                );
+                return;
+            }
+
+            navigationService_.Navigate(sceneTarget, navigationParams);
         }
     }
 }

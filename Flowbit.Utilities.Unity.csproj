@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/UnityNavigationInstaller.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/IAnimatedScreen.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/UI/ScrollRectExtensions.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/ScreenNavigationStrategy.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/SceneNavigationState.cs" />
