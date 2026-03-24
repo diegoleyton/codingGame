@@ -1,6 +1,6 @@
 using System;
 
-namespace Flowbit.GameBase.Scenes
+namespace Flowbit.Utilities.Core.Navigation
 {
     /// <summary>
     /// Handles the transition between one scene and another.

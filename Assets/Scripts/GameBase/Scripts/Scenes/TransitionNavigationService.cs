@@ -1,28 +1,22 @@
 using Flowbit.Utilities.Core.Navigation;
 using Flowbit.GameBase.Definitions;
-using System.Collections;
-using System;
-using UnityEngine;
 
 namespace Flowbit.GameBase.Scenes
 {
     /// <summary>
     /// Scene service for this game using transition
     /// </summary>
-    public class TransitionNavigationService : IGameNavigationService
+    public class GameNavigationService : IGameNavigationService
     {
-        private NavigationService navigationService_;
+        private INavigationService navigationService_;
         private SceneSettings sceneSettings_;
-        private ISceneTransitionStrategy sceneTransitionStrategy_;
 
-        public TransitionNavigationService(
-            NavigationService navigationService,
-            SceneSettings sceneSettings,
-            ISceneTransitionStrategy sceneTransitionStrategy)
+        public GameNavigationService(
+            INavigationService navigationService,
+            SceneSettings sceneSettings)
         {
             navigationService_ = navigationService;
             sceneSettings_ = sceneSettings;
-            sceneTransitionStrategy_ = sceneTransitionStrategy;
         }
 
         /// <summary>
@@ -32,17 +26,7 @@ namespace Flowbit.GameBase.Scenes
             SceneType sceneType,
             NavigationParams navigationParams = null)
         {
-            var sceneTarget = sceneSettings_.GetTarget(sceneType);
-
-            if (sceneTarget.TargetType == NavigationTargetType.Scene)
-            {
-                sceneTransitionStrategy_.RunTransition(
-                    () => navigationService_.Navigate(sceneTarget, navigationParams)
-                );
-                return;
-            }
-
-            navigationService_.Navigate(sceneTarget, navigationParams);
+            navigationService_.Navigate(sceneSettings_.GetTarget(sceneType), navigationParams);
         }
     }
 }

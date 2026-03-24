@@ -43,15 +43,15 @@ namespace Flowbit.GameBase.Services
         {
             var installer = GameObject.Instantiate<UnityNavigationInstaller>(res.NavigationInstallerPrefab);
             GameObject.DontDestroyOnLoad(installer);
-            installer.Install(dispatcher, res.SceneSettings.GetPrefabs());
 
             var sceneTransition = GameObject.Instantiate<SceneTransitionOverlay>(res.SceneTransitionOverlay);
             GameObject.DontDestroyOnLoad(sceneTransition);
 
-            IGameNavigationService transitionNavigationService = new TransitionNavigationService(
+            installer.Install(dispatcher, res.SceneSettings.GetPrefabs(), sceneTransition);
+
+            IGameNavigationService transitionNavigationService = new GameNavigationService(
                 installer.GetNavigationService(),
-                res.SceneSettings,
-                sceneTransition
+                res.SceneSettings
             );
             ServiceContainer.Register(transitionNavigationService);
         }

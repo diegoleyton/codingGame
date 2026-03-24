@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Flowbit.Utilities.Core.Events;
@@ -14,12 +13,12 @@ namespace Flowbit.Utilities.Unity.Navigation
         [Header("Screen Navigation")]
         [SerializeField] private ScreenNavigationHost screenNavigationHost_;
 
-        private NavigationService navigationService_;
+        private INavigationService navigationService_;
 
         /// <summary>
         /// Gets the installed core navigation service.
         /// </summary>
-        public NavigationService GetNavigationService()
+        public INavigationService GetNavigationService()
         {
             return navigationService_;
         }
@@ -27,22 +26,31 @@ namespace Flowbit.Utilities.Unity.Navigation
         /// <summary>
         /// Installs the Navigation service.
         /// </summary>
-        public void Install(EventDispatcher eventDispatcher, Dictionary<string, GameObject> prefabs)
+        public void Install(
+            EventDispatcher eventDispatcher,
+            Dictionary<string, GameObject> prefabs,
+            ISceneTransitionStrategy sceneTransitionStrategy = null)
         {
-            navigationService_ = new NavigationService(eventDispatcher);
+            var baseNavigationService = new NavigationService(eventDispatcher, sceneTransitionStrategy);
+            navigationService_ = baseNavigationService;
 
-            navigationService_.RegisterStrategy(
+            baseNavigationService.RegisterStrategy(
                 NavigationTargetType.Scene,
                 new SceneNavigationStrategy());
 
             if (screenNavigationHost_ != null)
             {
-                navigationService_.RegisterStrategy(
+                baseNavigationService.RegisterStrategy(
                     NavigationTargetType.Screen,
                     new ScreenNavigationStrategy(
                         prefabs,
                         screenNavigationHost_));
             }
+        }
+
+        public void InstallTransitionNavigationService(EventDispatcher eventDispatcher, Dictionary<string, GameObject> prefabs)
+        {
+
         }
     }
 }

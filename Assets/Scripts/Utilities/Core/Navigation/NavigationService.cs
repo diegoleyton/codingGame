@@ -7,18 +7,20 @@ namespace Flowbit.Utilities.Core.Navigation
     /// <summary>
     /// Resolves navigation requests using strategies registered per target type.
     /// </summary>
-    public sealed class NavigationService
+    public sealed class NavigationService : INavigationService
     {
         private readonly Dictionary<NavigationTargetType, INavigationStrategy> strategies_;
         private readonly EventDispatcher eventDispatcher_;
+        private readonly ISceneTransitionStrategy sceneTransitionStrategy_;
 
         /// <summary>
         /// Creates a new navigation service.
         /// </summary>
-        public NavigationService(EventDispatcher eventDispatcher)
+        public NavigationService(EventDispatcher eventDispatcher, ISceneTransitionStrategy sceneTransitionStrategy)
         {
             strategies_ = new Dictionary<NavigationTargetType, INavigationStrategy>();
             eventDispatcher_ = eventDispatcher;
+            sceneTransitionStrategy_ = sceneTransitionStrategy;
         }
 
         /// <summary>
@@ -55,7 +57,21 @@ namespace Flowbit.Utilities.Core.Navigation
         /// <summary>
         /// Navigates to the given target using the strategy registered for its target type.
         /// </summary>
-        public void Navigate(
+        public void Navigate(NavigationTarget target,
+            NavigationParams navigationParams = null)
+        {
+            if (sceneTransitionStrategy_ != null)
+            {
+                sceneTransitionStrategy_.RunTransition(
+                    () => NavigateInternal(target, navigationParams)
+                );
+                return;
+            }
+            NavigateInternal(target, navigationParams);
+        }
+
+
+        public void NavigateInternal(
             NavigationTarget target,
             NavigationParams navigationParams = null)
         {

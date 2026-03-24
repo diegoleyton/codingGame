@@ -60,7 +60,6 @@
     <Compile Include="Assets/Scripts/GameBase/Scripts/Character/CharacterAnimation.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/ComponentsLoopAnimator.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/SceneTransitionOverlay.cs" />
-    <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/ISceneTransitionStrategy.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Services/GameResources.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/GameStatusView.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/IGameNavigationService.cs" />
