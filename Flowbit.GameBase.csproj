@@ -56,10 +56,10 @@
     <Compile Include="Assets/Scripts/GameBase/Scripts/Services/GlobalServiceContainer.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/UIAnimatedComponent.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/ProgramPanelView.cs" />
-    <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/TransitionNavigationService.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Character/CharacterAnimation.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/ComponentsLoopAnimator.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/SceneTransitionOverlay.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/GameNavigationService.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Services/GameResources.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/GameStatusView.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/IGameNavigationService.cs" />

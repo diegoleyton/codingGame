@@ -1,6 +1,7 @@
 using Flowbit.Utilities.Navigation;
 using Flowbit.Utilities.Core.Events;
 using Flowbit.Utilities.Core.Services;
+using Flowbit.Utilities.Coroutines;
 using Flowbit.GameBase.Scenes;
 using Flowbit.GameBase.UI;
 using UnityEngine;
@@ -28,6 +29,7 @@ namespace Flowbit.GameBase.Services
             EventDispatcher dispatcher = new EventDispatcher();
             ServiceContainer.Register(dispatcher);
             var res = InitializeGameResources();
+            CreateCoroutineService();
             InitializeNavigationService(dispatcher, res);
             InitializeUIServices(res);
         }
@@ -51,7 +53,8 @@ namespace Flowbit.GameBase.Services
 
             IGameNavigationService transitionNavigationService = new GameNavigationService(
                 installer.GetNavigationService(),
-                res.SceneSettings
+                res.SceneSettings,
+                ServiceContainer.Get<ICoroutineService>()
             );
             ServiceContainer.Register(transitionNavigationService);
         }
@@ -61,6 +64,13 @@ namespace Flowbit.GameBase.Services
             var globalAnimator = GameObject.Instantiate<ComponentsLoopAnimator>(res.ComponentLoopAnimator);
             GameObject.DontDestroyOnLoad(globalAnimator);
             ServiceContainer.Register(globalAnimator);
+        }
+
+        private void CreateCoroutineService()
+        {
+            var go = new GameObject("[CoroutineService]");
+            GameObject.DontDestroyOnLoad(go);
+            ServiceContainer.Register<ICoroutineService>(go.AddComponent<CoroutineService>());
         }
     }
 }

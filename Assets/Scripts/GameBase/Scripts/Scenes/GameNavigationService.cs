@@ -1,5 +1,6 @@
 using Flowbit.Utilities.Navigation;
 using Flowbit.GameBase.Definitions;
+using Flowbit.Utilities.Coroutines;
 
 namespace Flowbit.GameBase.Scenes
 {
@@ -11,12 +12,16 @@ namespace Flowbit.GameBase.Scenes
         private INavigationService navigationService_;
         private SceneSettings sceneSettings_;
 
+        private ICoroutineService coroutineService_;
+
         public GameNavigationService(
             INavigationService navigationService,
-            SceneSettings sceneSettings)
+            SceneSettings sceneSettings,
+            ICoroutineService coroutineService)
         {
             navigationService_ = navigationService;
             sceneSettings_ = sceneSettings;
+            coroutineService_ = coroutineService;
         }
 
         /// <summary>
@@ -26,7 +31,10 @@ namespace Flowbit.GameBase.Scenes
             SceneType sceneType,
             NavigationParams navigationParams = null)
         {
-            navigationService_.Navigate(sceneSettings_.GetTarget(sceneType), navigationParams);
+            coroutineService_.StartCoroutine(
+                navigationService_.Navigate(
+                    sceneSettings_.GetTarget(sceneType),
+                    navigationParams));
         }
     }
 }

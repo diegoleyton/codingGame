@@ -60,12 +60,14 @@
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Abstractions/INavigationTransitionTargetProvider.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Scenes/SceneNavigationStrategy.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Abstractions/INavigationService.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Coroutines/ICoroutineService.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Scenes/SceneTransitionBootstrap.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Screens/ScreenNavigationHost.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Abstractions/INavigationStrategy.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Runtime/NavigationService.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Scenes/SceneTransitionTargetResolver.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Runtime/NavigationTransitionContext.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Coroutines/CoroutineService.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Screens/ScreenNavigationStrategy.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Scenes/SceneNavigationState.cs" />
   </ItemGroup>
