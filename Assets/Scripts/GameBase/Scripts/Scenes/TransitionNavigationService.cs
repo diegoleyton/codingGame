@@ -1,4 +1,4 @@
-using Flowbit.Utilities.Core.Navigation;
+using Flowbit.Utilities.Navigation;
 using Flowbit.GameBase.Definitions;
 
 namespace Flowbit.GameBase.Scenes

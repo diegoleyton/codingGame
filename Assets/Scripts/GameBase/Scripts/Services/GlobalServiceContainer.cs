@@ -1,4 +1,4 @@
-using Flowbit.Utilities.Unity.Navigation;
+using Flowbit.Utilities.Navigation;
 using Flowbit.Utilities.Core.Events;
 using Flowbit.Utilities.Core.Services;
 using UnityEngine;

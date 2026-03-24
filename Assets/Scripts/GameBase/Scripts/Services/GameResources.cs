@@ -1,5 +1,5 @@
 using UnityEngine;
-using Flowbit.Utilities.Unity.Navigation;
+using Flowbit.Utilities.Navigation;
 using Flowbit.GameBase.UI;
 using Flowbit.GameBase.Scenes;
 

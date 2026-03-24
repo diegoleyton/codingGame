@@ -6,7 +6,7 @@ using Flowbit.Utilities.Core.Events;
 using Flowbit.GameBase.Definitions;
 using Flowbit.GameBase.Services;
 using Flowbit.GameBase.Scenes;
-using Flowbit.Utilities.Unity.Navigation;
+using Flowbit.Utilities.Navigation;
 
 namespace Flowbit.MovingGame.Unity
 {
@@ -208,7 +208,7 @@ namespace Flowbit.MovingGame.Unity
 
         private int ResolveInitialLevelIndex()
         {
-            if (SceneNavigationState.LastSceneNavigationParams is MovingGameNavigationParams movingGameParams)
+            if (SceneNavigationState.NavigationParams is MovingGameNavigationParams movingGameParams)
             {
                 int levelIndex = movingGameParams.LevelIndex;
                 SceneNavigationState.Clear();

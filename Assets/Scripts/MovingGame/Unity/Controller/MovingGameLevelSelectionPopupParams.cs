@@ -1,5 +1,5 @@
 using System;
-using Flowbit.Utilities.Core.Navigation;
+using Flowbit.Utilities.Navigation;
 using Flowbit.MovingGame.Core.Levels;
 
 namespace Flowbit.MovingGame.Unity

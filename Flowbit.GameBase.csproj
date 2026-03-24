@@ -63,7 +63,7 @@
     <Compile Include="Assets/Scripts/GameBase/Scripts/Services/GameResources.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/GameStatusView.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/IGameNavigationService.cs" />
-    <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/AnimatedScreenBase.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/ScreenBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/Scripts/GameBase/Scripts/Flowbit.GameBase.asmdef" />

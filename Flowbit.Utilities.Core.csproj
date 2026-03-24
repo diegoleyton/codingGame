@@ -49,17 +49,9 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.26f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/Scripts/Utilities/Core/Navigation/NavigationTarget.cs" />
-    <Compile Include="Assets/Scripts/Utilities/Core/Navigation/INavigationStrategy.cs" />
-    <Compile Include="Assets/Scripts/Utilities/Core/Navigation/NavigationEvents.cs" />
-    <Compile Include="Assets/Scripts/Utilities/Core/Navigation/ISceneTransitionStrategy.cs" />
     <Compile Include="Assets/Scripts/Utilities/Core/Events/IEvent.cs" />
     <Compile Include="Assets/Scripts/Utilities/Core/Events/EventDispatcher.cs" />
     <Compile Include="Assets/Scripts/Utilities/Core/Services/ServiceContainer.cs" />
-    <Compile Include="Assets/Scripts/Utilities/Core/Navigation/NavigationTargetType.cs" />
-    <Compile Include="Assets/Scripts/Utilities/Core/Navigation/NavigationParams.cs" />
-    <Compile Include="Assets/Scripts/Utilities/Core/Navigation/NavigationService.cs" />
-    <Compile Include="Assets/Scripts/Utilities/Core/Navigation/INavigationService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/Scripts/Utilities/Core/Flowbit.Utilities.Core.asmdef" />

@@ -49,14 +49,25 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.26f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/UnityNavigationInstaller.cs" />
-    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/IAnimatedScreen.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Runtime/NavigationTarget.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Installer/UnityNavigationInstaller.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Abstractions/INavigationTransitionStrategy.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/UI/ScrollRectExtensions.cs" />
-    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/ScreenNavigationStrategy.cs" />
-    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/SceneNavigationState.cs" />
-    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/SceneNavigationStrategy.cs" />
-    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/ScreenNavigationHost.cs" />
-    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/IScreen.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Abstractions/IScreen.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Runtime/NavigationEvents.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Runtime/NavigationTargetType.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Runtime/NavigationParams.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Abstractions/INavigationTransitionTargetProvider.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Scenes/SceneNavigationStrategy.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Abstractions/INavigationService.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Scenes/SceneTransitionBootstrap.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Screens/ScreenNavigationHost.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Abstractions/INavigationStrategy.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Runtime/NavigationService.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Scenes/SceneTransitionTargetResolver.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Runtime/NavigationTransitionContext.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Screens/ScreenNavigationStrategy.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Scenes/SceneNavigationState.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/Scripts/Utilities/Unity/Flowbit.Utilities.Unity.asmdef" />

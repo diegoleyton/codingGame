@@ -1,9 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using Flowbit.Utilities.Core.Navigation;
-using Flowbit.Utilities.Unity.Navigation;
-using Flowbit.GameBase.Scenes;
+using Flowbit.Utilities.Navigation;
 using Flowbit.GameBase.Character;
 
 namespace Flowbit.MovingGame.Unity
@@ -11,7 +9,7 @@ namespace Flowbit.MovingGame.Unity
     /// <summary>
     /// Popup shown after completing a level.
     /// </summary>
-    public sealed class MovingGameCompletedPopupView : AnimatedScreenBase
+    public sealed class MovingGameCompletedPopupView : ScreenBase
     {
         [Header("UI")]
         [SerializeField] private Text titleText_;
@@ -23,7 +21,6 @@ namespace Flowbit.MovingGame.Unity
 
         private Action onContinueAction_;
         private Action onRetryAction_;
-
         private Action onCloseAction_;
 
         /// <summary>
@@ -76,19 +73,19 @@ namespace Flowbit.MovingGame.Unity
         private void OnContinuePressed()
         {
             onContinueAction_?.Invoke();
-            RequestClose();
+            Close();
         }
 
         private void OnRetryPressed()
         {
             onRetryAction_?.Invoke();
-            RequestClose();
+            Close();
         }
 
         private void OnClosePressed()
         {
             onCloseAction_?.Invoke();
-            RequestClose();
+            Close();
         }
     }
 }

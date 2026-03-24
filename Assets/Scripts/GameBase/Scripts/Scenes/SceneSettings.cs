@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
-using Flowbit.Utilities.Core.Navigation;
+using Flowbit.Utilities.Navigation;
 using Flowbit.GameBase.Definitions;
 using System;
 

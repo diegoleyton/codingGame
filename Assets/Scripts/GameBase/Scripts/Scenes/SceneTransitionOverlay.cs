@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using Flowbit.Utilities.Core.Navigation;
+using Flowbit.Utilities.Navigation;
 
 namespace Flowbit.GameBase.Scenes
 {
@@ -10,7 +10,7 @@ namespace Flowbit.GameBase.Scenes
     /// Displays a screenshot of the previous scene on top of everything
     /// while the next scene loads in the background.
     /// </summary>
-    public class SceneTransitionOverlay : MonoBehaviour, ISceneTransitionStrategy
+    public class SceneTransitionOverlay : MonoBehaviour, INavigationTransitionStrategy
     {
         [SerializeField]
         private RawImage rawImage_;
@@ -61,11 +61,18 @@ namespace Flowbit.GameBase.Scenes
             StartCoroutine(RunTransitionCoroutine(goToNextSceneAction));
         }
 
-        private IEnumerator RunTransitionCoroutine(Action goToNextSceneAction)
+        public IEnumerator RunTransition(
+            NavigationTransitionContext context,
+            Action performNavigation)
+        {
+            yield return StartCoroutine(RunTransitionCoroutine(performNavigation));
+        }
+
+        private IEnumerator RunTransitionCoroutine(Action performNavigation)
         {
             yield return StartCoroutine(PrepareTransition());
 
-            goToNextSceneAction?.Invoke();
+            performNavigation?.Invoke();
 
             yield return null;
             yield return null;
