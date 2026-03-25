@@ -20,6 +20,12 @@ namespace Flowbit.GameBase.Scenes
         [SerializeField]
         private SceneDefinition[] scenes_;
 
+        [field: SerializeField]
+        public GameSceneTransitionBase TransitionNext { get; private set; }
+
+        [field: SerializeField]
+        public GameSceneTransitionBase TransitionPrev { get; private set; }
+
         Dictionary<SceneType, NavigationTarget> navigationTargetMap_;
         Dictionary<string, NavigationTarget> navigationTargetMapPerName_;
 

@@ -10,7 +10,7 @@ namespace Flowbit.GameBase.Scenes
     /// Displays a screenshot of the previous scene on top of everything
     /// while the next scene loads in the background.
     /// </summary>
-    public class SceneTransitionOverlay : MonoBehaviour, INavigationTransitionStrategy
+    public class SceneTransitionOverlay : GameSceneTransitionBase
     {
         [SerializeField]
         private RawImage rawImage_;
@@ -58,7 +58,7 @@ namespace Flowbit.GameBase.Scenes
         /// <summary>
         /// Prepares a new transition and interrupts any previous one that may still be running.
         /// </summary>
-        public IEnumerator PrepareTransition(NavigationTransitionContext _)
+        public override IEnumerator PrepareTransition(NavigationTransitionContext _)
         {
             int transitionId = BeginNewTransition();
 
@@ -104,7 +104,7 @@ namespace Flowbit.GameBase.Scenes
         /// <summary>
         /// Finishes the currently active transition if it has not been interrupted.
         /// </summary>
-        public IEnumerator FinishTransition(NavigationTransitionContext _)
+        public override IEnumerator FinishTransition(NavigationTransitionContext _)
         {
             int transitionId = activeTransitionId_;
 

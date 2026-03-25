@@ -15,17 +15,15 @@ MonoBehaviour:
   scenes_:
   - <SceneType>k__BackingField: 0
     <TargetType>k__BackingField: 0
-    <SceneName>k__BackingField: LevelSelectorScene
     <Prefab>k__BackingField: {fileID: 0}
   - <SceneType>k__BackingField: 1
     <TargetType>k__BackingField: 0
-    <SceneName>k__BackingField: MovingGameScene
     <Prefab>k__BackingField: {fileID: 0}
   - <SceneType>k__BackingField: 2
     <TargetType>k__BackingField: 1
-    <SceneName>k__BackingField: MovingGameEndGamePopup
     <Prefab>k__BackingField: {fileID: 3064830125514427920, guid: 85a7726ff142940f7ba7f58624701710, type: 3}
   - <SceneType>k__BackingField: 3
     <TargetType>k__BackingField: 1
-    <SceneName>k__BackingField: MovingGameLevelSelectionPopup
     <Prefab>k__BackingField: {fileID: 130099972575510108, guid: 73a0dd780402b421ea5af2ef8dbbffe4, type: 3}
+  <TransitionNext>k__BackingField: {fileID: 8873921252752505752, guid: 2fdcc266e14be49caa427ba278f7f8f6, type: 3}
+  <TransitionPrev>k__BackingField: {fileID: 8380803026297557488, guid: 91a36af228fc64c389b6805989376f10, type: 3}

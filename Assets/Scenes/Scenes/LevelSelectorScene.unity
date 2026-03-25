@@ -921,6 +921,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b5f1988b12cd4931894ad795c81fd93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneType_: 0
   levelsLibrary_: {fileID: 1564817247}
   contentRoot_: {fileID: 596077613}
   levelButtonPrefab_: {fileID: 1980919660219262266, guid: 654bc997c54a046e7b18f96d96c01424, type: 3}
@@ -1072,7 +1073,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -23.8, y: -202.1}
+  m_AnchoredPosition: {x: -23.800049, y: -202.1}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!1660057539 &9223372036854775807
