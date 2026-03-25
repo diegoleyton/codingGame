@@ -43,8 +43,10 @@ namespace Flowbit.GameBase.Scenes
         private Vector2 finalImageInitialAnchoredPosition_;
         private Quaternion finalImageInitialLocalRotation_;
         private bool finalImageInitialStateCached_;
-
         private Vector3 backgroundPosition_;
+
+        private int activeTransitionId_;
+        private bool hasPreparedTransition_;
 
         private void Awake()
         {
@@ -53,9 +55,19 @@ namespace Flowbit.GameBase.Scenes
             DisableAllMaskableContainers();
         }
 
+        /// <summary>
+        /// Prepares a new transition and interrupts any previous one that may still be running.
+        /// </summary>
         public IEnumerator PrepareTransition(NavigationTransitionContext _)
         {
+            int transitionId = BeginNewTransition();
+
             yield return new WaitForEndOfFrame();
+
+            if (!IsActiveTransition(transitionId))
+            {
+                yield break;
+            }
 
             if (screenshotTexture_ != null)
             {
@@ -77,17 +89,35 @@ namespace Flowbit.GameBase.Scenes
             visualsContainer_.gameObject.SetActive(true);
             DisableAllMaskableContainers();
 
+            hasPreparedTransition_ = true;
+
             yield return null;
+
+            if (!IsActiveTransition(transitionId))
+            {
+                yield break;
+            }
+
             yield return null;
         }
 
+        /// <summary>
+        /// Finishes the currently active transition if it has not been interrupted.
+        /// </summary>
         public IEnumerator FinishTransition(NavigationTransitionContext _)
         {
+            int transitionId = activeTransitionId_;
+
+            if (!hasPreparedTransition_ || !IsActiveTransition(transitionId))
+            {
+                yield break;
+            }
+
             DisableAllMaskableContainers();
 
             if (maskableContainers_ == null || maskableContainers_.Length == 0)
             {
-                Clean();
+                CompleteTransition(transitionId);
                 yield break;
             }
 
@@ -96,6 +126,11 @@ namespace Flowbit.GameBase.Scenes
 
             for (int i = 0; i < maskableContainers_.Length; i++)
             {
+                if (!IsActiveTransition(transitionId))
+                {
+                    yield break;
+                }
+
                 MaskableContainer currentContainer = maskableContainers_[i];
 
                 if (previousContainer != null)
@@ -112,6 +147,11 @@ namespace Flowbit.GameBase.Scenes
                 yield return new WaitForSeconds(waitPerContainer);
             }
 
+            if (!IsActiveTransition(transitionId))
+            {
+                yield break;
+            }
+
             if (previousContainer != null)
             {
                 previousContainer.Enable(false);
@@ -121,13 +161,84 @@ namespace Flowbit.GameBase.Scenes
             finalImage_?.gameObject.SetActive(true);
 
             yield return new WaitForSeconds(waitPerContainer);
-            yield return StartCoroutine(ThrowToTarget(finalImage_));
+
+            if (!IsActiveTransition(transitionId))
+            {
+                yield break;
+            }
+
+            yield return StartCoroutine(ThrowToTarget(finalImage_, transitionId));
+
+            if (!IsActiveTransition(transitionId))
+            {
+                yield break;
+            }
 
             DisableAllMaskableContainers();
             rawImage_.rectTransform.SetParent(visualsContainer_.transform, true);
             rawImage_.transform.position = backgroundPosition_;
 
+            CompleteTransition(transitionId);
+        }
+
+        /// <summary>
+        /// Starts a new transition and aborts any previous visual state.
+        /// </summary>
+        private int BeginNewTransition()
+        {
+            activeTransitionId_++;
+            hasPreparedTransition_ = false;
+            AbortVisualState();
+            return activeTransitionId_;
+        }
+
+        /// <summary>
+        /// Completes the given transition if it is still the active one.
+        /// </summary>
+        private void CompleteTransition(int transitionId)
+        {
+            if (!IsActiveTransition(transitionId))
+            {
+                return;
+            }
+
+            hasPreparedTransition_ = false;
             Clean();
+        }
+
+        /// <summary>
+        /// Returns whether the given transition id is still the active one.
+        /// </summary>
+        private bool IsActiveTransition(int transitionId)
+        {
+            return transitionId == activeTransitionId_;
+        }
+
+        /// <summary>
+        /// Resets the visual state immediately to interrupt any running transition.
+        /// </summary>
+        private void AbortVisualState()
+        {
+            DisableAllMaskableContainers();
+            ResetFinalImageTransform();
+
+            if (rawImage_ != null)
+            {
+                rawImage_.texture = null;
+                rawImage_.rectTransform.SetParent(visualsContainer_.transform, false);
+                rawImage_.transform.position = backgroundPosition_;
+            }
+
+            if (screenshotTexture_ != null)
+            {
+                Destroy(screenshotTexture_);
+                screenshotTexture_ = null;
+            }
+
+            if (visualsContainer_ != null)
+            {
+                visualsContainer_.gameObject.SetActive(false);
+            }
         }
 
         private void DisableAllMaskableContainers()
@@ -167,7 +278,7 @@ namespace Flowbit.GameBase.Scenes
         /// <summary>
         /// Throws a UI element from its current position to the target using a projectile-like arc.
         /// </summary>
-        private IEnumerator ThrowToTarget(RectTransform element)
+        private IEnumerator ThrowToTarget(RectTransform element, int transitionId)
         {
             if (element == null || throwTarget_ == null)
             {
@@ -192,6 +303,11 @@ namespace Flowbit.GameBase.Scenes
 
             while (elapsed < throwDuration_)
             {
+                if (!IsActiveTransition(transitionId))
+                {
+                    yield break;
+                }
+
                 elapsed += Time.deltaTime;
                 float t = Mathf.Clamp01(elapsed / throwDuration_);
 
@@ -207,6 +323,11 @@ namespace Flowbit.GameBase.Scenes
                     Mathf.Lerp(0f, throwRotationDegrees_, t));
 
                 yield return null;
+            }
+
+            if (!IsActiveTransition(transitionId))
+            {
+                yield break;
             }
 
             element.anchoredPosition = endPosition;
