@@ -53,34 +53,7 @@ namespace Flowbit.GameBase.Scenes
             DisableAllMaskableContainers();
         }
 
-        /// <summary>
-        /// Play the transition animation and call the next scene action when it is required.
-        /// </summary>
-        public void RunTransition(Action goToNextSceneAction)
-        {
-            StartCoroutine(RunTransitionCoroutine(goToNextSceneAction));
-        }
-
-        public IEnumerator RunTransition(
-            NavigationTransitionContext context,
-            Action performNavigation)
-        {
-            yield return StartCoroutine(RunTransitionCoroutine(performNavigation));
-        }
-
-        private IEnumerator RunTransitionCoroutine(Action performNavigation)
-        {
-            yield return StartCoroutine(PrepareTransition());
-
-            performNavigation?.Invoke();
-
-            yield return null;
-            yield return null;
-
-            yield return StartCoroutine(PlayTransitionOut());
-        }
-
-        private IEnumerator PrepareTransition()
+        public IEnumerator PrepareTransition(NavigationTransitionContext _)
         {
             yield return new WaitForEndOfFrame();
 
@@ -103,15 +76,18 @@ namespace Flowbit.GameBase.Scenes
 
             visualsContainer_.gameObject.SetActive(true);
             DisableAllMaskableContainers();
+
+            yield return null;
+            yield return null;
         }
 
-        private IEnumerator PlayTransitionOut()
+        public IEnumerator FinishTransition(NavigationTransitionContext _)
         {
             DisableAllMaskableContainers();
 
             if (maskableContainers_ == null || maskableContainers_.Length == 0)
             {
-                FinishTransition();
+                Clean();
                 yield break;
             }
 
@@ -151,7 +127,7 @@ namespace Flowbit.GameBase.Scenes
             rawImage_.rectTransform.SetParent(visualsContainer_.transform, true);
             rawImage_.transform.position = backgroundPosition_;
 
-            FinishTransition();
+            Clean();
         }
 
         private void DisableAllMaskableContainers()
@@ -173,7 +149,7 @@ namespace Flowbit.GameBase.Scenes
             }
         }
 
-        private void FinishTransition()
+        private void Clean()
         {
             ResetFinalImageTransform();
 

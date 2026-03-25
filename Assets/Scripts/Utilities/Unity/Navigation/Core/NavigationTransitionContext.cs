@@ -1,7 +1,7 @@
 namespace Flowbit.Utilities.Navigation
 {
     /// <summary>
-    /// Contains the information required to play a navigation transition.
+    /// Contains the information required to play one stage of a navigation transition.
     /// </summary>
     public sealed class NavigationTransitionContext
     {
@@ -9,41 +9,27 @@ namespace Flowbit.Utilities.Navigation
         /// Creates a new transition context.
         /// </summary>
         public NavigationTransitionContext(
-            NavigationTarget fromTarget,
-            NavigationTarget toTarget,
-            INavigationNode fromNode,
-            INavigationNode toNode,
+            NavigationTarget activeTarget,
+            INavigationNode activeNode,
             NavigationParams navigationParams)
         {
-            FromTarget = fromTarget;
-            ToTarget = toTarget;
-            FromNode = fromNode;
-            ToNode = toNode;
+            ActiveTarget = activeTarget;
+            ActiveNode = activeNode;
             NavigationParams = navigationParams;
         }
 
         /// <summary>
-        /// Gets the previous navigation target.
+        /// Gets the target associated with the current transition stage.
         /// </summary>
-        public NavigationTarget FromTarget { get; }
+        public NavigationTarget ActiveTarget { get; }
 
         /// <summary>
-        /// Gets the destination navigation target.
+        /// Gets the node associated with the current transition stage.
         /// </summary>
-        public NavigationTarget ToTarget { get; }
+        public INavigationNode ActiveNode { get; }
 
         /// <summary>
-        /// Gets the previous node instance.
-        /// </summary>
-        public INavigationNode FromNode { get; }
-
-        /// <summary>
-        /// Gets the destination node instance.
-        /// </summary>
-        public INavigationNode ToNode { get; }
-
-        /// <summary>
-        /// Gets the navigation parameters.
+        /// Gets the navigation parameters associated with the transition.
         /// </summary>
         public NavigationParams NavigationParams { get; }
     }
