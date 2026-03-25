@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Flowbit.Utilities.Navigation
 {
@@ -15,8 +16,9 @@ namespace Flowbit.Utilities.Navigation
         private readonly INavigationNodeResolver sceneNodeResolver_;
         private readonly INavigationTransitionStrategy navigateTransitionStrategy_;
         private readonly INavigationTransitionStrategy backTransitionStrategy_;
+        private readonly INavigationTransitionStrategy popupOpenTransitionStrategy_;
+        private readonly INavigationTransitionStrategy popupCloseTransitionStrategy_;
         private readonly Stack<NavigationHistoryEntry> sceneHistory_;
-
         private ResolvedNavigationNode currentSceneNode_;
         private readonly Dictionary<string, ResolvedNavigationNode> openedPrefabs_;
         private readonly Dictionary<string, GameObject> openedPrefabInstances_;
@@ -29,13 +31,17 @@ namespace Flowbit.Utilities.Navigation
             Transform prefabParent,
             INavigationNodeResolver sceneNodeResolver,
             INavigationTransitionStrategy navigateTransitionStrategy,
-            INavigationTransitionStrategy backTransitionStrategy)
+            INavigationTransitionStrategy backTransitionStrategy,
+            INavigationTransitionStrategy popupOpenTransitionStrategy,
+            INavigationTransitionStrategy popupCloseTransitionStrategy)
         {
             prefabMap_ = prefabMap ?? throw new ArgumentNullException(nameof(prefabMap));
             prefabParent_ = prefabParent;
             sceneNodeResolver_ = sceneNodeResolver ?? throw new ArgumentNullException(nameof(sceneNodeResolver));
             navigateTransitionStrategy_ = navigateTransitionStrategy ?? throw new ArgumentNullException(nameof(navigateTransitionStrategy));
             backTransitionStrategy_ = backTransitionStrategy ?? throw new ArgumentNullException(nameof(backTransitionStrategy));
+            popupOpenTransitionStrategy_ = popupOpenTransitionStrategy ?? throw new ArgumentNullException(nameof(popupOpenTransitionStrategy));
+            popupCloseTransitionStrategy_ = popupCloseTransitionStrategy ?? throw new ArgumentNullException(nameof(popupCloseTransitionStrategy));
 
             sceneHistory_ = new Stack<NavigationHistoryEntry>();
             openedPrefabs_ = new Dictionary<string, ResolvedNavigationNode>();
@@ -113,17 +119,14 @@ namespace Flowbit.Utilities.Navigation
 
             NavigationHistoryEntry previousEntry = sceneHistory_.Pop();
 
-            NavigationTransitionContext prepareContext = new NavigationTransitionContext(
-                currentSceneNode_?.Target,
-                currentSceneNode_?.Node,
-                previousEntry.NavigationParams);
+            NavigationTransitionContext prepareContext =
+                new NavigationTransitionContext(currentSceneNode_?.Target, currentSceneNode_?.Node, previousEntry.NavigationParams);
 
             yield return backTransitionStrategy_.PrepareTransition(prepareContext);
 
             CloseAllOpenedPrefabsImmediately();
 
             ResolvedNavigationNode previousSceneNode = null;
-
             yield return ResolveSceneTarget(
                 previousEntry.Target,
                 previousEntry.NavigationParams,
@@ -132,10 +135,8 @@ namespace Flowbit.Utilities.Navigation
 
             currentSceneNode_ = previousSceneNode;
 
-            NavigationTransitionContext finishContext = new NavigationTransitionContext(
-                previousSceneNode.Target,
-                previousSceneNode.Node,
-                previousEntry.NavigationParams);
+            NavigationTransitionContext finishContext =
+                new NavigationTransitionContext(previousSceneNode.Target, previousSceneNode.Node, previousEntry.NavigationParams);
 
             yield return backTransitionStrategy_.FinishTransition(finishContext);
         }
@@ -155,26 +156,20 @@ namespace Flowbit.Utilities.Navigation
                 yield break;
             }
 
-            NavigationTransitionContext prepareContext = new NavigationTransitionContext(
-                prefabNode.Target,
-                prefabNode.Node,
-                null);
+            NavigationTransitionContext prepareContext =
+                new NavigationTransitionContext(prefabNode.Target, prefabNode.Node, prefabNode.NavigationParams);
 
-            yield return backTransitionStrategy_.PrepareTransition(prepareContext);
+            yield return popupCloseTransitionStrategy_.PrepareTransition(prepareContext);
 
             DisposePrefab(id);
 
-            NavigationTransitionContext finishContext = new NavigationTransitionContext(
-                currentSceneNode_?.Target,
-                currentSceneNode_?.Node,
-                null);
+            NavigationTransitionContext finishContext =
+                new NavigationTransitionContext(currentSceneNode_?.Target, currentSceneNode_?.Node, prefabNode.NavigationParams);
 
-            yield return backTransitionStrategy_.FinishTransition(finishContext);
+            yield return popupCloseTransitionStrategy_.FinishTransition(finishContext);
         }
 
-        private void StartWithSceneTarget(
-            NavigationTarget target,
-            NavigationParams navigationParams)
+        private void StartWithSceneTarget(NavigationTarget target, NavigationParams navigationParams)
         {
             INavigationNode node = sceneNodeResolver_.Resolve(target);
             if (node == null)
@@ -183,40 +178,26 @@ namespace Flowbit.Utilities.Navigation
                     $"No INavigationNode was resolved for scene '{target.Id}'.");
             }
 
-            InitializeNodeIfNeeded(
-                node,
-                navigationParams,
-                forceInitialize: false);
-
-            currentSceneNode_ = new ResolvedNavigationNode(
-                target,
-                node,
-                navigationParams);
+            InitializeNodeIfNeeded(node, navigationParams, forceInitialize: false);
+            currentSceneNode_ = new ResolvedNavigationNode(target, node, navigationParams);
         }
 
-        private IEnumerator NavigateToScene(
-            NavigationTarget target,
-            NavigationParams navigationParams)
+        private IEnumerator NavigateToScene(NavigationTarget target, NavigationParams navigationParams)
         {
-            NavigationTransitionContext prepareContext = new NavigationTransitionContext(
-                currentSceneNode_?.Target,
-                currentSceneNode_?.Node,
-                navigationParams);
+            NavigationTransitionContext prepareContext =
+                new NavigationTransitionContext(currentSceneNode_?.Target, currentSceneNode_?.Node, navigationParams);
 
             yield return navigateTransitionStrategy_.PrepareTransition(prepareContext);
 
             if (currentSceneNode_ != null)
             {
                 sceneHistory_.Push(
-                    new NavigationHistoryEntry(
-                        currentSceneNode_.Target,
-                        currentSceneNode_.NavigationParams));
+                    new NavigationHistoryEntry(currentSceneNode_.Target, currentSceneNode_.NavigationParams));
             }
 
             CloseAllOpenedPrefabsImmediately();
 
             ResolvedNavigationNode nextSceneNode = null;
-
             yield return ResolveSceneTarget(
                 target,
                 navigationParams,
@@ -225,29 +206,23 @@ namespace Flowbit.Utilities.Navigation
 
             currentSceneNode_ = nextSceneNode;
 
-            NavigationTransitionContext finishContext = new NavigationTransitionContext(
-                nextSceneNode.Target,
-                nextSceneNode.Node,
-                navigationParams);
+            NavigationTransitionContext finishContext =
+                new NavigationTransitionContext(nextSceneNode.Target, nextSceneNode.Node, navigationParams);
 
             yield return navigateTransitionStrategy_.FinishTransition(finishContext);
         }
 
-        private IEnumerator NavigateToPrefab(
-            NavigationTarget target,
-            NavigationParams navigationParams)
+        private IEnumerator NavigateToPrefab(NavigationTarget target, NavigationParams navigationParams)
         {
             if (openedPrefabs_.ContainsKey(target.Id))
             {
                 yield break;
             }
 
-            NavigationTransitionContext prepareContext = new NavigationTransitionContext(
-                currentSceneNode_?.Target,
-                currentSceneNode_?.Node,
-                navigationParams);
+            NavigationTransitionContext prepareContext =
+                new NavigationTransitionContext(currentSceneNode_?.Target, currentSceneNode_?.Node, navigationParams);
 
-            yield return navigateTransitionStrategy_.PrepareTransition(prepareContext);
+            yield return popupOpenTransitionStrategy_.PrepareTransition(prepareContext);
 
             ResolvedNavigationNode prefabNode = null;
             GameObject prefabInstance = null;
@@ -262,12 +237,10 @@ namespace Flowbit.Utilities.Navigation
             openedPrefabs_[target.Id] = prefabNode;
             openedPrefabInstances_[target.Id] = prefabInstance;
 
-            NavigationTransitionContext finishContext = new NavigationTransitionContext(
-                prefabNode.Target,
-                prefabNode.Node,
-                navigationParams);
+            NavigationTransitionContext finishContext =
+                new NavigationTransitionContext(prefabNode.Target, prefabNode.Node, navigationParams);
 
-            yield return navigateTransitionStrategy_.FinishTransition(finishContext);
+            yield return popupOpenTransitionStrategy_.FinishTransition(finishContext);
         }
 
         private IEnumerator ResolveSceneTarget(
@@ -276,14 +249,10 @@ namespace Flowbit.Utilities.Navigation
             bool shouldInitialize,
             Action<ResolvedNavigationNode> onResolved)
         {
-            AsyncOperation loadOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(
-                target.Id,
-                UnityEngine.SceneManagement.LoadSceneMode.Single);
-
+            AsyncOperation loadOperation = SceneManager.LoadSceneAsync(target.Id, LoadSceneMode.Single);
             if (loadOperation == null)
             {
-                throw new InvalidOperationException(
-                    $"Could not load scene '{target.Id}'.");
+                throw new InvalidOperationException($"Could not load scene '{target.Id}'.");
             }
 
             while (!loadOperation.isDone)
@@ -298,15 +267,8 @@ namespace Flowbit.Utilities.Navigation
                     $"No INavigationNode was resolved for scene '{target.Id}'.");
             }
 
-            InitializeNodeIfNeeded(
-                node,
-                navigationParams,
-                shouldInitialize);
-
-            onResolved(new ResolvedNavigationNode(
-                target,
-                node,
-                navigationParams));
+            InitializeNodeIfNeeded(node, navigationParams, shouldInitialize);
+            onResolved(new ResolvedNavigationNode(target, node, navigationParams));
         }
 
         private void ResolvePrefabTarget(
@@ -331,17 +293,10 @@ namespace Flowbit.Utilities.Navigation
                     $"Prefab navigation target '{target.Id}' does not implement INavigationNode.");
             }
 
-            InitializeNodeIfNeeded(
-                node,
-                navigationParams,
-                shouldInitialize);
+            InitializeNodeIfNeeded(node, navigationParams, shouldInitialize);
 
             onPrefabInstanceCreated(instance);
-
-            onResolved(new ResolvedNavigationNode(
-                target,
-                node,
-                navigationParams));
+            onResolved(new ResolvedNavigationNode(target, node, navigationParams));
         }
 
         private static void InitializeNodeIfNeeded(

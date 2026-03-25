@@ -26,6 +26,12 @@ namespace Flowbit.GameBase.Scenes
         [field: SerializeField]
         public GameSceneTransitionBase TransitionPrev { get; private set; }
 
+        [field: SerializeField]
+        public GameSceneTransitionBase PopupTransitionOpen { get; private set; }
+
+        [field: SerializeField]
+        public GameSceneTransitionBase PopupTransitionClose { get; private set; }
+
         Dictionary<SceneType, NavigationTarget> navigationTargetMap_;
         Dictionary<string, NavigationTarget> navigationTargetMapPerName_;
 

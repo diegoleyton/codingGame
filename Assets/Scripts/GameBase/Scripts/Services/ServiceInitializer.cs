@@ -47,6 +47,10 @@ namespace Flowbit.GameBase.Services
             GameObject.DontDestroyOnLoad(sceneTransitionNext);
             var sceneTransitionPrev = GameObject.Instantiate<GameSceneTransitionBase>(res.SceneSettings.TransitionPrev);
             GameObject.DontDestroyOnLoad(sceneTransitionPrev);
+            var popupTransitionOpen = GameObject.Instantiate<GameSceneTransitionBase>(res.SceneSettings.PopupTransitionOpen);
+            GameObject.DontDestroyOnLoad(popupTransitionOpen);
+            var popupTransitionClose = GameObject.Instantiate<GameSceneTransitionBase>(res.SceneSettings.PopupTransitionClose);
+            GameObject.DontDestroyOnLoad(popupTransitionClose);
 
             var navigationPopupContainer = new GameObject("[NavigationPopups]");
             GameObject.DontDestroyOnLoad(navigationPopupContainer);
@@ -56,7 +60,9 @@ namespace Flowbit.GameBase.Services
                 navigationPopupContainer.transform,
                 new SceneNavigationNodeResolver(),
                 sceneTransitionNext,
-                sceneTransitionPrev);
+                sceneTransitionPrev,
+                popupTransitionOpen,
+                popupTransitionClose);
 
             IGameNavigationService transitionNavigationService = new GameNavigationService(
                 navigationService,
