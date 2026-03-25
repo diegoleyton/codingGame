@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Flowbit.Utilities.Navigation
 {
@@ -60,20 +59,17 @@ namespace Flowbit.Utilities.Navigation
 
             if (currentSceneNode_ != null)
             {
-                throw new InvalidOperationException(
-                    "The navigation service has already been started.");
+                throw new InvalidOperationException("The navigation service has already been started.");
             }
 
             if (sceneHistory_.Count > 0)
             {
-                throw new InvalidOperationException(
-                    "Cannot start navigation with a non-empty scene history.");
+                throw new InvalidOperationException("Cannot start navigation with a non-empty scene history.");
             }
 
             if (target.TargetType != NavigationTargetType.Scene)
             {
-                throw new InvalidOperationException(
-                    "StartWith only supports scene targets.");
+                throw new InvalidOperationException("StartWith only supports scene targets.");
             }
 
             StartWithSceneTarget(target, navigationParams);
@@ -124,6 +120,8 @@ namespace Flowbit.Utilities.Navigation
 
             yield return backTransitionStrategy_.PrepareTransition(prepareContext);
 
+            CloseAllOpenedPrefabsImmediately();
+
             ResolvedNavigationNode previousSceneNode = null;
 
             yield return ResolveSceneTarget(
@@ -132,7 +130,6 @@ namespace Flowbit.Utilities.Navigation
                 shouldInitialize: false,
                 onResolved: resolvedNode => previousSceneNode = resolvedNode);
 
-            DisposeAllOpenedPrefabs();
             currentSceneNode_ = previousSceneNode;
 
             NavigationTransitionContext finishContext = new NavigationTransitionContext(
@@ -188,7 +185,6 @@ namespace Flowbit.Utilities.Navigation
 
             InitializeNodeIfNeeded(
                 node,
-                target,
                 navigationParams,
                 forceInitialize: false);
 
@@ -209,14 +205,6 @@ namespace Flowbit.Utilities.Navigation
 
             yield return navigateTransitionStrategy_.PrepareTransition(prepareContext);
 
-            ResolvedNavigationNode nextSceneNode = null;
-
-            yield return ResolveSceneTarget(
-                target,
-                navigationParams,
-                shouldInitialize: true,
-                onResolved: resolvedNode => nextSceneNode = resolvedNode);
-
             if (currentSceneNode_ != null)
             {
                 sceneHistory_.Push(
@@ -225,7 +213,16 @@ namespace Flowbit.Utilities.Navigation
                         currentSceneNode_.NavigationParams));
             }
 
-            DisposeAllOpenedPrefabs();
+            CloseAllOpenedPrefabsImmediately();
+
+            ResolvedNavigationNode nextSceneNode = null;
+
+            yield return ResolveSceneTarget(
+                target,
+                navigationParams,
+                shouldInitialize: true,
+                onResolved: resolvedNode => nextSceneNode = resolvedNode);
+
             currentSceneNode_ = nextSceneNode;
 
             NavigationTransitionContext finishContext = new NavigationTransitionContext(
@@ -279,7 +276,10 @@ namespace Flowbit.Utilities.Navigation
             bool shouldInitialize,
             Action<ResolvedNavigationNode> onResolved)
         {
-            AsyncOperation loadOperation = SceneManager.LoadSceneAsync(target.Id, LoadSceneMode.Single);
+            AsyncOperation loadOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(
+                target.Id,
+                UnityEngine.SceneManagement.LoadSceneMode.Single);
+
             if (loadOperation == null)
             {
                 throw new InvalidOperationException(
@@ -300,7 +300,6 @@ namespace Flowbit.Utilities.Navigation
 
             InitializeNodeIfNeeded(
                 node,
-                target,
                 navigationParams,
                 shouldInitialize);
 
@@ -334,11 +333,11 @@ namespace Flowbit.Utilities.Navigation
 
             InitializeNodeIfNeeded(
                 node,
-                target,
                 navigationParams,
                 shouldInitialize);
 
             onPrefabInstanceCreated(instance);
+
             onResolved(new ResolvedNavigationNode(
                 target,
                 node,
@@ -347,7 +346,6 @@ namespace Flowbit.Utilities.Navigation
 
         private static void InitializeNodeIfNeeded(
             INavigationNode node,
-            NavigationTarget target,
             NavigationParams navigationParams,
             bool forceInitialize)
         {
@@ -360,6 +358,11 @@ namespace Flowbit.Utilities.Navigation
             {
                 node.Initialize(navigationParams);
             }
+        }
+
+        private void CloseAllOpenedPrefabsImmediately()
+        {
+            DisposeAllOpenedPrefabs();
         }
 
         private void DisposePrefab(string id)

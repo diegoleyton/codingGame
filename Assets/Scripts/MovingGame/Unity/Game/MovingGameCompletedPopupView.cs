@@ -85,7 +85,6 @@ namespace Flowbit.MovingGame.Unity
 
         private void OnClosePressed()
         {
-            Close();
             onCloseAction_?.Invoke();
         }
     }

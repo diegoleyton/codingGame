@@ -61,11 +61,11 @@
     <Compile Include="Assets/Scripts/GameBase/Scripts/Character/CharacterAnimation.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/ComponentsLoopAnimator.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/SceneNavigationNodeResolver.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/Transitions/PaperOpenTransitionOverlay.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/GameNavigationService.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Services/GameResources.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/Transitions/SceneTransitionOverlay.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/PopupBase.cs" />
-    <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/Transitions/PaperDropTransitionOverlay.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/GameStatusView.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/IGameNavigationService.cs" />
   </ItemGroup>

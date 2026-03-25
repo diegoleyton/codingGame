@@ -63,7 +63,6 @@ namespace Flowbit.MovingGame.Unity
 
         private void OnContinuePressed()
         {
-            Close();
             continueAction_?.Invoke();
         }
     }
