@@ -2,6 +2,7 @@ using Flowbit.Utilities.Navigation;
 using Flowbit.Utilities.Core.Events;
 using Flowbit.Utilities.Core.Services;
 using Flowbit.Utilities.Coroutines;
+using Flowbit.Utilities.Unity.UI;
 using Flowbit.GameBase.Scenes;
 using Flowbit.GameBase.UI;
 using UnityEngine;
