@@ -56,6 +56,7 @@
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/InstructionsPresentationSettings.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Services/GlobalServiceContainer.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/UIAnimatedComponent.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/ScreenBlockerImage.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/Transitions/GameSceneTransitionBase.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/ProgramPanelView.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Character/CharacterAnimation.cs" />

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Flowbit.Utilities.Core.Events;
 
 namespace Flowbit.Utilities.Navigation
 {
@@ -18,10 +19,13 @@ namespace Flowbit.Utilities.Navigation
         private readonly INavigationTransitionStrategy backTransitionStrategy_;
         private readonly INavigationTransitionStrategy popupOpenTransitionStrategy_;
         private readonly INavigationTransitionStrategy popupCloseTransitionStrategy_;
+        private readonly EventDispatcher eventDispatcher_;
         private readonly Stack<NavigationHistoryEntry> sceneHistory_;
-        private ResolvedNavigationNode currentSceneNode_;
         private readonly Dictionary<string, ResolvedNavigationNode> openedPrefabs_;
         private readonly Dictionary<string, GameObject> openedPrefabInstances_;
+
+        private ResolvedNavigationNode currentSceneNode_;
+        private int activeTransitionCount_;
 
         /// <summary>
         /// Creates a new navigation service.
@@ -33,7 +37,8 @@ namespace Flowbit.Utilities.Navigation
             INavigationTransitionStrategy navigateTransitionStrategy,
             INavigationTransitionStrategy backTransitionStrategy,
             INavigationTransitionStrategy popupOpenTransitionStrategy,
-            INavigationTransitionStrategy popupCloseTransitionStrategy)
+            INavigationTransitionStrategy popupCloseTransitionStrategy,
+            EventDispatcher eventDispatcher)
         {
             prefabMap_ = prefabMap ?? throw new ArgumentNullException(nameof(prefabMap));
             prefabParent_ = prefabParent;
@@ -42,6 +47,7 @@ namespace Flowbit.Utilities.Navigation
             backTransitionStrategy_ = backTransitionStrategy ?? throw new ArgumentNullException(nameof(backTransitionStrategy));
             popupOpenTransitionStrategy_ = popupOpenTransitionStrategy ?? throw new ArgumentNullException(nameof(popupOpenTransitionStrategy));
             popupCloseTransitionStrategy_ = popupCloseTransitionStrategy ?? throw new ArgumentNullException(nameof(popupCloseTransitionStrategy));
+            eventDispatcher_ = eventDispatcher ?? throw new ArgumentNullException(nameof(eventDispatcher));
 
             sceneHistory_ = new Stack<NavigationHistoryEntry>();
             openedPrefabs_ = new Dictionary<string, ResolvedNavigationNode>();
@@ -91,19 +97,22 @@ namespace Flowbit.Utilities.Navigation
                 throw new ArgumentNullException(nameof(target));
             }
 
-            switch (target.TargetType)
+            using (BeginTransitionScope())
             {
-                case NavigationTargetType.Scene:
-                    yield return NavigateToScene(target, navigationParams);
-                    yield break;
+                switch (target.TargetType)
+                {
+                    case NavigationTargetType.Scene:
+                        yield return NavigateToScene(target, navigationParams);
+                        yield break;
 
-                case NavigationTargetType.Prefab:
-                    yield return NavigateToPrefab(target, navigationParams);
-                    yield break;
+                    case NavigationTargetType.Prefab:
+                        yield return NavigateToPrefab(target, navigationParams);
+                        yield break;
 
-                default:
-                    throw new InvalidOperationException(
-                        $"Unsupported navigation target type '{target.TargetType}'.");
+                    default:
+                        throw new InvalidOperationException(
+                            $"Unsupported navigation target type '{target.TargetType}'.");
+                }
             }
         }
 
@@ -117,28 +126,37 @@ namespace Flowbit.Utilities.Navigation
                 yield break;
             }
 
-            NavigationHistoryEntry previousEntry = sceneHistory_.Pop();
+            using (BeginTransitionScope())
+            {
+                NavigationHistoryEntry previousEntry = sceneHistory_.Pop();
 
-            NavigationTransitionContext prepareContext =
-                new NavigationTransitionContext(currentSceneNode_?.Target, currentSceneNode_?.Node, previousEntry.NavigationParams);
+                NavigationTransitionContext prepareContext =
+                    new NavigationTransitionContext(
+                        currentSceneNode_?.Target,
+                        currentSceneNode_?.Node,
+                        previousEntry.NavigationParams);
 
-            yield return backTransitionStrategy_.PrepareTransition(prepareContext);
+                yield return backTransitionStrategy_.PrepareTransition(prepareContext);
 
-            CloseAllOpenedPrefabsImmediately();
+                CloseAllOpenedPrefabsImmediately();
 
-            ResolvedNavigationNode previousSceneNode = null;
-            yield return ResolveSceneTarget(
-                previousEntry.Target,
-                previousEntry.NavigationParams,
-                shouldInitialize: false,
-                onResolved: resolvedNode => previousSceneNode = resolvedNode);
+                ResolvedNavigationNode previousSceneNode = null;
+                yield return ResolveSceneTarget(
+                    previousEntry.Target,
+                    previousEntry.NavigationParams,
+                    shouldInitialize: false,
+                    onResolved: resolvedNode => previousSceneNode = resolvedNode);
 
-            currentSceneNode_ = previousSceneNode;
+                currentSceneNode_ = previousSceneNode;
 
-            NavigationTransitionContext finishContext =
-                new NavigationTransitionContext(previousSceneNode.Target, previousSceneNode.Node, previousEntry.NavigationParams);
+                NavigationTransitionContext finishContext =
+                    new NavigationTransitionContext(
+                        previousSceneNode.Target,
+                        previousSceneNode.Node,
+                        previousEntry.NavigationParams);
 
-            yield return backTransitionStrategy_.FinishTransition(finishContext);
+                yield return backTransitionStrategy_.FinishTransition(finishContext);
+            }
         }
 
         /// <summary>
@@ -156,17 +174,72 @@ namespace Flowbit.Utilities.Navigation
                 yield break;
             }
 
-            NavigationTransitionContext prepareContext =
-                new NavigationTransitionContext(prefabNode.Target, prefabNode.Node, prefabNode.NavigationParams);
+            using (BeginTransitionScope())
+            {
+                NavigationTransitionContext prepareContext =
+                    new NavigationTransitionContext(
+                        prefabNode.Target,
+                        prefabNode.Node,
+                        prefabNode.NavigationParams);
 
-            yield return popupCloseTransitionStrategy_.PrepareTransition(prepareContext);
+                yield return popupCloseTransitionStrategy_.PrepareTransition(prepareContext);
 
-            DisposePrefab(id);
+                DisposePrefab(id);
 
-            NavigationTransitionContext finishContext =
-                new NavigationTransitionContext(currentSceneNode_?.Target, currentSceneNode_?.Node, prefabNode.NavigationParams);
+                NavigationTransitionContext finishContext =
+                    new NavigationTransitionContext(
+                        currentSceneNode_?.Target,
+                        currentSceneNode_?.Node,
+                        prefabNode.NavigationParams);
 
-            yield return popupCloseTransitionStrategy_.FinishTransition(finishContext);
+                yield return popupCloseTransitionStrategy_.FinishTransition(finishContext);
+            }
+        }
+
+        private IDisposable BeginTransitionScope()
+        {
+            activeTransitionCount_++;
+            if (activeTransitionCount_ == 1)
+            {
+                eventDispatcher_.Send(this, new NavigationTransitionStartedEvent());
+            }
+
+            return new TransitionScope(this);
+        }
+
+        private void EndTransitionScope()
+        {
+            if (activeTransitionCount_ <= 0)
+            {
+                throw new InvalidOperationException("Transition scope count cannot go below zero.");
+            }
+
+            activeTransitionCount_--;
+            if (activeTransitionCount_ == 0)
+            {
+                eventDispatcher_.Send(this, new NavigationTransitionFinishedEvent());
+            }
+        }
+
+        private sealed class TransitionScope : IDisposable
+        {
+            private NavigationService owner_;
+
+            public TransitionScope(NavigationService owner)
+            {
+                owner_ = owner ?? throw new ArgumentNullException(nameof(owner));
+            }
+
+            public void Dispose()
+            {
+                if (owner_ == null)
+                {
+                    return;
+                }
+
+                owner_.EndTransitionScope();
+                owner_ = null;
+            }
         }
 
         private void StartWithSceneTarget(NavigationTarget target, NavigationParams navigationParams)

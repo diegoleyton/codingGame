@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Core/NavigationTransitionContext.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/UI/ScreenBlocker.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Core/NavigationTarget.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Abstractions/INavigationTransitionStrategy.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Core/NavigationTargetType.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Assets/Scripts/Utilities/Unity/UI/ScrollRectExtensions.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Core/NavigationParams.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Abstractions/INavigationNodeResolver.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Events/NavigationEvents.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Abstractions/INavigationService.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Coroutines/ICoroutineService.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Coroutines/CoroutineService.cs" />

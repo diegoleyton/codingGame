@@ -30,6 +30,7 @@ namespace Flowbit.GameBase.Services
             ServiceContainer.Register(dispatcher);
             var res = InitializeGameResources();
             CreateCoroutineService();
+            CreateScreenBlocker(res);
             InitializeNavigationService(dispatcher, res);
             InitializeUIServices(res);
         }
@@ -39,6 +40,13 @@ namespace Flowbit.GameBase.Services
             var res = Resources.Load<GameResources>("GameResources");
             ServiceContainer.Register(res);
             return res;
+        }
+
+        private void CreateScreenBlocker(GameResources res)
+        {
+            var blockerImage = GameObject.Instantiate<ScreenBlockerImage>(res.SceneSettings.ScreenBlockerImage);
+            GameObject.DontDestroyOnLoad(blockerImage);
+            ServiceContainer.Register(new ScreenBlocker(blockerImage.Image));
         }
 
         private void InitializeNavigationService(EventDispatcher dispatcher, GameResources res)
@@ -62,12 +70,15 @@ namespace Flowbit.GameBase.Services
                 sceneTransitionNext,
                 sceneTransitionPrev,
                 popupTransitionOpen,
-                popupTransitionClose);
+                popupTransitionClose,
+                ServiceContainer.Get<EventDispatcher>());
 
             IGameNavigationService transitionNavigationService = new GameNavigationService(
                 navigationService,
                 res.SceneSettings,
-                ServiceContainer.Get<ICoroutineService>()
+                ServiceContainer.Get<ICoroutineService>(),
+                dispatcher,
+                ServiceContainer.Get<ScreenBlocker>()
             );
             ServiceContainer.Register(transitionNavigationService);
         }

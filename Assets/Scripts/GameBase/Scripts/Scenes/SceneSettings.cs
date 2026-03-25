@@ -32,6 +32,9 @@ namespace Flowbit.GameBase.Scenes
         [field: SerializeField]
         public GameSceneTransitionBase PopupTransitionClose { get; private set; }
 
+        [field: SerializeField]
+        public ScreenBlockerImage ScreenBlockerImage { get; private set; }
+
         Dictionary<SceneType, NavigationTarget> navigationTargetMap_;
         Dictionary<string, NavigationTarget> navigationTargetMapPerName_;
 
