@@ -47,9 +47,6 @@ namespace Flowbit.GameBase.Scenes
         private int activeTransitionId_;
         private bool hasPreparedTransition_;
 
-        private float fullWidth_;
-        private float fullHeight_;
-
         private void Awake()
         {
             CacheInitialState();
@@ -85,7 +82,7 @@ namespace Flowbit.GameBase.Scenes
             visualsContainer_.SetActive(true);
             oldSceneMaskContainer_.gameObject.SetActive(true);
             oldSceneImage_.gameObject.SetActive(true);
-            paperEdge_.gameObject.SetActive(true);
+            paperEdge_.gameObject.SetActive(false);
 
             hasPreparedTransition_ = true;
         }
@@ -184,13 +181,6 @@ namespace Flowbit.GameBase.Scenes
             {
                 oldSceneMaskOffsetMinInitial_ = oldSceneMaskContainer_.offsetMin;
                 oldSceneMaskOffsetMaxInitial_ = oldSceneMaskContainer_.offsetMax;
-
-                RectTransform parentRect = oldSceneMaskContainer_.parent as RectTransform;
-                if (parentRect != null)
-                {
-                    fullWidth_ = parentRect.rect.width;
-                    fullHeight_ = parentRect.rect.height;
-                }
             }
 
             if (paperEdge_ != null)
@@ -308,7 +298,7 @@ namespace Flowbit.GameBase.Scenes
                 float t = transitionDuration_ > 0f ? Mathf.Clamp01(elapsed / transitionDuration_) : 1f;
                 float easedT = EaseInOutCubic(t);
 
-                float revealedWidth = Mathf.Lerp(0f, parentWidth, easedT);
+                float revealedWidth = Mathf.Lerp(0f, parentWidth + 20, easedT);
                 ApplyReveal(revealedWidth, parentWidth);
                 ApplyPaperEdgeSpriteByProgress(t);
 
@@ -329,8 +319,6 @@ namespace Flowbit.GameBase.Scenes
         /// </summary>
         private void ApplyReveal(float revealedWidth, float parentWidth)
         {
-            float remainingOldWidth = Mathf.Max(0f, parentWidth - revealedWidth);
-
             Vector2 offsetMin = oldSceneMaskOffsetMinInitial_;
             offsetMin.x = oldSceneMaskOffsetMinInitial_.x + revealedWidth;
             oldSceneMaskContainer_.offsetMin = offsetMin;
@@ -355,6 +343,7 @@ namespace Flowbit.GameBase.Scenes
             {
                 return;
             }
+            paperEdge_.gameObject.SetActive(true);
 
             int spriteCount = paperEdgeSprites_.Length;
             int spriteIndex = Mathf.Min(Mathf.FloorToInt(Mathf.Clamp01(normalizedProgress) * spriteCount), spriteCount - 1);
