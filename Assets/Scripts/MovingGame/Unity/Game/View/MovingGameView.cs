@@ -17,6 +17,9 @@ namespace Flowbit.MovingGame.Unity
         [SerializeField] private GameObject foodPrefab_;
         [SerializeField] private Transform foodRoot_;
 
+        [SerializeField] private GameObject consumedFoodEffectPrefab_;
+        [SerializeField] private Transform consumedFoodEffectRoot_;
+
         [Header("Break")]
         [SerializeField] private GameObject breakPrefab_;
         [SerializeField] private Transform breakRoot_;
@@ -33,6 +36,7 @@ namespace Flowbit.MovingGame.Unity
         [SerializeField] private bool animateRotation_ = true;
 
         private readonly List<GameObject> spawnedFood_ = new List<GameObject>();
+        private readonly HashSet<GridPosition> lastFoodPositions_ = new HashSet<GridPosition>();
         private GridRenderer gridRenderer_;
         private Core.MovingGame game_;
 
@@ -51,7 +55,7 @@ namespace Flowbit.MovingGame.Unity
         public void RefreshImmediate(Core.MovingGame game)
         {
             game_ = game;
-            RebuildFoodVisuals();
+            RebuildFoodVisuals(true);
             UpdateCharacterImmediate();
         }
 
@@ -69,7 +73,7 @@ namespace Flowbit.MovingGame.Unity
 
             if (character_ == null)
             {
-                RebuildFoodVisuals();
+                RebuildFoodVisuals(false);
                 yield break;
             }
 
@@ -103,7 +107,7 @@ namespace Flowbit.MovingGame.Unity
             {
                 character_.position = targetPosition;
                 character_.rotation = targetRotation;
-                RebuildFoodVisuals();
+                RebuildFoodVisuals(false);
                 yield break;
             }
 
@@ -130,7 +134,7 @@ namespace Flowbit.MovingGame.Unity
 
             character_.position = targetPosition;
             character_.rotation = targetRotation;
-            RebuildFoodVisuals();
+            RebuildFoodVisuals(false);
         }
 
         /// <summary>
@@ -159,7 +163,7 @@ namespace Flowbit.MovingGame.Unity
         private IEnumerator ExecuteBreakAfterProcess(StepAfterProcess stepAfterProcess)
         {
             UpdateCharacterImmediate();
-            RebuildFoodVisuals();
+            RebuildFoodVisuals(false);
 
             if (!stepAfterProcess.HasPosition())
             {
@@ -208,28 +212,55 @@ namespace Flowbit.MovingGame.Unity
             character_.rotation = DirectionToRotation(game_.GetCharacterDirection());
         }
 
-        private void RebuildFoodVisuals()
+        private void RebuildFoodVisuals(bool skipConsumedFoodEffect)
         {
-            ClearFoodVisuals();
+            HashSet<GridPosition> currentFoodPositions_ = new HashSet<GridPosition>();
 
-            if (foodPrefab_ == null || game_ == null)
+            if (game_ != null)
             {
-                return;
+                IReadOnlyCollection<GridPosition> foodPositions_ = game_.GetFoodPositions();
+
+                foreach (GridPosition foodPosition in foodPositions_)
+                {
+                    currentFoodPositions_.Add(foodPosition);
+                }
             }
 
-            Transform parent = foodRoot_ != null ? foodRoot_ : transform;
-            IReadOnlyCollection<GridPosition> foodPositions = game_.GetFoodPositions();
-
-            foreach (GridPosition foodPosition in foodPositions)
+            if (!skipConsumedFoodEffect)
             {
-                GameObject foodObject = Instantiate(
-                    foodPrefab_,
-                    GridToWorld(foodPosition),
-                    Quaternion.identity,
-                    parent);
+                foreach (GridPosition previousFoodPosition_ in lastFoodPositions_)
+                {
+                    if (!currentFoodPositions_.Contains(previousFoodPosition_))
+                    {
+                        SpawnConsumedFoodEffect(previousFoodPosition_);
+                    }
+                }
+            }
 
-                foodObject.name = $"Food_{foodPosition.GetX()}_{foodPosition.GetY()}";
-                spawnedFood_.Add(foodObject);
+            ClearFoodVisuals();
+
+            if (foodPrefab_ != null && game_ != null)
+            {
+                Transform parent_ = foodRoot_ != null ? foodRoot_ : transform;
+
+                foreach (GridPosition foodPosition_ in currentFoodPositions_)
+                {
+                    GameObject foodObject_ = Instantiate(
+                        foodPrefab_,
+                        GridToWorld(foodPosition_),
+                        Quaternion.identity,
+                        parent_);
+
+                    foodObject_.name = $"Food_{foodPosition_.GetX()}_{foodPosition_.GetY()}";
+                    spawnedFood_.Add(foodObject_);
+                }
+            }
+
+            lastFoodPositions_.Clear();
+
+            foreach (GridPosition foodPosition_ in currentFoodPositions_)
+            {
+                lastFoodPositions_.Add(foodPosition_);
             }
         }
 
@@ -286,6 +317,26 @@ namespace Flowbit.MovingGame.Unity
             }
 
             return character_.position;
+        }
+
+        private void SpawnConsumedFoodEffect(GridPosition position)
+        {
+            if (consumedFoodEffectPrefab_ == null)
+            {
+                return;
+            }
+
+            Transform parent_ = consumedFoodEffectRoot_ != null
+                ? consumedFoodEffectRoot_
+                : transform;
+
+            GameObject effectObject_ = Instantiate(
+                consumedFoodEffectPrefab_,
+                GridToWorld(position),
+                Quaternion.identity,
+                parent_);
+
+            effectObject_.name = $"ConsumedFood_{position.GetX()}_{position.GetY()}";
         }
 
         private void ClearFoodVisuals()

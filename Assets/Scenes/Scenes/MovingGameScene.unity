@@ -710,12 +710,14 @@ MonoBehaviour:
   character_: {fileID: 185792419}
   foodPrefab_: {fileID: 906667981694400783, guid: 86c3a083775cd4a8f95ca6c4e21086a5, type: 3}
   foodRoot_: {fileID: 0}
+  consumedFoodEffectPrefab_: {fileID: 6498187279897792720, guid: 1b87e01bded774909b11647292e24be8, type: 3}
+  consumedFoodEffectRoot_: {fileID: 0}
   breakPrefab_: {fileID: 8238055016132422236, guid: 0372e0471efc345a4be5223cd86cd08c, type: 3}
   breakRoot_: {fileID: 0}
   breakDelaySeconds_: 0.5
   breakProjectilePrefab_: {fileID: 6773806084491835860, guid: 2b4dc44e4cc6641ee96d9dfe5671f8c0, type: 3}
   breakProjectileRoot_: {fileID: 0}
-  breakProjectileDurationSeconds_: 0.2
+  breakProjectileDurationSeconds_: 0.24
   moveDurationSeconds_: 0.36
   rotateDurationSeconds_: 0.28
   animateMovement_: 1
