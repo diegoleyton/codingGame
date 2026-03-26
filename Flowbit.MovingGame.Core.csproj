@@ -51,11 +51,13 @@
   <ItemGroup>
     <Compile Include="Assets/Scripts/MovingGame/Core/Instructions/RotateRightInstructionDefinition.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Core/Instructions/RotateLeftInstructionDefinition.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Core/Game/StepAfterProcess.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Core/Game/Direction.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Core/Game/IMovingGame.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Core/Levels/MovingGameLevelsFileData.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Core/Levels/MovingGameLevelData.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Core/Instructions/MoveForwardInstructionDefinition.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Core/Game/StepAfterProcessType.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Core/Instructions/BreakForwardInstructionDefinition.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Core/Game/GridPosition.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Core/Levels/MovingGameLevelsParser.cs" />

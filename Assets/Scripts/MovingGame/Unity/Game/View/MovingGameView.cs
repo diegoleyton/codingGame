@@ -17,6 +17,11 @@ namespace Flowbit.MovingGame.Unity
         [SerializeField] private GameObject foodPrefab_;
         [SerializeField] private Transform foodRoot_;
 
+        [Header("Break")]
+        [SerializeField] private GameObject breakPrefab_;
+        [SerializeField] private Transform breakRoot_;
+        [SerializeField] private float breakDelaySeconds_ = 0.25f;
+
         [Header("Animation")]
         [SerializeField] private float moveDurationSeconds_ = 0.2f;
         [SerializeField] private float rotateDurationSeconds_ = 0.15f;
@@ -24,7 +29,6 @@ namespace Flowbit.MovingGame.Unity
         [SerializeField] private bool animateRotation_ = true;
 
         private readonly List<GameObject> spawnedFood_ = new List<GameObject>();
-
         private GridRenderer gridRenderer_;
         private Core.MovingGame game_;
 
@@ -73,7 +77,6 @@ namespace Flowbit.MovingGame.Unity
 
             bool shouldAnimateMovement = animateMovement_ &&
                                          (startPosition - targetPosition).sqrMagnitude > 0.0001f;
-
             bool shouldAnimateRotation = animateRotation_ &&
                                          Quaternion.Angle(startRotation, targetRotation) > 0.1f;
 
@@ -124,6 +127,70 @@ namespace Flowbit.MovingGame.Unity
             character_.position = targetPosition;
             character_.rotation = targetRotation;
             RebuildFoodVisuals();
+        }
+
+        /// <summary>
+        /// Executes the given step after-process.
+        /// </summary>
+        public IEnumerator ExecuteStepAfterProcess(StepAfterProcess stepAfterProcess, Core.MovingGame game)
+        {
+            game_ = game;
+
+            switch (stepAfterProcess.GetProcessType())
+            {
+                case StepAfterProcessType.None:
+                    yield break;
+
+                case StepAfterProcessType.Move:
+                case StepAfterProcessType.Rotate:
+                    yield return RefreshAnimated(game_);
+                    yield break;
+
+                case StepAfterProcessType.Break:
+                    yield return ExecuteBreakAfterProcess(stepAfterProcess);
+                    yield break;
+            }
+        }
+
+        private IEnumerator ExecuteBreakAfterProcess(StepAfterProcess stepAfterProcess)
+        {
+            UpdateCharacterImmediate();
+            RebuildFoodVisuals();
+
+            if (!stepAfterProcess.HasPosition())
+            {
+                yield break;
+            }
+
+            SpawnBreakPrefab(stepAfterProcess.GetPosition());
+
+            if (!stepAfterProcess.IsBreakable())
+            {
+                yield break;
+            }
+
+            if (breakDelaySeconds_ > 0f)
+            {
+                yield return new WaitForSeconds(breakDelaySeconds_);
+            }
+        }
+
+        private void SpawnBreakPrefab(GridPosition position)
+        {
+            if (breakPrefab_ == null)
+            {
+                return;
+            }
+
+            Transform parent = breakRoot_ != null ? breakRoot_ : transform;
+
+            GameObject breakObject = Instantiate(
+                breakPrefab_,
+                GridToWorld(position),
+                Quaternion.identity,
+                parent);
+
+            breakObject.name = $"Break_{position.GetX()}_{position.GetY()}";
         }
 
         private void UpdateCharacterImmediate()

@@ -143,8 +143,14 @@ namespace Flowbit.MovingGame.Unity
                 yield break;
             }
 
+            StepAfterProcess stepAfterProcess = game_.GetStepAfterProcess();
+
+            yield return movingGameView_.ExecuteStepAfterProcess(stepAfterProcess, game_);
+
+            game_.FinalizeStepAfterProcess();
+
             RenderGrid();
-            yield return movingGameView_.RefreshAnimated(game_);
+            movingGameView_.RefreshImmediate(game_);
         }
 
         /// <summary>

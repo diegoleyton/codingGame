@@ -10,10 +10,8 @@ namespace Flowbit.MovingGame.Core
     {
         private readonly int width_;
         private readonly int height_;
-
         private readonly GridPosition startCharacterPosition_;
         private readonly Direction startCharacterDirection_;
-
         private readonly HashSet<GridPosition> startFoodPositions_;
         private readonly HashSet<GridPosition> blockedPositions_;
         private readonly HashSet<GridPosition> startBreakableBlockedPositions_;
@@ -25,6 +23,7 @@ namespace Flowbit.MovingGame.Core
         private HashSet<GridPosition> visitedPositions_;
         private bool hasWon_;
         private bool hasFailed_;
+        private StepAfterProcess stepAfterProcess_;
 
         /// <summary>
         /// Creates a new moving game.
@@ -64,7 +63,6 @@ namespace Flowbit.MovingGame.Core
             blockedPositions_ = blockedPositions != null
                 ? new HashSet<GridPosition>(blockedPositions)
                 : new HashSet<GridPosition>();
-
             startBreakableBlockedPositions_ = breakableBlockedPositions != null
                 ? new HashSet<GridPosition>(breakableBlockedPositions)
                 : new HashSet<GridPosition>();
@@ -122,10 +120,48 @@ namespace Flowbit.MovingGame.Core
             return visitedPositions_;
         }
 
+        /// <summary>
+        /// Returns whether there is a step after-process pending.
+        /// </summary>
+        public bool HasStepAfterProcess()
+        {
+            return stepAfterProcess_.GetProcessType() != StepAfterProcessType.None;
+        }
+
+        /// <summary>
+        /// Returns the current step after-process.
+        /// </summary>
+        public StepAfterProcess GetStepAfterProcess()
+        {
+            return stepAfterProcess_;
+        }
+
+        /// <summary>
+        /// Finalizes the current step after-process.
+        /// </summary>
+        public void FinalizeStepAfterProcess()
+        {
+            if (stepAfterProcess_.GetProcessType() == StepAfterProcessType.Break &&
+                stepAfterProcess_.HasPosition() &&
+                stepAfterProcess_.IsBreakable())
+            {
+                breakableBlockedPositions_.Remove(stepAfterProcess_.GetPosition());
+            }
+
+            ClearStepAfterProcess();
+        }
+
+        /// <summary>
+        /// Clears the current step after-process.
+        /// </summary>
+        public void ClearStepAfterProcess()
+        {
+            stepAfterProcess_ = StepAfterProcess.None();
+        }
+
         public bool IsBlocked(GridPosition position)
         {
-            return blockedPositions_.Contains(position) ||
-                   breakableBlockedPositions_.Contains(position);
+            return blockedPositions_.Contains(position) || breakableBlockedPositions_.Contains(position);
         }
 
         public bool IsBreakableBlocked(GridPosition position)
@@ -157,6 +193,7 @@ namespace Flowbit.MovingGame.Core
             visitedPositions_ = new HashSet<GridPosition> { startCharacterPosition_ };
             hasWon_ = false;
             hasFailed_ = false;
+            stepAfterProcess_ = StepAfterProcess.None();
 
             ConsumeFoodAtCurrentPosition();
             UpdateWinState();
@@ -173,6 +210,10 @@ namespace Flowbit.MovingGame.Core
             {
                 return;
             }
+
+            ClearStepAfterProcess();
+
+            bool moved_ = false;
 
             for (int i = 0; i < steps; i++)
             {
@@ -194,11 +235,21 @@ namespace Flowbit.MovingGame.Core
                 visitedPositions_.Add(characterPosition_);
                 ConsumeFoodAtCurrentPosition();
                 UpdateWinState();
+                moved_ = true;
 
                 if (hasWon_)
                 {
-                    return;
+                    break;
                 }
+            }
+
+            if (moved_)
+            {
+                stepAfterProcess_ = new StepAfterProcess(
+                    StepAfterProcessType.Move,
+                    default,
+                    false,
+                    false);
             }
         }
 
@@ -209,6 +260,8 @@ namespace Flowbit.MovingGame.Core
                 return;
             }
 
+            ClearStepAfterProcess();
+
             characterDirection_ = characterDirection_ switch
             {
                 Direction.Up => Direction.Left,
@@ -217,6 +270,12 @@ namespace Flowbit.MovingGame.Core
                 Direction.Right => Direction.Up,
                 _ => characterDirection_
             };
+
+            stepAfterProcess_ = new StepAfterProcess(
+                StepAfterProcessType.Rotate,
+                default,
+                false,
+                false);
         }
 
         public void RotateRight()
@@ -226,6 +285,8 @@ namespace Flowbit.MovingGame.Core
                 return;
             }
 
+            ClearStepAfterProcess();
+
             characterDirection_ = characterDirection_ switch
             {
                 Direction.Up => Direction.Right,
@@ -234,6 +295,12 @@ namespace Flowbit.MovingGame.Core
                 Direction.Left => Direction.Up,
                 _ => characterDirection_
             };
+
+            stepAfterProcess_ = new StepAfterProcess(
+                StepAfterProcessType.Rotate,
+                default,
+                false,
+                false);
         }
 
         public void BreakForward()
@@ -243,6 +310,8 @@ namespace Flowbit.MovingGame.Core
                 return;
             }
 
+            ClearStepAfterProcess();
+
             GridPosition forwardPosition = GetForwardPosition(characterPosition_, characterDirection_);
 
             if (!IsInsideBounds(forwardPosition))
@@ -250,10 +319,13 @@ namespace Flowbit.MovingGame.Core
                 return;
             }
 
-            if (breakableBlockedPositions_.Contains(forwardPosition))
-            {
-                breakableBlockedPositions_.Remove(forwardPosition);
-            }
+            bool isBreakable = breakableBlockedPositions_.Contains(forwardPosition);
+
+            stepAfterProcess_ = new StepAfterProcess(
+                StepAfterProcessType.Break,
+                forwardPosition,
+                true,
+                isBreakable);
         }
 
         public bool IsInsideBounds(GridPosition position)

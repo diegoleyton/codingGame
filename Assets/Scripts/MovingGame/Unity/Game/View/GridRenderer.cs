@@ -25,6 +25,8 @@ namespace Flowbit.MovingGame.Unity
         private int width_;
         private int height_;
 
+        private readonly Dictionary<GridPosition, GameObject> cellObjectsByPosition_ = new();
+
         public void RenderGrid(int width, int height)
         {
             RenderGrid(width, height, null, null, null);
@@ -128,6 +130,7 @@ namespace Flowbit.MovingGame.Unity
 
                     cell.transform.localScale = new Vector3(cellSize_, cellSize_, 1f);
                     spawnedCells_.Add(cell);
+                    cellObjectsByPosition_[gridPosition] = cell;
                 }
             }
         }
@@ -156,6 +159,71 @@ namespace Flowbit.MovingGame.Unity
             }
 
             spawnedCells_.Clear();
+            cellObjectsByPosition_.Clear();
+        }
+
+        /// <summary>
+        /// Refreshes a single cell visual using the given state.
+        /// </summary>
+        public void RefreshCell(
+            GridPosition gridPosition,
+            bool isBlocked,
+            bool isBreakableBlocked,
+            bool isVisited)
+        {
+            if (cellObjectsByPosition_.TryGetValue(gridPosition, out GameObject existingCell))
+            {
+                spawnedCells_.Remove(existingCell);
+
+                if (existingCell != null)
+                {
+                    Destroy(existingCell);
+                }
+
+                cellObjectsByPosition_.Remove(gridPosition);
+            }
+
+            Transform parent = cellsRoot_ != null ? cellsRoot_ : transform;
+            Vector3 worldPosition = GridToWorld(gridPosition);
+
+            GameObject prefabToUse = cellPrefab_;
+
+            if (isBreakableBlocked && breakableBlockedCellPrefab_ != null)
+            {
+                prefabToUse = breakableBlockedCellPrefab_;
+            }
+            else if (isBlocked && blockedCellPrefab_ != null)
+            {
+                prefabToUse = blockedCellPrefab_;
+            }
+            else if (isVisited && visitedCellPrefab_ != null)
+            {
+                prefabToUse = visitedCellPrefab_;
+            }
+
+            GameObject cell = Instantiate(prefabToUse, worldPosition, Quaternion.identity, parent);
+
+            if (isBreakableBlocked)
+            {
+                cell.name = $"BreakableBlockedCell_{gridPosition.GetX()}_{gridPosition.GetY()}";
+            }
+            else if (isBlocked)
+            {
+                cell.name = $"BlockedCell_{gridPosition.GetX()}_{gridPosition.GetY()}";
+            }
+            else if (isVisited)
+            {
+                cell.name = $"VisitedCell_{gridPosition.GetX()}_{gridPosition.GetY()}";
+            }
+            else
+            {
+                cell.name = $"Cell_{gridPosition.GetX()}_{gridPosition.GetY()}";
+            }
+
+            cell.transform.localScale = new Vector3(cellSize_, cellSize_, 1f);
+
+            spawnedCells_.Add(cell);
+            cellObjectsByPosition_[gridPosition] = cell;
         }
 
         private Vector2 GetGridOffset()

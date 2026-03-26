@@ -47,5 +47,25 @@ namespace Flowbit.MovingGame.Core
         /// Returns the positions visited by the character.
         /// </summary>
         IReadOnlyCollection<GridPosition> GetVisitedPositions();
+
+        /// <summary>
+        /// Returns whether there is a step after-process pending.
+        /// </summary>
+        bool HasStepAfterProcess();
+
+        /// <summary>
+        /// Returns the current step after-process.
+        /// </summary>
+        StepAfterProcess GetStepAfterProcess();
+
+        /// <summary>
+        /// Finalizes the current step after-process.
+        /// </summary>
+        void FinalizeStepAfterProcess();
+
+        /// <summary>
+        /// Clears the current step after-process.
+        /// </summary>
+        void ClearStepAfterProcess();
     }
 }
