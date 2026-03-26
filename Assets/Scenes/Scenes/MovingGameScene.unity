@@ -712,7 +712,10 @@ MonoBehaviour:
   foodRoot_: {fileID: 0}
   breakPrefab_: {fileID: 8238055016132422236, guid: 0372e0471efc345a4be5223cd86cd08c, type: 3}
   breakRoot_: {fileID: 0}
-  breakDelaySeconds_: 5
+  breakDelaySeconds_: 0.5
+  breakProjectilePrefab_: {fileID: 6773806084491835860, guid: 2b4dc44e4cc6641ee96d9dfe5671f8c0, type: 3}
+  breakProjectileRoot_: {fileID: 0}
+  breakProjectileDurationSeconds_: 0.2
   moveDurationSeconds_: 0.36
   rotateDurationSeconds_: 0.28
   animateMovement_: 1

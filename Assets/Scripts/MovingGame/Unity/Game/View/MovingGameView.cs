@@ -22,6 +22,10 @@ namespace Flowbit.MovingGame.Unity
         [SerializeField] private Transform breakRoot_;
         [SerializeField] private float breakDelaySeconds_ = 0.25f;
 
+        [SerializeField] private GameObject breakProjectilePrefab_;
+        [SerializeField] private Transform breakProjectileRoot_;
+        [SerializeField] private float breakProjectileDurationSeconds_ = 0.15f;
+
         [Header("Animation")]
         [SerializeField] private float moveDurationSeconds_ = 0.2f;
         [SerializeField] private float rotateDurationSeconds_ = 0.15f;
@@ -162,12 +166,12 @@ namespace Flowbit.MovingGame.Unity
                 yield break;
             }
 
-            SpawnBreakPrefab(stepAfterProcess.GetPosition());
+            Vector3 targetWorldPosition = GridToWorld(stepAfterProcess.GetPosition());
+            Vector3 startWorldPosition = GetBreakProjectileStartWorldPosition();
 
-            if (!stepAfterProcess.IsBreakable())
-            {
-                yield break;
-            }
+            yield return PlayBreakProjectile(startWorldPosition, targetWorldPosition);
+
+            SpawnBreakPrefab(stepAfterProcess.GetPosition());
 
             if (breakDelaySeconds_ > 0f)
             {
@@ -227,6 +231,61 @@ namespace Flowbit.MovingGame.Unity
                 foodObject.name = $"Food_{foodPosition.GetX()}_{foodPosition.GetY()}";
                 spawnedFood_.Add(foodObject);
             }
+        }
+
+        private IEnumerator PlayBreakProjectile(Vector3 startWorldPosition, Vector3 targetWorldPosition)
+        {
+            if (breakProjectilePrefab_ == null)
+            {
+                yield break;
+            }
+
+            Transform parent = breakProjectileRoot_ != null ? breakProjectileRoot_ : transform;
+
+            GameObject projectileObject = Instantiate(
+                breakProjectilePrefab_,
+                startWorldPosition,
+                Quaternion.identity,
+                parent);
+
+            projectileObject.name = "BreakProjectile";
+
+            float duration = Mathf.Max(0f, breakProjectileDurationSeconds_);
+
+            if (duration <= 0f)
+            {
+                projectileObject.transform.position = targetWorldPosition;
+                Destroy(projectileObject);
+                yield break;
+            }
+
+            float elapsed = 0f;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsed / duration);
+
+                projectileObject.transform.position = Vector3.Lerp(
+                    startWorldPosition,
+                    targetWorldPosition,
+                    t);
+
+                yield return null;
+            }
+
+            projectileObject.transform.position = targetWorldPosition;
+            Destroy(projectileObject);
+        }
+
+        private Vector3 GetBreakProjectileStartWorldPosition()
+        {
+            if (character_ == null)
+            {
+                return Vector3.zero;
+            }
+
+            return character_.position;
         }
 
         private void ClearFoodVisuals()
