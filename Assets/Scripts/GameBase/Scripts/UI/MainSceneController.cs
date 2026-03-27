@@ -14,6 +14,7 @@ namespace Flowbit.GameBase.UI
 
         protected override void Start()
         {
+            base.Start();
             var serviceContainer = GlobalServiceContainer.ServiceContainer;
             navigationService_ = serviceContainer.Get<IGameNavigationService>();
         }

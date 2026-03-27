@@ -17,6 +17,8 @@ namespace Flowbit.GameBase.Scenes
         [field: SerializeField]
         public Canvas Canvas { get; private set; }
 
+        protected sealed override bool IgnoreBackButton => true;
+
         protected void Close()
         {
             NavigationService.Close(sceneType_);

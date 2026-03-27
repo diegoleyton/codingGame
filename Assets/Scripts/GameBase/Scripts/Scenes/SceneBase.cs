@@ -18,6 +18,8 @@ namespace Flowbit.GameBase.Scenes
 
         protected virtual bool HasBackButton => false;
 
+        protected virtual bool IgnoreBackButton => false;
+
         protected bool initialized_ = false;
 
         public string Id => sceneType_.GetId();
@@ -59,7 +61,8 @@ namespace Flowbit.GameBase.Scenes
 
         private IEnumerator InitializeByDefault()
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return null;
+            yield return null;
             if (!initialized_)
             {
                 InitializeBackButton();
@@ -69,6 +72,10 @@ namespace Flowbit.GameBase.Scenes
 
         private void InitializeBackButton()
         {
+            if (IgnoreBackButton)
+            {
+                return;
+            }
             var backButton = GlobalServiceContainer.ServiceContainer.Get<BackButton>();
             backButton.EnableBackButton(HasBackButton);
         }
