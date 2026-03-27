@@ -20,16 +20,14 @@ namespace Flowbit.MovingGame.Unity
 
         private IGameNavigationService navigationService_;
 
-        private void Awake()
+        protected override bool HasBackButton => true;
+
+        protected override void Start()
         {
+            base.Start();
             var serviceContainer = GlobalServiceContainer.ServiceContainer;
             navigationService_ = serviceContainer.Get<IGameNavigationService>();
-        }
 
-        public override void Initialize(NavigationParams _) { }
-
-        public void Start()
-        {
             if (levelsLibrary_ == null)
             {
                 throw new InvalidOperationException("Levels library is not assigned.");

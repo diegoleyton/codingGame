@@ -26,12 +26,11 @@ namespace Flowbit.GameBase.Services
         public ServiceInitializer()
         {
             ServiceContainer = new ServiceContainer();
-
             EventDispatcher dispatcher = new EventDispatcher();
             ServiceContainer.Register(dispatcher);
             var res = InitializeGameResources();
+            InitializeScreenBLocker(res);
             CreateCoroutineService();
-            CreateScreenBlocker(res);
             InitializeNavigationService(dispatcher, res);
             InitializeUIServices(res);
         }
@@ -41,13 +40,6 @@ namespace Flowbit.GameBase.Services
             var res = Resources.Load<GameResources>("GameResources");
             ServiceContainer.Register(res);
             return res;
-        }
-
-        private void CreateScreenBlocker(GameResources res)
-        {
-            var blockerImage = GameObject.Instantiate<ScreenBlockerImage>(res.SceneSettings.ScreenBlockerImage);
-            GameObject.DontDestroyOnLoad(blockerImage);
-            ServiceContainer.Register(new ScreenBlocker(blockerImage.Image));
         }
 
         private void InitializeNavigationService(EventDispatcher dispatcher, GameResources res)
@@ -84,11 +76,22 @@ namespace Flowbit.GameBase.Services
             ServiceContainer.Register(transitionNavigationService);
         }
 
+        private void InitializeScreenBLocker(GameResources res)
+        {
+            var blockerImage = GameObject.Instantiate<ScreenBlockerImage>(res.SceneSettings.ScreenBlockerImage);
+            GameObject.DontDestroyOnLoad(blockerImage);
+            ServiceContainer.Register(new ScreenBlocker(blockerImage.Image));
+        }
+
         private void InitializeUIServices(GameResources res)
         {
             var globalAnimator = GameObject.Instantiate<ComponentsLoopAnimator>(res.ComponentLoopAnimator);
             GameObject.DontDestroyOnLoad(globalAnimator);
             ServiceContainer.Register(globalAnimator);
+
+            var backButton = GameObject.Instantiate<BackButton>(res.BackButton);
+            GameObject.DontDestroyOnLoad(backButton);
+            ServiceContainer.Register(backButton);
         }
 
         private void CreateCoroutineService()

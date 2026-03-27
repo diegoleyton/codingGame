@@ -20,17 +20,9 @@ namespace Flowbit.MovingGame.Unity
 
         private Action continueAction_;
 
-        /// <summary>
-        /// Initializes the popup with navigation parameters.
-        /// </summary>
-        public override void Initialize(NavigationParams navigationParams)
+        protected override void Initialize()
         {
-            if (navigationParams is not MovingGameLevelSelectionPopupParams popupParams)
-            {
-                throw new ArgumentException(
-                    $"Expected {nameof(MovingGameLevelSelectionPopupParams)} but got {navigationParams?.GetType().Name ?? "null"}.");
-            }
-
+            var popupParams = GetSceneParameters<MovingGameLevelSelectionPopupParams>();
             continueAction_ = popupParams.OnContinue;
 
             if (titleText_ != null)

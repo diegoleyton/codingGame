@@ -28,5 +28,11 @@ namespace Flowbit.GameBase.Services
         /// </summary>
         [field: SerializeField]
         public ComponentsLoopAnimator ComponentLoopAnimator { get; private set; }
+
+        /// <summary>
+        /// Gets the back button controller.
+        /// </summary>
+        [field: SerializeField]
+        public BackButton BackButton { get; private set; }
     }
 }

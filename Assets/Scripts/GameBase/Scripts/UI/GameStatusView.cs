@@ -1,7 +1,6 @@
 using UnityEngine;
 using Flowbit.GameBase.Character;
 using Flowbit.EngineController;
-using System;
 
 namespace Flowbit.GameBase.UI
 {

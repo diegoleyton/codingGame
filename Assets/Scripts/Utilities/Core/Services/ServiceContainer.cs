@@ -41,7 +41,7 @@ namespace Flowbit.Utilities.Core.Services
             if (singleServices_.TryGetValue(type, out var instance))
                 return (T)instance;
 
-            throw new Exception($"No singleton service registered for type {type}");
+            throw new Exception($"No service registered for type {type}");
         }
 
         /// <summary>

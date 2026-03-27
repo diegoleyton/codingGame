@@ -14,7 +14,7 @@ namespace Flowbit.GameBase.UI
 
         private bool registered_;
 
-        private void Awake()
+        private void Start()
         {
             ResolveAnimator();
 

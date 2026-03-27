@@ -19,6 +19,9 @@ MonoBehaviour:
   - <SceneType>k__BackingField: 1
     <TargetType>k__BackingField: 0
     <Prefab>k__BackingField: {fileID: 0}
+  - <SceneType>k__BackingField: 4
+    <TargetType>k__BackingField: 0
+    <Prefab>k__BackingField: {fileID: 0}
   - <SceneType>k__BackingField: 2
     <TargetType>k__BackingField: 1
     <Prefab>k__BackingField: {fileID: 3064830125514427920, guid: 85a7726ff142940f7ba7f58624701710, type: 3}

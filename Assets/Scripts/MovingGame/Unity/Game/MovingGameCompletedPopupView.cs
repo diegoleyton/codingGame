@@ -27,14 +27,9 @@ namespace Flowbit.MovingGame.Unity
         /// <summary>
         /// Initializes the popup with navigation parameters.
         /// </summary>
-        public override void Initialize(NavigationParams navigationParams)
+        protected override void Initialize()
         {
-            if (navigationParams is not MovingGameCompletedPopupParams popupParams)
-            {
-                throw new ArgumentException(
-                    $"Expected {nameof(MovingGameCompletedPopupParams)} but got {navigationParams?.GetType().Name ?? "null"}.");
-            }
-
+            var popupParams = GetSceneParameters<MovingGameCompletedPopupParams>();
             onContinueAction_ = popupParams.OnContinue;
             onRetryAction_ = popupParams.OnRetry;
             onCloseAction_ = popupParams.OnClose;

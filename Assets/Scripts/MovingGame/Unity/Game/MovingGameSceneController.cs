@@ -33,25 +33,20 @@ namespace Flowbit.MovingGame.Unity
         private bool currentLevelFailed_;
         private Coroutine showCompletedPopupCoroutine_;
 
-        private void Awake()
-        {
-            var serviceContainer = GlobalServiceContainer.ServiceContainer;
-            eventDispatcher_ = serviceContainer.Get<EventDispatcher>();
-            navigationService_ = serviceContainer.Get<IGameNavigationService>();
-        }
+        protected override bool HasBackButton => true;
 
-        private void OnEnable()
+        private void RegisterEvents()
         {
-            if (movingGameController_ != null)
+            if (movingGameController_ != null && eventDispatcher_ != null)
             {
                 eventDispatcher_.Subscribe<LevelCompletedEvent>(movingGameController_, OnLevelCompleted);
                 eventDispatcher_.Subscribe<LevelFailedEvent>(movingGameController_, OnLevelFailed);
             }
         }
 
-        private void OnDisable()
+        private void UnRegisterEvents()
         {
-            if (movingGameController_ != null)
+            if (movingGameController_ != null && eventDispatcher_ != null)
             {
                 eventDispatcher_.Unsubscribe<LevelCompletedEvent>(movingGameController_, OnLevelCompleted);
                 eventDispatcher_.Unsubscribe<LevelFailedEvent>(movingGameController_, OnLevelFailed);
@@ -60,8 +55,35 @@ namespace Flowbit.MovingGame.Unity
             StopCompletedPopupCoroutine();
         }
 
-        public override void Initialize(NavigationParams navigationParams)
+        private void OnEnable()
         {
+            RegisterEvents();
+        }
+
+        private void OnDisable()
+        {
+            UnRegisterEvents();
+        }
+
+        protected override void Initialize()
+        {
+            var movingGameParams = GetSceneParameters<MovingGameNavigationParams>();
+            Initialize(movingGameParams.LevelIndex);
+        }
+
+        protected override void DefaultInitialize()
+        {
+            Initialize(defaultLevelIndex_);
+        }
+
+        private void Initialize(int levelIndex)
+        {
+            var serviceContainer = GlobalServiceContainer.ServiceContainer;
+            eventDispatcher_ = serviceContainer.Get<EventDispatcher>();
+            navigationService_ = serviceContainer.Get<IGameNavigationService>();
+
+            RegisterEvents();
+
             if (levelsLibrary_ == null)
             {
                 throw new InvalidOperationException("Levels library is not assigned.");
@@ -70,12 +92,6 @@ namespace Flowbit.MovingGame.Unity
             if (movingGameController_ == null)
             {
                 throw new InvalidOperationException("Moving game controller is not assigned.");
-            }
-
-            int levelIndex = defaultLevelIndex_;
-            if (navigationParams is MovingGameNavigationParams movingGameParams)
-            {
-                levelIndex = movingGameParams.LevelIndex;
             }
 
             levelsLibrary_.Load();

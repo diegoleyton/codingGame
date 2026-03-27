@@ -49,6 +49,7 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.26f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets/Scripts/GameBase/Scripts/UI/BackButton.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/InstructionListItemView.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Services/ServiceInitializer.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/SceneBase.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Assets/Scripts/GameBase/Scripts/Character/CharacterAnimation.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/ComponentsLoopAnimator.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/SceneNavigationNodeResolver.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Scripts/UI/MainSceneController.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/Transitions/PaperOpenTransitionOverlay.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/GameNavigationService.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Services/GameResources.cs" />

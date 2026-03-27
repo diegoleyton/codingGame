@@ -10,7 +10,8 @@ namespace Flowbit.GameBase.Definitions
         MovingGameLevelSelection,
         MovingGame,
         MovingGameLevelCompletedPopup,
-        MovingGameLevelSelectionPopup
+        MovingGameLevelSelectionPopup,
+        MainScene
     }
 
     public static class SceneTypeExtension
@@ -19,6 +20,7 @@ namespace Flowbit.GameBase.Definitions
         {
             {SceneType.MovingGameLevelSelection, "LevelSelectorScene"},
             {SceneType.MovingGame, "MovingGameScene"},
+            {SceneType.MainScene, "MainScene"},
             {SceneType.MovingGameLevelCompletedPopup, "MovingGameEndGamePopup"},
             {SceneType.MovingGameLevelSelectionPopup, "MovingGameLevelSelectionPopup"}
         };

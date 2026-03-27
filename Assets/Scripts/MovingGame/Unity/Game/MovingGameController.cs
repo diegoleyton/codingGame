@@ -29,7 +29,7 @@ namespace Flowbit.MovingGame.Unity
         private bool failedEventSent_;
 
 
-        private void Awake()
+        private void Start()
         {
             var serviceContainer = GlobalServiceContainer.ServiceContainer;
             eventDispatcher_ = serviceContainer.Get<EventDispatcher>();
