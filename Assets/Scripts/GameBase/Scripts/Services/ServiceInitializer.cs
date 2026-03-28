@@ -3,8 +3,10 @@ using Flowbit.Utilities.Core.Events;
 using Flowbit.Utilities.Core.Services;
 using Flowbit.Utilities.Coroutines;
 using Flowbit.Utilities.Unity.UI;
+using Flowbit.Utilities.Audio;
 using Flowbit.GameBase.Scenes;
 using Flowbit.GameBase.UI;
+using Flowbit.GameBase.Audio;
 using UnityEngine;
 
 namespace Flowbit.GameBase.Services
@@ -33,6 +35,7 @@ namespace Flowbit.GameBase.Services
             CreateCoroutineService();
             InitializeNavigationService(dispatcher, res);
             InitializeUIServices(res);
+            InitializeAudioServices(res, dispatcher);
         }
 
         private GameResources InitializeGameResources()
@@ -92,6 +95,18 @@ namespace Flowbit.GameBase.Services
             var backButton = GameObject.Instantiate<BackButton>(res.BackButton);
             GameObject.DontDestroyOnLoad(backButton);
             ServiceContainer.Register(backButton);
+        }
+
+        private void InitializeAudioServices(GameResources res, EventDispatcher dispatcher)
+        {
+            var audioPool = GameObject.Instantiate<GameObject>(res.GameSoundLibrary.AudioPool);
+            GameObject.DontDestroyOnLoad(audioPool);
+            AudioPlayer<SoundId> audioPlayer = new AudioPlayer<SoundId>(
+                res.GameSoundLibrary,
+                audioPool.GetComponent<IAudioSourcePool>(),
+                audioPool.GetComponent<ILoopingAudioSourcePool>());
+
+            new AudioReactor(dispatcher, audioPlayer);
         }
 
         private void CreateCoroutineService()

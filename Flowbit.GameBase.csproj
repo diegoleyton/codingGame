@@ -56,11 +56,14 @@
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/SceneSettings.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/InstructionsPresentationSettings.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Services/GlobalServiceContainer.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Scripts/Audio/SoundId.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/UIAnimatedComponent.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/ScreenBlockerImage.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/Transitions/GameSceneTransitionBase.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/ProgramPanelView.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Scripts/Audio/AudioReactor.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Character/CharacterAnimation.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Scripts/Audio/GameSoundLibrary.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/ComponentsLoopAnimator.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/SceneNavigationNodeResolver.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/MainSceneController.cs" />

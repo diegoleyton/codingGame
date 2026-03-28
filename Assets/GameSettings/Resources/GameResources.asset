@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <SceneSettings>k__BackingField: {fileID: 11400000, guid: 4113b897535a54744ac95d4305138535, type: 2}
   <InstructionsPresentationSettings>k__BackingField: {fileID: 11400000, guid: 09fff0e3182004e00846782f271405b3, type: 2}
-  <ComponentLoopAnimator>k__BackingField: {fileID: 5469796037845318584, guid: cfe2723724d8847daac7d680e568a187, type: 3}
   <BackButton>k__BackingField: {fileID: 808607406510788919, guid: ff805550f8ba04dfe982219efb4c1bbc, type: 3}
+  <ComponentLoopAnimator>k__BackingField: {fileID: 5469796037845318584, guid: cfe2723724d8847daac7d680e568a187, type: 3}
+  <GameSoundLibrary>k__BackingField: {fileID: 11400000, guid: 7fb244bc424174539914b6ba3699ed2f, type: 2}

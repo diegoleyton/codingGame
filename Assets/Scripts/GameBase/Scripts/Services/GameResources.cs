@@ -2,6 +2,7 @@ using UnityEngine;
 using Flowbit.Utilities.Navigation;
 using Flowbit.GameBase.UI;
 using Flowbit.GameBase.Scenes;
+using Flowbit.GameBase.Audio;
 
 namespace Flowbit.GameBase.Services
 {
@@ -24,15 +25,21 @@ namespace Flowbit.GameBase.Services
         public InstructionsPresentationSettings InstructionsPresentationSettings { get; private set; }
 
         /// <summary>
+        /// Gets the back button controller.
+        /// </summary>
+        [field: SerializeField]
+        public BackButton BackButton { get; private set; }
+
+        /// <summary>
         /// Gets the resources that define the presentation of instructions.
         /// </summary>
         [field: SerializeField]
         public ComponentsLoopAnimator ComponentLoopAnimator { get; private set; }
 
         /// <summary>
-        /// Gets the back button controller.
+        /// Gets the sound library for the game.
         /// </summary>
         [field: SerializeField]
-        public BackButton BackButton { get; private set; }
+        public GameSoundLibrary GameSoundLibrary { get; private set; }
     }
 }

@@ -58,15 +58,23 @@
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Core/NavigationTargetType.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Core/NavigationService.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/UI/ScrollRectExtensions.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Audio/IAudioSourcePool.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Core/NavigationParams.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Audio/SoundLibrary.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Audio/SoundLibraryEntry.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Audio/SoundAsset.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Abstractions/INavigationNodeResolver.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Events/NavigationEvents.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Abstractions/INavigationService.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Coroutines/ICoroutineService.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Coroutines/CoroutineService.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Audio/AudioPlayer.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Core/NavigationHistoryEntry.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Abstractions/INavigationNode.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Audio/ILoopingAudioSourcePool.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Core/ResolvedNavigationNode.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Audio/LoopingAudioSourcePool.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/Audio/AudioSourcePool.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/Scripts/Utilities/Unity/Flowbit.Utilities.Unity.asmdef" />

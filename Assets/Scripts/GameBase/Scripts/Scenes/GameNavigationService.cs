@@ -57,6 +57,8 @@ namespace Flowbit.GameBase.Scenes
                 navigationService_.Navigate(
                     sceneSettings_.GetTarget(sceneType),
                     navigationParams));
+
+            eventDispatcher_?.Send(new OnNextScene());
         }
 
         /// <summary>
