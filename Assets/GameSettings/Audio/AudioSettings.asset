@@ -15,4 +15,10 @@ MonoBehaviour:
   _entries:
   - _key: 0
     _soundAsset: {fileID: 11400000, guid: afd689ab8cd9046c8932b82e4812e733, type: 2}
+  - _key: 1
+    _soundAsset: {fileID: 11400000, guid: 678ea5029df12461f8775f7fca06a1fe, type: 2}
+  - _key: 2
+    _soundAsset: {fileID: 11400000, guid: f1e5d2cacd3314cacafdab8726dd6b37, type: 2}
+  - _key: 3
+    _soundAsset: {fileID: 11400000, guid: 5cac744e331004fcdb18e87fa37fa28a, type: 2}
   <AudioPool>k__BackingField: {fileID: 6223451992814651929, guid: 83f6ee944f0a84a82b6109a64832aa9f, type: 3}

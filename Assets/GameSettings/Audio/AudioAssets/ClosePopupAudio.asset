@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ac44c74826714b8392245fc76fd4b5e, type: 3}
   m_Name: ClosePopupAudio
   m_EditorClassIdentifier: 
-  _clips: []
-  _volumeRange: {x: 1, y: 1}
-  _pitchRange: {x: 1, y: 1}
+  _clips:
+  - {fileID: 8300000, guid: 529376f8eee9c448c9896728be4a926e, type: 3}
+  - {fileID: 8300000, guid: 4f0bf7e8cbb3243fbb651d9d4e68fc82, type: 3}
+  - {fileID: 8300000, guid: 2094fc5d7ba874e9e998dd36847d6b53, type: 3}
+  _volumeRange: {x: 0.3, y: 0.5}
+  _pitchRange: {x: 0.9, y: 1.1}

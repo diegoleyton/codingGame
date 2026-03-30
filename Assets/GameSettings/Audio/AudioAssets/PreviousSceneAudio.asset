@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ac44c74826714b8392245fc76fd4b5e, type: 3}
   m_Name: PreviousSceneAudio
   m_EditorClassIdentifier: 
-  _clips: []
-  _volumeRange: {x: 1, y: 1}
-  _pitchRange: {x: 1, y: 1}
+  _clips:
+  - {fileID: 8300000, guid: fa72ac53959fb4f4ebe6d5f162f871cf, type: 3}
+  _volumeRange: {x: 0.08, y: 0.1}
+  _pitchRange: {x: 0.9, y: 1.1}

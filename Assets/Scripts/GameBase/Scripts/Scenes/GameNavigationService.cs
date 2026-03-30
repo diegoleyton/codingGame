@@ -53,12 +53,20 @@ namespace Flowbit.GameBase.Scenes
             SceneType sceneType,
             NavigationParams navigationParams = null)
         {
+            var target = sceneSettings_.GetTarget(sceneType);
             coroutineService_.StartCoroutine(
                 navigationService_.Navigate(
-                    sceneSettings_.GetTarget(sceneType),
+                    target,
                     navigationParams));
 
-            eventDispatcher_?.Send(new OnNextScene());
+            if (target.TargetType == NavigationTargetType.Scene)
+            {
+                eventDispatcher_?.Send(new OnNextScene());
+            }
+            else
+            {
+                eventDispatcher_?.Send(new OnPopupOpen());
+            }
         }
 
         /// <summary>
@@ -67,6 +75,7 @@ namespace Flowbit.GameBase.Scenes
         public void Back()
         {
             coroutineService_.StartCoroutine(navigationService_.Back());
+            eventDispatcher_?.Send(new OnPreviousScene());
         }
 
         /// <summary>
@@ -76,6 +85,7 @@ namespace Flowbit.GameBase.Scenes
         {
             string id = sceneSettings_.GetTarget(sceneType).Id;
             coroutineService_.StartCoroutine(navigationService_.Close(id));
+            eventDispatcher_?.Send(new OnPopupClose());
         }
 
         /// <summary>
