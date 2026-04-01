@@ -10,39 +10,85 @@ namespace Flowbit.GameBase.Audio
     /// </summary>
     public sealed class AudioReactor
     {
-        private readonly EventDispatcher _eventDispatcher;
-        private readonly AudioPlayer<SoundId> _audioPlayer;
+        private readonly EventDispatcher eventDispatcher_;
+        private readonly AudioPlayer<SoundId> audioPlayer_;
+
+        private bool playingGameMusic_ = false;
+        private float musicTransitionTime_ = 1f;
 
         /// <summary>
         /// Creates a new audio reactor.
         /// </summary>
         public AudioReactor(
             EventDispatcher eventDispatcher,
-            AudioPlayer<SoundId> audioPlayer)
+            AudioPlayer<SoundId> audioPlayer,
+            float musicTransitionTime)
         {
-            _eventDispatcher = eventDispatcher ?? throw new ArgumentNullException(nameof(eventDispatcher));
-            _audioPlayer = audioPlayer ?? throw new ArgumentNullException(nameof(audioPlayer));
-
+            eventDispatcher_ = eventDispatcher ?? throw new ArgumentNullException(nameof(eventDispatcher));
+            audioPlayer_ = audioPlayer ?? throw new ArgumentNullException(nameof(audioPlayer));
+            musicTransitionTime_ = musicTransitionTime;
             Subscribe();
         }
 
         private void Subscribe()
         {
-            _eventDispatcher.Subscribe<OnNextScene>(_ => Play(SoundId.NextScene));
-            _eventDispatcher.Subscribe<OnPreviousScene>(_ => Play(SoundId.PreviousScene));
-            _eventDispatcher.Subscribe<OnPopupOpen>(_ => Play(SoundId.PopupOpen));
-            _eventDispatcher.Subscribe<OnPopupClose>(_ => Play(SoundId.PopupClosed));
+            eventDispatcher_.Subscribe<OnNextScene>(OnNextScene);
+            eventDispatcher_.Subscribe<OnPreviousScene>(OnPreviousScene);
+            eventDispatcher_.Subscribe<OnPopupOpen>(_ => Play(SoundId.PopupOpen));
+            eventDispatcher_.Subscribe<OnPopupClose>(_ => Play(SoundId.PopupClosed));
+            eventDispatcher_.Subscribe<OnFirstScene>(_ => PlayLoop(SoundId.Main));
+        }
+
+        private void OnNextScene(OnNextScene e)
+        {
+            Play(SoundId.NextScene);
+            if (e.SceneType == SceneType.MovingGame)
+            {
+                PlayGameMusic();
+            }
+            else
+            {
+                PlayMenuMusic();
+            }
+        }
+
+        private void OnPreviousScene(OnPreviousScene e)
+        {
+            Play(SoundId.PreviousScene);
+            PlayMenuMusic();
+        }
+
+        private void PlayGameMusic()
+        {
+            if (playingGameMusic_)
+            {
+                return;
+            }
+
+            playingGameMusic_ = true;
+            audioPlayer_.TryTransitionLoop(SoundId.Main, SoundId.Main2, musicTransitionTime_);
+        }
+
+        private void PlayMenuMusic()
+        {
+            if (!playingGameMusic_)
+            {
+                return;
+            }
+
+            playingGameMusic_ = false;
+            audioPlayer_.TryTransitionLoop(SoundId.Main2, SoundId.Main, musicTransitionTime_);
         }
 
         private void Play(SoundId soundId)
         {
-            _audioPlayer.TryPlayOneShot(soundId);
+            audioPlayer_.TryPlayOneShot(soundId);
         }
 
         private void PlayLoop(SoundId soundId)
         {
-            _audioPlayer.StopAllLoops();
-            _audioPlayer.TryPlayLoop(soundId);
+            audioPlayer_.StopAllLoops();
+            audioPlayer_.TryPlayLoop(soundId);
         }
     }
 }

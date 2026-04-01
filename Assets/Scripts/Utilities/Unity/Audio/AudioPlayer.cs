@@ -1,10 +1,13 @@
 using System;
+using System.Collections;
 using UnityEngine;
+using Flowbit.Utilities.Coroutines;
 
 namespace Flowbit.Utilities.Audio
 {
     /// <summary>
     /// Plays audio from a typed sound library using one-shot and looping source pools.
+    /// Supports crossfading between looping sounds.
     /// </summary>
     /// <typeparam name="TKey">The enum type used by the sound library.</typeparam>
     public sealed class AudioPlayer<TKey> where TKey : Enum
@@ -12,6 +15,10 @@ namespace Flowbit.Utilities.Audio
         private readonly SoundLibrary<TKey> _soundLibrary;
         private readonly IAudioSourcePool _oneShotPool;
         private readonly ILoopingAudioSourcePool _loopingPool;
+        private readonly ICoroutineService _coroutineService;
+
+        private Coroutine _loopTransitionCoroutine;
+        private LoopTransition _activeLoopTransition;
 
         /// <summary>
         /// Creates a new audio player.
@@ -19,14 +26,17 @@ namespace Flowbit.Utilities.Audio
         /// <param name="soundLibrary">The sound library used to resolve audio keys.</param>
         /// <param name="oneShotPool">The pool used for one-shot playback.</param>
         /// <param name="loopingPool">The pool used for looping playback.</param>
+        /// <param name="coroutineService">The coroutine service used to run transitions.</param>
         public AudioPlayer(
             SoundLibrary<TKey> soundLibrary,
             IAudioSourcePool oneShotPool,
-            ILoopingAudioSourcePool loopingPool)
+            ILoopingAudioSourcePool loopingPool,
+            ICoroutineService coroutineService)
         {
             _soundLibrary = soundLibrary ?? throw new ArgumentNullException(nameof(soundLibrary));
             _oneShotPool = oneShotPool ?? throw new ArgumentNullException(nameof(oneShotPool));
             _loopingPool = loopingPool ?? throw new ArgumentNullException(nameof(loopingPool));
+            _coroutineService = coroutineService ?? throw new ArgumentNullException(nameof(coroutineService));
         }
 
         /// <summary>
@@ -38,7 +48,7 @@ namespace Flowbit.Utilities.Audio
         {
             if (!TryGetPlaybackData(
                 key,
-                out SoundAsset soundAsset,
+                out SoundAsset _,
                 out AudioClip clip,
                 out float volume,
                 out float pitch))
@@ -65,6 +75,8 @@ namespace Flowbit.Utilities.Audio
         /// <returns>True if playback was triggered; otherwise false.</returns>
         public bool TryPlayLoop(TKey key)
         {
+            CancelActiveLoopTransition();
+
             if (!TryGetPlaybackData(
                 key,
                 out SoundAsset _,
@@ -93,6 +105,86 @@ namespace Flowbit.Utilities.Audio
         }
 
         /// <summary>
+        /// Tries to transition from one active looping sound to another looping sound.
+        /// The target loop starts at the equivalent playback position of the source loop.
+        /// This only works if the source loop is currently playing.
+        /// </summary>
+        /// <param name="fromKey">The currently playing loop key.</param>
+        /// <param name="toKey">The target loop key.</param>
+        /// <param name="durationSeconds">The crossfade duration in seconds.</param>
+        /// <returns>True if the transition started; otherwise false.</returns>
+        public bool TryTransitionLoop(TKey fromKey, TKey toKey, float durationSeconds)
+        {
+            if (durationSeconds <= 0f)
+            {
+                durationSeconds = 0.01f;
+            }
+
+            int fromAudioId = Convert.ToInt32(fromKey);
+            int toAudioId = Convert.ToInt32(toKey);
+
+            if (fromAudioId == toAudioId)
+            {
+                return false;
+            }
+
+            if (!_loopingPool.TryGetSource(fromAudioId, out AudioSource fromSource))
+            {
+                return false;
+            }
+
+            if (fromSource == null || !fromSource.isPlaying || !fromSource.loop || fromSource.clip == null)
+            {
+                return false;
+            }
+
+            if (!TryGetPlaybackData(
+                toKey,
+                out SoundAsset _,
+                out AudioClip toClip,
+                out float toVolume,
+                out float toPitch))
+            {
+                return false;
+            }
+
+            CancelActiveLoopTransition();
+
+            AudioSource toSource = _loopingPool.GetOrCreateSource(toAudioId);
+            if (toSource == null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(fromSource, toSource))
+            {
+                return false;
+            }
+
+            int toTimeSamples = GetMappedTimeSamples(fromSource, toClip);
+
+            toSource.Stop();
+            toSource.clip = toClip;
+            toSource.loop = true;
+            toSource.pitch = toPitch;
+            toSource.volume = 0f;
+            toSource.timeSamples = toTimeSamples;
+            toSource.Play();
+
+            _activeLoopTransition = new LoopTransition(
+                fromAudioId: fromAudioId,
+                toAudioId: toAudioId,
+                fromSource: fromSource,
+                toSource: toSource,
+                fromStartVolume: fromSource.volume,
+                toTargetVolume: toVolume,
+                durationSeconds: durationSeconds);
+
+            _loopTransitionCoroutine = _coroutineService.StartCoroutine(RunLoopTransition(_activeLoopTransition));
+            return true;
+        }
+
+        /// <summary>
         /// Stops the active loop associated with the given key.
         /// </summary>
         /// <param name="key">The sound key to stop.</param>
@@ -100,6 +192,12 @@ namespace Flowbit.Utilities.Audio
         public bool StopLoop(TKey key)
         {
             int audioId = Convert.ToInt32(key);
+
+            if (_activeLoopTransition != null &&
+                (_activeLoopTransition.FromAudioId == audioId || _activeLoopTransition.ToAudioId == audioId))
+            {
+                CancelActiveLoopTransition();
+            }
 
             if (!_loopingPool.TryGetSource(audioId, out AudioSource _))
             {
@@ -115,7 +213,100 @@ namespace Flowbit.Utilities.Audio
         /// </summary>
         public void StopAllLoops()
         {
+            CancelActiveLoopTransition();
             _loopingPool.StopAndReleaseAll();
+        }
+
+        private IEnumerator RunLoopTransition(LoopTransition transition)
+        {
+            float elapsedSeconds = 0f;
+
+            while (elapsedSeconds < transition.DurationSeconds)
+            {
+                if (!IsTransitionStillValid(transition))
+                {
+                    CleanupTransitionState();
+                    yield break;
+                }
+
+                elapsedSeconds += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsedSeconds / transition.DurationSeconds);
+
+                transition.FromSource.volume = Mathf.Lerp(
+                    transition.FromStartVolume,
+                    0f,
+                    t);
+
+                transition.ToSource.volume = Mathf.Lerp(
+                    0f,
+                    transition.ToTargetVolume,
+                    t);
+
+                yield return null;
+            }
+
+            if (IsTransitionStillValid(transition))
+            {
+                transition.ToSource.volume = transition.ToTargetVolume;
+                _loopingPool.ReleaseSource(transition.FromAudioId);
+            }
+
+            CleanupTransitionState();
+        }
+
+        private bool IsTransitionStillValid(LoopTransition transition)
+        {
+            return transition != null &&
+                   transition.FromSource != null &&
+                   transition.ToSource != null &&
+                   transition.FromSource.clip != null &&
+                   transition.ToSource.clip != null;
+        }
+
+        private void CancelActiveLoopTransition()
+        {
+            if (_loopTransitionCoroutine != null)
+            {
+                _coroutineService.StopCoroutine(_loopTransitionCoroutine);
+                _loopTransitionCoroutine = null;
+            }
+
+            if (_activeLoopTransition == null)
+            {
+                return;
+            }
+
+            if (_activeLoopTransition.ToAudioId != _activeLoopTransition.FromAudioId)
+            {
+                _loopingPool.ReleaseSource(_activeLoopTransition.ToAudioId);
+            }
+
+            _activeLoopTransition = null;
+        }
+
+        private void CleanupTransitionState()
+        {
+            _loopTransitionCoroutine = null;
+            _activeLoopTransition = null;
+        }
+
+        private static int GetMappedTimeSamples(AudioSource fromSource, AudioClip toClip)
+        {
+            if (fromSource.clip == null || toClip == null)
+            {
+                return 0;
+            }
+
+            if (fromSource.clip.samples <= 0 || toClip.samples <= 0)
+            {
+                return 0;
+            }
+
+            float normalizedTime = (float)fromSource.timeSamples / fromSource.clip.samples;
+            normalizedTime = Mathf.Repeat(normalizedTime, 1f);
+
+            int mappedSamples = Mathf.RoundToInt(normalizedTime * toClip.samples);
+            return Mathf.Clamp(mappedSamples, 0, Mathf.Max(0, toClip.samples - 1));
         }
 
         private bool TryGetPlaybackData(
@@ -148,6 +339,35 @@ namespace Flowbit.Utilities.Audio
             volume = soundAsset.GetRandomVolume();
             pitch = soundAsset.GetRandomPitch();
             return true;
+        }
+
+        private sealed class LoopTransition
+        {
+            public int FromAudioId { get; }
+            public int ToAudioId { get; }
+            public AudioSource FromSource { get; }
+            public AudioSource ToSource { get; }
+            public float FromStartVolume { get; }
+            public float ToTargetVolume { get; }
+            public float DurationSeconds { get; }
+
+            public LoopTransition(
+                int fromAudioId,
+                int toAudioId,
+                AudioSource fromSource,
+                AudioSource toSource,
+                float fromStartVolume,
+                float toTargetVolume,
+                float durationSeconds)
+            {
+                FromAudioId = fromAudioId;
+                ToAudioId = toAudioId;
+                FromSource = fromSource;
+                ToSource = toSource;
+                FromStartVolume = fromStartVolume;
+                ToTargetVolume = toTargetVolume;
+                DurationSeconds = Mathf.Max(0.01f, durationSeconds);
+            }
         }
     }
 }

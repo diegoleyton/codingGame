@@ -61,7 +61,7 @@ namespace Flowbit.GameBase.Scenes
 
             if (target.TargetType == NavigationTargetType.Scene)
             {
-                eventDispatcher_?.Send(new OnNextScene());
+                eventDispatcher_?.Send(new OnNextScene(sceneType));
             }
             else
             {

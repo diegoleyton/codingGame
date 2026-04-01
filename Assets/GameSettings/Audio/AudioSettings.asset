@@ -21,4 +21,9 @@ MonoBehaviour:
     _soundAsset: {fileID: 11400000, guid: f1e5d2cacd3314cacafdab8726dd6b37, type: 2}
   - _key: 3
     _soundAsset: {fileID: 11400000, guid: 5cac744e331004fcdb18e87fa37fa28a, type: 2}
+  - _key: 4
+    _soundAsset: {fileID: 11400000, guid: 7419f21f533de4a638bdee0faab2228f, type: 2}
+  - _key: 5
+    _soundAsset: {fileID: 11400000, guid: eb85a512266da4571987b2771cce23c4, type: 2}
   <AudioPool>k__BackingField: {fileID: 6223451992814651929, guid: 83f6ee944f0a84a82b6109a64832aa9f, type: 3}
+  <MusicTransitionTime>k__BackingField: 1

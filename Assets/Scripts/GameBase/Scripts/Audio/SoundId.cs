@@ -6,5 +6,7 @@ public enum SoundId
     NextScene,
     PreviousScene,
     PopupOpen,
-    PopupClosed
+    PopupClosed,
+    Main,
+    Main2
 }

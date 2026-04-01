@@ -5,6 +5,7 @@ using Flowbit.GameBase.Services;
 using Flowbit.GameBase.Definitions;
 using Flowbit.GameBase.UI;
 using Flowbit.Utilities.Navigation;
+using Flowbit.Utilities.Core.Events;
 
 namespace Flowbit.GameBase.Scenes
 {
@@ -26,8 +27,18 @@ namespace Flowbit.GameBase.Scenes
 
         private NavigationParams sceneParameters_;
 
+        private static bool firstScene_ = true;
+
         protected virtual void Start()
         {
+            if (!firstScene_)
+            {
+                return;
+            }
+
+            firstScene_ = false;
+            var dispatcher = GlobalServiceContainer.ServiceContainer.Get<EventDispatcher>();
+            dispatcher.Send(new OnFirstScene());
             StartCoroutine(InitializeByDefault());
         }
 

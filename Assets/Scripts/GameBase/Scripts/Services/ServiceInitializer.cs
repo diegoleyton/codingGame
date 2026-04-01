@@ -104,9 +104,10 @@ namespace Flowbit.GameBase.Services
             AudioPlayer<SoundId> audioPlayer = new AudioPlayer<SoundId>(
                 res.GameSoundLibrary,
                 audioPool.GetComponent<IAudioSourcePool>(),
-                audioPool.GetComponent<ILoopingAudioSourcePool>());
+                audioPool.GetComponent<ILoopingAudioSourcePool>(),
+                ServiceContainer.Get<ICoroutineService>());
 
-            new AudioReactor(dispatcher, audioPlayer);
+            new AudioReactor(dispatcher, audioPlayer, res.GameSoundLibrary.MusicTransitionTime);
         }
 
         private void CreateCoroutineService()

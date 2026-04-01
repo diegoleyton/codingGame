@@ -8,5 +8,6 @@ namespace Flowbit.GameBase.Audio
     public sealed class GameSoundLibrary : SoundLibrary<SoundId>
     {
         [field: SerializeField] public GameObject AudioPool { get; private set; }
+        [field: SerializeField] public float MusicTransitionTime { get; private set; }
     }
 }

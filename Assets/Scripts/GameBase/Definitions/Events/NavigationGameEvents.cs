@@ -7,6 +7,12 @@ namespace Flowbit.GameBase.Definitions
     /// </summary>
     public sealed class OnNextScene : IEvent
     {
+        public OnNextScene(SceneType sceneType)
+        {
+            SceneType = sceneType;
+        }
+
+        public SceneType SceneType { get; }
     }
 
     /// <summary>
@@ -27,6 +33,13 @@ namespace Flowbit.GameBase.Definitions
     /// Event called when we close a popup
     /// </summary>
     public sealed class OnPopupClose : IEvent
+    {
+    }
+
+    /// <summary>
+    /// Event called when the first scene is loaded
+    /// </summary>
+    public sealed class OnFirstScene : IEvent
     {
     }
 }
