@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Core/NavigationTransitionContext.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/UI/HoldToActionButton.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/UI/ScreenBlocker.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Core/NavigationTarget.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/General/AutoDestroy.cs" />

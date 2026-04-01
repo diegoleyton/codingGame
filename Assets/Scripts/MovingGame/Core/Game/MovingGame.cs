@@ -316,6 +316,11 @@ namespace Flowbit.MovingGame.Core
 
             if (!IsInsideBounds(forwardPosition))
             {
+                stepAfterProcess_ = new StepAfterProcess(
+                    StepAfterProcessType.Break,
+                    default,
+                    false,
+                    false);
                 return;
             }
 

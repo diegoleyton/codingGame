@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Flowbit.GameBase.Character
@@ -14,8 +13,7 @@ namespace Flowbit.GameBase.Character
     }
 
     /// <summary>
-    /// Controls a pet Animator and enables or disables state-specific objects
-    /// when the Animator changes state.
+    /// Controls a pet Animator.
     /// </summary>
     public sealed class PetAnimation : MonoBehaviour
     {
@@ -24,8 +22,6 @@ namespace Flowbit.GameBase.Character
 
         [SerializeField]
         private Animator animator;
-
-        private PetAnimationStateType? currentAppliedState;
 
         /// <summary>
         /// Gets the Animator used by this character.
@@ -36,7 +32,9 @@ namespace Flowbit.GameBase.Character
         {
             if (animator == null)
             {
-                Debug.LogError($"{nameof(PetAnimation)} on {gameObject.name} is missing an Animator reference.", this);
+                Debug.LogError(
+                    $"{nameof(PetAnimation)} on {gameObject.name} is missing an Animator reference.",
+                    this);
             }
         }
 
@@ -47,11 +45,14 @@ namespace Flowbit.GameBase.Character
         {
             if (animator == null)
             {
-                Debug.LogError($"{nameof(CharacterAnimation)} on {gameObject.name} cannot set state because Animator is null.", this);
+                Debug.LogError(
+                    $"{nameof(PetAnimation)} on {gameObject.name} cannot set state because Animator is null.",
+                    this);
                 return;
             }
 
             animator.SetBool(WALK_NAME, stateType == PetAnimationStateType.Walk);
+
             if (stateType == PetAnimationStateType.Attack)
             {
                 animator.SetTrigger(ATTACK_NAME);

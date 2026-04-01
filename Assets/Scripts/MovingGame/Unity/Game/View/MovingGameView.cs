@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Flowbit.GameBase.Character;
 using Flowbit.MovingGame.Core;
 
 namespace Flowbit.MovingGame.Unity
@@ -11,32 +12,57 @@ namespace Flowbit.MovingGame.Unity
     public sealed class MovingGameView : MonoBehaviour
     {
         [Header("Scene References")]
-        [SerializeField] private Transform character_;
+        [SerializeField]
+        private Transform character_;
+
+        [SerializeField]
+        private PetAnimation petAnimation_;
 
         [Header("Food")]
-        [SerializeField] private GameObject foodPrefab_;
-        [SerializeField] private Transform foodRoot_;
+        [SerializeField]
+        private GameObject foodPrefab_;
 
-        [SerializeField] private GameObject consumedFoodEffectPrefab_;
-        [SerializeField] private Transform consumedFoodEffectRoot_;
+        [SerializeField]
+        private Transform foodRoot_;
+
+        [SerializeField]
+        private GameObject consumedFoodEffectPrefab_;
+
+        [SerializeField]
+        private Transform consumedFoodEffectRoot_;
 
         [Header("Break")]
-        [SerializeField] private GameObject breakPrefab_;
-        [SerializeField] private Transform breakRoot_;
-        [SerializeField] private float breakDelaySeconds_ = 0.25f;
+        [SerializeField]
+        private GameObject breakPrefab_;
 
-        [SerializeField] private GameObject breakProjectilePrefab_;
-        [SerializeField] private Transform breakProjectileRoot_;
-        [SerializeField] private float breakProjectileDurationSeconds_ = 0.15f;
+        [SerializeField]
+        private Transform breakRoot_;
+
+        [SerializeField]
+        private float breakDelaySeconds_ = 0.25f;
 
         [Header("Animation")]
-        [SerializeField] private float moveDurationSeconds_ = 0.2f;
-        [SerializeField] private float rotateDurationSeconds_ = 0.15f;
-        [SerializeField] private bool animateMovement_ = true;
-        [SerializeField] private bool animateRotation_ = true;
+        [SerializeField]
+        private float moveDurationSeconds_ = 0.2f;
+
+        [SerializeField]
+        private float moveAnimationSeconds_ = 0.2f;
+
+        [SerializeField]
+        private float rotateDurationSeconds_ = 0.15f;
+
+        [SerializeField]
+        private float attackDurationSeconds_ = 0.25f;
+
+        [SerializeField]
+        private bool animateMovement_ = true;
+
+        [SerializeField]
+        private bool animateRotation_ = true;
 
         private readonly List<GameObject> spawnedFood_ = new List<GameObject>();
         private readonly HashSet<GridPosition> lastFoodPositions_ = new HashSet<GridPosition>();
+
         private GridRenderer gridRenderer_;
         private Core.MovingGame game_;
 
@@ -55,8 +81,10 @@ namespace Flowbit.MovingGame.Unity
         public void RefreshImmediate(Core.MovingGame game)
         {
             game_ = game;
+
             RebuildFoodVisuals(true);
             UpdateCharacterImmediate();
+            SetPetAnimationState(PetAnimationStateType.Idle);
         }
 
         /// <summary>
@@ -85,6 +113,7 @@ namespace Flowbit.MovingGame.Unity
 
             bool shouldAnimateMovement = animateMovement_ &&
                                          (startPosition - targetPosition).sqrMagnitude > 0.0001f;
+
             bool shouldAnimateRotation = animateRotation_ &&
                                          Quaternion.Angle(startRotation, targetRotation) > 0.1f;
 
@@ -108,10 +137,17 @@ namespace Flowbit.MovingGame.Unity
                 character_.position = targetPosition;
                 character_.rotation = targetRotation;
                 RebuildFoodVisuals(false);
+                SetPetAnimationState(PetAnimationStateType.Idle);
                 yield break;
             }
 
+            if (shouldAnimateMovement)
+            {
+                SetPetAnimationState(PetAnimationStateType.Walk);
+            }
+
             float elapsed = 0f;
+            bool returnedToIdleAfterMoveAnimation = false;
 
             while (elapsed < duration)
             {
@@ -129,12 +165,19 @@ namespace Flowbit.MovingGame.Unity
                     character_.rotation = Quaternion.Lerp(startRotation, targetRotation, easedT);
                 }
 
+                if (!returnedToIdleAfterMoveAnimation && elapsed >= moveAnimationSeconds_)
+                {
+                    SetPetAnimationState(PetAnimationStateType.Idle);
+                    returnedToIdleAfterMoveAnimation = true;
+                }
+
                 yield return null;
             }
 
             character_.position = targetPosition;
             character_.rotation = targetRotation;
             RebuildFoodVisuals(false);
+            SetPetAnimationState(PetAnimationStateType.Idle);
         }
 
         /// <summary>
@@ -165,22 +208,27 @@ namespace Flowbit.MovingGame.Unity
             UpdateCharacterImmediate();
             RebuildFoodVisuals(false);
 
-            if (!stepAfterProcess.HasPosition())
+            // Siempre hace la animación de ataque,
+            // aunque no haya nada al frente o no sea quebrable.
+            SetPetAnimationState(PetAnimationStateType.Attack);
+
+            if (attackDurationSeconds_ > 0f)
             {
-                yield break;
+                yield return new WaitForSeconds(attackDurationSeconds_);
             }
 
-            Vector3 targetWorldPosition = GridToWorld(stepAfterProcess.GetPosition());
-            Vector3 startWorldPosition = GetBreakProjectileStartWorldPosition();
-
-            yield return PlayBreakProjectile(startWorldPosition, targetWorldPosition);
-
-            SpawnBreakPrefab(stepAfterProcess.GetPosition());
-
-            if (breakDelaySeconds_ > 0f)
+            // Solo muestra el efecto visual de quiebre si realmente se rompió algo quebrable.
+            if (stepAfterProcess.HasPosition() && stepAfterProcess.IsBreakable())
             {
-                yield return new WaitForSeconds(breakDelaySeconds_);
+                SpawnBreakPrefab(stepAfterProcess.GetPosition());
+
+                if (breakDelaySeconds_ > 0f)
+                {
+                    yield return new WaitForSeconds(breakDelaySeconds_);
+                }
             }
+
+            SetPetAnimationState(PetAnimationStateType.Idle);
         }
 
         private void SpawnBreakPrefab(GridPosition position)
@@ -264,61 +312,6 @@ namespace Flowbit.MovingGame.Unity
             }
         }
 
-        private IEnumerator PlayBreakProjectile(Vector3 startWorldPosition, Vector3 targetWorldPosition)
-        {
-            if (breakProjectilePrefab_ == null)
-            {
-                yield break;
-            }
-
-            Transform parent = breakProjectileRoot_ != null ? breakProjectileRoot_ : transform;
-
-            GameObject projectileObject = Instantiate(
-                breakProjectilePrefab_,
-                startWorldPosition,
-                Quaternion.identity,
-                parent);
-
-            projectileObject.name = "BreakProjectile";
-
-            float duration = Mathf.Max(0f, breakProjectileDurationSeconds_);
-
-            if (duration <= 0f)
-            {
-                projectileObject.transform.position = targetWorldPosition;
-                Destroy(projectileObject);
-                yield break;
-            }
-
-            float elapsed = 0f;
-
-            while (elapsed < duration)
-            {
-                elapsed += Time.deltaTime;
-                float t = Mathf.Clamp01(elapsed / duration);
-
-                projectileObject.transform.position = Vector3.Lerp(
-                    startWorldPosition,
-                    targetWorldPosition,
-                    t);
-
-                yield return null;
-            }
-
-            projectileObject.transform.position = targetWorldPosition;
-            Destroy(projectileObject);
-        }
-
-        private Vector3 GetBreakProjectileStartWorldPosition()
-        {
-            if (character_ == null)
-            {
-                return Vector3.zero;
-            }
-
-            return character_.position;
-        }
-
         private void SpawnConsumedFoodEffect(GridPosition position)
         {
             if (consumedFoodEffectPrefab_ == null)
@@ -350,6 +343,16 @@ namespace Flowbit.MovingGame.Unity
             }
 
             spawnedFood_.Clear();
+        }
+
+        private void SetPetAnimationState(PetAnimationStateType stateType)
+        {
+            if (petAnimation_ == null)
+            {
+                return;
+            }
+
+            petAnimation_.SetState(stateType);
         }
 
         private Vector3 GridToWorld(GridPosition position)
