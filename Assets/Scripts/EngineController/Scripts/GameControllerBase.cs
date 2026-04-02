@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 using Flowbit.Engine;
 using Flowbit.Engine.Instructions;
 
@@ -16,6 +17,8 @@ namespace Flowbit.EngineController
         [SerializeField] private ProgramViewBase programPanelView_;
         [SerializeField] private GameStatusViewBase gameStatusView_;
 
+        [SerializeField] private ExecutionControlsViewBase executionControlsView_;
+
         [Header("Execution")]
         [SerializeField] private float stepDelaySeconds_ = 0.5f;
 
@@ -25,6 +28,7 @@ namespace Flowbit.EngineController
         private Coroutine runCoroutine_;
         private Coroutine stepCoroutine_;
         private bool programDirty_;
+        private bool pauseRequested_;
 
         /// <summary>
         /// Initializes the controller.
@@ -32,6 +36,7 @@ namespace Flowbit.EngineController
         private void Start()
         {
             runner_ = new ProgramRunner();
+            programPanelView_?.SetInstructionSelectedCallback(JumpToInstructionState);
 
             if (ShouldCreateGameOnStart())
             {
@@ -42,6 +47,7 @@ namespace Flowbit.EngineController
             CreateNewProgram();
             ClearInstructionHighlight();
             RefreshResultView();
+            RefreshExecutionControlsView();
         }
 
         /// <summary>
@@ -59,31 +65,51 @@ namespace Flowbit.EngineController
                 return;
             }
 
+            pauseRequested_ = false;
             programPanelView_?.EnableInstructions(false);
+            RefreshExecutionControlsView();
+
             stepCoroutine_ = StartCoroutine(StepRoutine());
         }
 
         /// <summary>
-        /// Runs the loaded program automatically.
+        /// Toggles automatic execution.
+        /// If already running, it pauses after the current step finishes.
         /// </summary>
         public void Run()
         {
-            if (runCoroutine_ != null || stepCoroutine_ != null)
+            if (runCoroutine_ != null)
+            {
+                pauseRequested_ = true;
+                RefreshExecutionControlsView();
+                return;
+            }
+
+            if (stepCoroutine_ != null)
             {
                 return;
             }
 
+            if (!CanExecuteStep())
+            {
+                return;
+            }
+
+            pauseRequested_ = false;
             programPanelView_?.EnableInstructions(false);
             EnsureRunnerReady();
+
             runCoroutine_ = StartCoroutine(RunRoutine());
+            RefreshExecutionControlsView();
         }
 
         /// <summary>
-        /// Stops automatic execution if it is running.
+        /// Requests a pause after the current step finishes.
         /// </summary>
         public void Stop()
         {
-            StopRunning();
+            pauseRequested_ = true;
+            RefreshExecutionControlsView();
         }
 
         /// <summary>
@@ -91,7 +117,7 @@ namespace Flowbit.EngineController
         /// </summary>
         public void ResetGame()
         {
-            StopRunning();
+            StopRunningImmediately();
 
             if (game_ == null || runner_ == null)
             {
@@ -105,6 +131,7 @@ namespace Flowbit.EngineController
             RefreshViewImmediate();
             ClearInstructionHighlight();
             RefreshResultView();
+            RefreshExecutionControlsView();
         }
 
         /// <summary>
@@ -112,7 +139,7 @@ namespace Flowbit.EngineController
         /// </summary>
         public void CleanProgram()
         {
-            StopRunning();
+            StopRunningImmediately();
 
             if (game_ == null)
             {
@@ -125,20 +152,73 @@ namespace Flowbit.EngineController
             RefreshViewImmediate();
             ClearInstructionHighlight();
             RefreshResultView();
+            RefreshExecutionControlsView();
         }
 
         /// <summary>
         /// Removes the last instruction from the current program.
+        /// Always returns the game to the initial state.
         /// </summary>
         public void RemoveLastInstruction()
         {
-            if (currentProgram_ == null || currentProgram_.GetInstructionCount() == 0)
+            var instructionCount = currentProgram_.GetInstructionCount();
+            if (instructionCount <= 0)
             {
                 return;
             }
 
-            currentProgram_.RemoveLastInstruction();
+            RemoveInstructionAt(instructionCount - 1);
+        }
+
+        /// <summary>
+        /// Removes the instruction at the given index and adjusts execution state accordingly.
+        /// </summary>
+        public void RemoveInstructionAt(int removedIndex)
+        {
+            if (currentProgram_ == null)
+            {
+                return;
+            }
+
+            int instructionCount = currentProgram_.GetInstructionCount();
+
+            if (removedIndex < 0 || removedIndex >= instructionCount)
+            {
+                return;
+            }
+
+            // Gets the current index before stopping the program
+            int currentInstructionIndex = runner_ != null
+                ? runner_.GetCurrentInstructionIndex()
+                : -1;
+
+            StopRunningImmediately();
+
+            currentProgram_.RemoveInstructionAt(removedIndex);
             OnProgramChanged();
+
+            if (runner_ == null)
+            {
+                return;
+            }
+
+            // Case 1: If we current instruction is before the removed one, do nothing
+            if (currentInstructionIndex <= removedIndex)
+            {
+                return;
+            }
+
+            // Case 2: If we deleted the current one or one after, go to the previous one
+            int targetIndex = currentInstructionIndex - 1;
+
+            if (targetIndex < 0)
+            {
+                // go to the starting position
+                JumpToInstructionState(-1);
+                return;
+            }
+
+            JumpToInstructionState(targetIndex);
         }
 
         /// <summary>
@@ -175,7 +255,7 @@ namespace Flowbit.EngineController
                 throw new ArgumentNullException(nameof(game));
             }
 
-            StopRunning();
+            StopRunningImmediately();
 
             if (runner_ == null)
             {
@@ -184,10 +264,13 @@ namespace Flowbit.EngineController
 
             game_ = game;
             CreateNewProgram();
+            programPanelView_?.SetInstructionSelectedCallback(JumpToInstructionState);
+
             InitializeView();
             RefreshViewImmediate();
             ClearInstructionHighlight();
             RefreshResultView();
+            RefreshExecutionControlsView();
         }
 
         /// <summary>
@@ -220,10 +303,13 @@ namespace Flowbit.EngineController
             {
                 programPanelView_.Rebuild(
                     currentProgram_.GenerateReadOnlyInstructions());
+
+                programPanelView_.SetInstructionSelectedCallback(JumpToInstructionState);
             }
 
             ClearInstructionHighlight();
             RefreshResultView();
+            RefreshExecutionControlsView();
         }
 
         /// <summary>
@@ -303,6 +389,12 @@ namespace Flowbit.EngineController
         /// </summary>
         protected abstract IEnumerator RefreshViewAnimated();
 
+        /// <summary>
+        /// Applies the current executed step immediately, without animation.
+        /// This is used when jumping directly to a selected instruction state.
+        /// </summary>
+        protected abstract void ApplyExecutedStepImmediate();
+
         private void CreateNewProgram()
         {
             currentProgram_ = new ProgramDefinition();
@@ -313,6 +405,8 @@ namespace Flowbit.EngineController
             {
                 programPanelView_.Rebuild(
                     currentProgram_.GenerateReadOnlyInstructions());
+
+                programPanelView_.SetInstructionSelectedCallback(JumpToInstructionState);
             }
         }
 
@@ -359,6 +453,8 @@ namespace Flowbit.EngineController
             RefreshResultView();
 
             stepCoroutine_ = null;
+            programPanelView_?.EnableInstructions(true);
+            RefreshExecutionControlsView();
         }
 
         private IEnumerator RunRoutine()
@@ -372,19 +468,95 @@ namespace Flowbit.EngineController
                 yield return RefreshViewAnimated();
                 RefreshResultView();
 
+                if (pauseRequested_)
+                {
+                    break;
+                }
+
                 if (!CanExecuteStep())
                 {
                     break;
                 }
 
-                yield return new WaitForSeconds(stepDelaySeconds_);
+                float elapsed = 0f;
+                while (elapsed < stepDelaySeconds_)
+                {
+                    if (pauseRequested_)
+                    {
+                        break;
+                    }
+
+                    elapsed += Time.deltaTime;
+                    yield return null;
+                }
+
+                if (pauseRequested_)
+                {
+                    break;
+                }
             }
 
             runCoroutine_ = null;
+            pauseRequested_ = false;
+            programPanelView_?.EnableInstructions(true);
+            RefreshExecutionControlsView();
         }
 
-        private void StopRunning()
+        private void JumpToInstructionState(int instructionIndex)
         {
+            StopRunningImmediately();
+
+            if (game_ == null || runner_ == null || currentProgram_ == null)
+            {
+                return;
+            }
+
+            int instructionCount = currentProgram_.GetInstructionCount();
+            int clampedInstructionIndex = Mathf.Clamp(instructionIndex, -1, instructionCount - 1);
+
+            game_.ResetGame();
+            runner_.ResetExecution();
+            programDirty_ = false;
+
+            if (clampedInstructionIndex >= 0)
+            {
+                while (!runner_.IsFinished() && !game_.HasWon() && !game_.HasFailed())
+                {
+                    int currentInstructionIndex = runner_.GetCurrentInstructionIndex();
+
+                    if (currentInstructionIndex < 0 || currentInstructionIndex > clampedInstructionIndex)
+                    {
+                        break;
+                    }
+
+                    runner_.ExecuteNextStep(game_);
+                    ApplyExecutedStepImmediate();
+
+                    if (currentInstructionIndex == clampedInstructionIndex)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            RefreshViewImmediate();
+
+            if (clampedInstructionIndex >= 0)
+            {
+                HighlightInstruction(clampedInstructionIndex);
+            }
+            else
+            {
+                ClearInstructionHighlight();
+            }
+
+            RefreshResultView();
+            RefreshExecutionControlsView();
+        }
+
+        private void StopRunningImmediately()
+        {
+            pauseRequested_ = false;
             programPanelView_?.EnableInstructions(true);
 
             if (runCoroutine_ != null)
@@ -398,6 +570,19 @@ namespace Flowbit.EngineController
                 StopCoroutine(stepCoroutine_);
                 stepCoroutine_ = null;
             }
+
+            RefreshExecutionControlsView();
+        }
+
+        private void RefreshExecutionControlsView()
+        {
+            if (executionControlsView_ == null)
+            {
+                return;
+            }
+
+            bool isRunning = runCoroutine_ != null;
+            executionControlsView_.SetIsRunning(isRunning);
         }
     }
 }

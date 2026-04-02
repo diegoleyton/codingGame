@@ -72,6 +72,7 @@
     <Compile Include="Assets/Scripts/Utilities/Unity/Audio/AudioPlayer.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Core/NavigationHistoryEntry.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Abstractions/INavigationNode.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Unity/UI/ScrollRectInteractionTracker.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Audio/ILoopingAudioSourcePool.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Navigation/Core/ResolvedNavigationNode.cs" />
     <Compile Include="Assets/Scripts/Utilities/Unity/Audio/LoopingAudioSourcePool.cs" />

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,19 +16,17 @@ namespace Flowbit.GameBase.UI
     {
         [SerializeField] private Transform contentRoot_;
         [SerializeField] private InstructionListItemView itemPrefab_;
-
         [SerializeField] private InstructionsPresentationSettings instructionsPresentationSettings_;
-
         [SerializeField] private GameObject instructionButtonContainer_;
-
         [SerializeField] private ScrollRect scrollRect_;
-
+        [SerializeField] private ScrollRectInteractionTracker scrollRectTracker_;
         [SerializeField] private float autoScrollTime_ = 0.2f;
-
         [SerializeField] private GameObject uiBlocker_;
 
         private readonly List<InstructionListItemView> spawnedItems_ =
             new List<InstructionListItemView>();
+
+        private Action<int> onInstructionSelected_;
 
         /// <summary>
         /// Rebuilds the visual list for the given program.
@@ -43,14 +42,21 @@ namespace Flowbit.GameBase.UI
 
             for (int i = 0; i < instructions.Count; i++)
             {
+                int instructionIndex = i;
+
                 InstructionListItemView item =
                     Instantiate(itemPrefab_, contentRoot_);
 
-                GameObject instructionUi = instructionsPresentationSettings_.CreateInstructionUi((InstructionType)instructions[i].GetDefinition().GetInstructionId());
+                GameObject instructionUi =
+                    instructionsPresentationSettings_.CreateInstructionUi(
+                        (InstructionType)instructions[i].GetDefinition().GetInstructionId());
+
                 item.SetInstructionView(instructionUi);
-                item.SetInstructionIndex("" + (i + 1));
+                item.SetInstructionIndex((i + 1).ToString());
                 item.SetInstructionLabel(BuildInstructionLabel(instructions[i]));
                 item.SetHighlighted(false);
+                item.SetInteractable(true);
+                item.SetClickAction(() => onInstructionSelected_?.Invoke(instructionIndex));
 
                 spawnedItems_.Add(item);
             }
@@ -64,10 +70,15 @@ namespace Flowbit.GameBase.UI
             for (int i = 0; i < spawnedItems_.Count; i++)
             {
                 bool highlighted = i == index;
-                if (highlighted)
+
+                if (highlighted && scrollRect_ != null && CanAutoScroll())
                 {
-                    StartCoroutine(scrollRect_.ScrollItemToTopSlotAnimated(spawnedItems_[i].GetRectTransform(), autoScrollTime_));
+                    StartCoroutine(
+                        scrollRect_.ScrollItemToTopSlotAnimated(
+                            spawnedItems_[i].GetRectTransform(),
+                            autoScrollTime_));
                 }
+
                 spawnedItems_[i].SetHighlighted(highlighted);
             }
         }
@@ -86,7 +97,18 @@ namespace Flowbit.GameBase.UI
         public override void EnableInstructions(bool enabled)
         {
             instructionButtonContainer_?.SetActive(enabled);
-            uiBlocker_?.SetActive(!enabled);
+
+            // The program items themselves must stay clickable even while running,
+            // so we do not block the whole panel anymore.
+            if (uiBlocker_ != null)
+            {
+                uiBlocker_.SetActive(false);
+            }
+        }
+
+        public override void SetInstructionSelectedCallback(Action<int> onInstructionSelected)
+        {
+            onInstructionSelected_ = onInstructionSelected;
         }
 
         private void ClearItems()
@@ -110,7 +132,6 @@ namespace Flowbit.GameBase.UI
             }
 
             string displayName = instruction.GetDefinition().GetDisplayName();
-
             List<string> parts = new List<string>();
 
             foreach (var parameter in instruction.GetParameterValues())
@@ -124,6 +145,16 @@ namespace Flowbit.GameBase.UI
             }
 
             return $"{displayName} ({string.Join(", ", parts)})";
+        }
+
+        private bool CanAutoScroll()
+        {
+            if (scrollRectTracker_ == null)
+            {
+                return true;
+            }
+
+            return !scrollRectTracker_.IsDragging;
         }
     }
 }

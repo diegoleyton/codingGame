@@ -177,4 +177,9 @@ public sealed class GameControllerMock : GameControllerBase<GameMock>
         throw new InvalidOperationException(
             $"Field '{fieldName}' was not found in the type hierarchy.");
     }
+
+    protected override void ApplyExecutedStepImmediate()
+    {
+        throw new NotImplementedException();
+    }
 }

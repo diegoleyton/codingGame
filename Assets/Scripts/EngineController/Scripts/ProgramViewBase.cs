@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Flowbit.Engine;
@@ -25,8 +26,13 @@ namespace Flowbit.EngineController
         public abstract void ClearHighlight();
 
         /// <summary>
-        /// Enable or disable instructions for users.
+        /// Enables or disables the instruction editing controls.
         /// </summary>
         public abstract void EnableInstructions(bool enabled);
+
+        /// <summary>
+        /// Sets a callback invoked when the user clicks an instruction item.
+        /// </summary>
+        public abstract void SetInstructionSelectedCallback(Action<int> onInstructionSelected);
     }
 }

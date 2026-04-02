@@ -22,12 +22,10 @@ namespace Flowbit.MovingGame.Unity
         [SerializeField] private GridRenderer gridRenderer_;
 
         private EventDispatcher eventDispatcher_;
-
         private Core.MovingGame game_;
         private MovingGameLevelData currentLevelData_;
         private bool completedEventSent_;
         private bool failedEventSent_;
-
 
         private void Start()
         {
@@ -154,6 +152,29 @@ namespace Flowbit.MovingGame.Unity
         }
 
         /// <summary>
+        /// Applies the last executed step immediately without animation.
+        /// </summary>
+        protected override void ApplyExecutedStepImmediate()
+        {
+            if (game_ == null)
+            {
+                return;
+            }
+
+            if (game_.HasStepAfterProcess())
+            {
+                game_.FinalizeStepAfterProcess();
+            }
+
+            RenderGrid();
+
+            if (movingGameView_ != null)
+            {
+                movingGameView_.RefreshImmediate(game_);
+            }
+        }
+
+        /// <summary>
         /// Updates the result UI and emits level state events when needed.
         /// </summary>
         protected override void RefreshResultView()
@@ -260,14 +281,18 @@ namespace Flowbit.MovingGame.Unity
 
         private static Direction ParseDirection(string direction)
         {
-            return direction switch
+            if (string.IsNullOrWhiteSpace(direction))
             {
-                "Up" => Direction.Up,
-                "Down" => Direction.Down,
-                "Left" => Direction.Left,
-                "Right" => Direction.Right,
-                _ => throw new InvalidOperationException(
-                    $"Unknown direction '{direction}'.")
+                return Direction.Up;
+            }
+
+            return direction.Trim().ToLowerInvariant() switch
+            {
+                "up" => Direction.Up,
+                "right" => Direction.Right,
+                "down" => Direction.Down,
+                "left" => Direction.Left,
+                _ => Direction.Up
             };
         }
     }

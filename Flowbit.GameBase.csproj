@@ -64,6 +64,7 @@
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/ProgramPanelView.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Audio/AudioReactor.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Character/CharacterAnimation.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Scripts/UI/ExecutionControlsView.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Audio/GameSoundLibrary.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/ComponentsLoopAnimator.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/SceneNavigationNodeResolver.cs" />
