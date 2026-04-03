@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Flowbit.Engine;
 using Flowbit.Engine.Instructions;
@@ -29,6 +30,8 @@ namespace Flowbit.EngineController
         private TGame game_;
         private ProgramRunner<TInstruction> runner_;
         private ProgramDefinition<TInstruction> currentProgram_;
+        private IReadOnlyList<TInstruction> availableInstructions_;
+
         private Coroutine runCoroutine_;
         private Coroutine stepCoroutine_;
         private bool programDirty_;
@@ -41,6 +44,21 @@ namespace Flowbit.EngineController
         // True when execution has reached the end of the program and the UI should remain
         // in a stopped-at-end state: no highlight, no instruction panel, but stop/reset visible.
         private bool isStoppedAtProgramEnd_;
+
+        /// <summary>
+        /// Gets the resolver used to determine which instructions are available for a level.
+        /// </summary>
+        protected abstract IAvailableInstructionsResolver<TInstruction> AvailableInstructionsResolver { get; }
+
+        /// <summary>
+        /// Gets the resolver used to determine which instructions are available for a level.
+        /// </summary>
+        protected abstract IInstructionFactory<TGame, TInstruction> InstructionFactory { get; }
+
+        /// <summary>
+        /// Gets the instructions available for the currently loaded level.
+        /// </summary>
+        public IReadOnlyList<TInstruction> AvailableInstructions => availableInstructions_;
 
         /// <summary>
         /// Initializes the controller.
@@ -283,16 +301,16 @@ namespace Flowbit.EngineController
         }
 
         /// <summary>
-        /// Adds an instruction of the given instruction definition to the current program.
+        /// Adds an instruction of the given instruction type to the current program.
         /// </summary>
-        protected void AddInstructionToCurrentProgram(
-            GameInstructionDefinitionBase<TGame, TInstruction> instructionDefinition)
+        protected void AddInstructionToCurrentProgram(TInstruction instructionType)
         {
             if (currentProgram_ == null)
             {
                 throw new InvalidOperationException(
                     "A program must be created before adding instructions.");
             }
+            var instructionDefinition = InstructionFactory.CreateInstruction(instructionType);
 
             InstructionInstance<TInstruction> instructionInstance =
                 new InstructionInstance<TInstruction>(instructionDefinition);
@@ -380,6 +398,51 @@ namespace Flowbit.EngineController
         /// </summary>
         protected abstract void ApplyExecutedStepImmediate();
 
+        /// <summary>
+        /// Resolves and caches the instructions available for the provided level.
+        /// </summary>
+        protected void ResolveAvailableInstructions(int levelId)
+        {
+            if (AvailableInstructionsResolver == null)
+            {
+                throw new InvalidOperationException(
+                    $"{GetType().Name} must provide an {nameof(IAvailableInstructionsResolver<TInstruction>)}.");
+            }
+
+            availableInstructions_ = AvailableInstructionsResolver.Resolve(levelId) ??
+                                     Array.Empty<TInstruction>();
+        }
+
+        /// <summary>
+        /// Returns whether the provided instruction is available for the current level.
+        /// </summary>
+        protected bool IsInstructionAvailable(TInstruction instruction)
+        {
+            if (availableInstructions_ == null)
+            {
+                return false;
+            }
+
+            var comparer = EqualityComparer<TInstruction>.Default;
+
+            for (int i = 0; i < availableInstructions_.Count; i++)
+            {
+                if (comparer.Equals(availableInstructions_[i], instruction))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Returns the available instructions for the current level.
+        /// </summary>
+        protected IReadOnlyList<TInstruction> GetAvailableInstructions()
+        {
+            return availableInstructions_ ?? Array.Empty<TInstruction>();
+        }
         private void CreateNewProgram()
         {
             currentProgram_ = new ProgramDefinition<TInstruction>();

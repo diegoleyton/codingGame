@@ -7,13 +7,13 @@ namespace Flowbit.GameBase.Definitions
     /// </summary>
     public sealed class LevelLoadedEvent : IEvent
     {
-        public LevelLoadedEvent(string levelId, int levelIndex)
+        public LevelLoadedEvent(int levelId, int levelIndex)
         {
             LevelId = levelId;
             LevelIndex = levelIndex;
         }
 
-        public string LevelId { get; }
+        public int LevelId { get; }
         public int LevelIndex { get; }
     }
 
@@ -22,12 +22,12 @@ namespace Flowbit.GameBase.Definitions
     /// </summary>
     public sealed class LevelCompletedEvent : IEvent
     {
-        public LevelCompletedEvent(string levelId)
+        public LevelCompletedEvent(int levelId)
         {
             LevelId = levelId;
         }
 
-        public string LevelId { get; }
+        public int LevelId { get; }
     }
 
     /// <summary>
@@ -35,11 +35,11 @@ namespace Flowbit.GameBase.Definitions
     /// </summary>
     public sealed class LevelFailedEvent : IEvent
     {
-        public LevelFailedEvent(string levelId)
+        public LevelFailedEvent(int levelId)
         {
             LevelId = levelId;
         }
 
-        public string LevelId { get; }
+        public int LevelId { get; }
     }
 }

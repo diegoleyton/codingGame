@@ -95,9 +95,13 @@ public sealed class GameControllerMock : GameControllerBase<GameMock, int>
 
     public GameMock CreatedGame => createdGame_;
 
+    protected override IAvailableInstructionsResolver<int> AvailableInstructionsResolver => throw new NotImplementedException();
+
+    protected override IInstructionFactory<GameMock, int> InstructionFactory => throw new NotImplementedException();
+
     public void AddTestInstruction()
     {
-        AddInstructionToCurrentProgram(new InstructionDefinitionMock());
+        AddInstructionToCurrentProgram(1);
     }
 
     public void SetExecutionDelay(float seconds)

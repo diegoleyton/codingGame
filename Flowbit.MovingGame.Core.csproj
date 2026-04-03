@@ -59,6 +59,7 @@
     <Compile Include="Assets/Scripts/MovingGame/Core/Instructions/MoveForwardInstructionDefinition.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Core/Game/StepAfterProcessType.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Core/Instructions/BreakForwardInstructionDefinition.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Core/Instructions/MovingGameInstructionFactory.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Core/Game/GridPosition.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Core/Levels/MovingGameLevelsParser.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Core/Game/MovingGame.cs" />

@@ -9,7 +9,7 @@ namespace Flowbit.MovingGame.Core.Levels
     [Serializable]
     public sealed class MovingGameLevelData
     {
-        public string id;
+        public int id;
         public string name;
         public int difficulty;
         public string hint;

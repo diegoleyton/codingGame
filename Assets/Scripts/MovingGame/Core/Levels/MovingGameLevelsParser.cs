@@ -41,9 +41,9 @@ namespace Flowbit.MovingGame.Core.Levels
             {
                 MovingGameLevelData level = fileData.levels[i];
 
-                if (string.IsNullOrWhiteSpace(level.id))
+                if (level.id <= 0)
                 {
-                    throw new InvalidOperationException($"Level at index {i} is missing id.");
+                    throw new InvalidOperationException($"Level at index {i} has invalid id '{level.id}'.");
                 }
 
                 if (level.width <= 0 || level.height <= 0)

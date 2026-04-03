@@ -3,7 +3,7 @@
   "version": 1,
   "levels": [
     {
-      "id": "level_001",
+      "id": 1,
       "name": "First Steps",
       "difficulty": 1,
       "hint": "Move forward to reach the food.",
@@ -24,7 +24,7 @@
       "breakableBlockedPositions": []
     },
     {
-      "id": "level_002",
+      "id": 2,
       "name": "Straight Line",
       "difficulty": 1,
       "hint": "Keep moving forward.",
@@ -45,7 +45,7 @@
       "breakableBlockedPositions": []
     },
     {
-      "id": "level_003",
+      "id": 3,
       "name": "Face Up",
       "difficulty": 1,
       "hint": "Going up also works.",
@@ -66,7 +66,7 @@
       "breakableBlockedPositions": []
     },
     {
-      "id": "level_004",
+      "id": 4,
       "name": "One Turn",
       "difficulty": 1,
       "hint": "Turn before moving.",
@@ -87,7 +87,7 @@
       "breakableBlockedPositions": []
     },
     {
-      "id": "level_005",
+      "id": 5,
       "name": "Downward Path",
       "difficulty": 1,
       "hint": "Think about direction first.",
@@ -108,7 +108,7 @@
       "breakableBlockedPositions": []
     },
     {
-      "id": "level_006",
+      "id": 6,
       "name": "Long Walk",
       "difficulty": 1,
       "hint": "Several moves in a row.",
@@ -129,7 +129,7 @@
       "breakableBlockedPositions": []
     },
     {
-      "id": "level_007",
+      "id": 7,
       "name": "Around the Wall",
       "difficulty": 2,
       "hint": "You cannot go straight through the wall.",
@@ -155,7 +155,7 @@
       "breakableBlockedPositions": []
     },
     {
-      "id": "level_008",
+      "id": 8,
       "name": "Corner Detour",
       "difficulty": 2,
       "hint": "Walk around the blocks.",
@@ -185,7 +185,7 @@
       "breakableBlockedPositions": []
     },
     {
-      "id": "level_009",
+      "id": 9,
       "name": "Blocked Above",
       "difficulty": 2,
       "hint": "The shortest path is not always open.",
@@ -215,7 +215,7 @@
       "breakableBlockedPositions": []
     },
     {
-      "id": "level_010",
+      "id": 10,
       "name": "Zig Zag",
       "difficulty": 2,
       "hint": "Follow the open spaces.",
@@ -253,7 +253,7 @@
       "breakableBlockedPositions": []
     },
     {
-      "id": "level_011",
+      "id": 11,
       "name": "Wall Gap",
       "difficulty": 2,
       "hint": "There is only one way around.",
@@ -295,7 +295,7 @@
       "breakableBlockedPositions": []
     },
     {
-      "id": "level_012",
+      "id": 12,
       "name": "Split Walls",
       "difficulty": 2,
       "hint": "Go around both barriers.",
@@ -345,7 +345,7 @@
       "breakableBlockedPositions": []
     },
     {
-      "id": "level_013",
+      "id": 13,
       "name": "First Break",
       "difficulty": 3,
       "hint": "Break the object in front of you.",
@@ -371,7 +371,7 @@
       ]
     },
     {
-      "id": "level_014",
+      "id": 14,
       "name": "Break Then Move",
       "difficulty": 3,
       "hint": "You must break before going forward.",
@@ -406,7 +406,7 @@
       ]
     },
     {
-      "id": "level_015",
+      "id": 15,
       "name": "Break Upward",
       "difficulty": 3,
       "hint": "The obstacle blocks the only path.",
@@ -441,7 +441,7 @@
       ]
     },
     {
-      "id": "level_016",
+      "id": 16,
       "name": "Break in the Hall",
       "difficulty": 3,
       "hint": "There is no way around the breakable object.",
@@ -488,7 +488,7 @@
       ]
     },
     {
-      "id": "level_017",
+      "id": 17,
       "name": "Break to Continue",
       "difficulty": 3,
       "hint": "The corridor is blocked. Break it.",
@@ -531,7 +531,7 @@
       ]
     },
     {
-      "id": "level_018",
+      "id": 18,
       "name": "Break or No Progress",
       "difficulty": 3,
       "hint": "You cannot reach the food without breaking first.",
@@ -582,7 +582,7 @@
       ]
     },
     {
-      "id": "level_019",
+      "id": 19,
       "name": "Two Foods",
       "difficulty": 4,
       "hint": "Eat both foods to win.",
@@ -607,7 +607,7 @@
       "breakableBlockedPositions": []
     },
     {
-      "id": "level_020",
+      "id": 20,
       "name": "Vertical Double",
       "difficulty": 4,
       "hint": "One food is not enough.",
@@ -637,7 +637,7 @@
       "breakableBlockedPositions": []
     },
     {
-      "id": "level_021",
+      "id": 21,
       "name": "Wall and Two Foods",
       "difficulty": 4,
       "hint": "Collect both foods while avoiding the wall.",
@@ -675,7 +675,7 @@
       "breakableBlockedPositions": []
     },
     {
-      "id": "level_022",
+      "id": 22,
       "name": "Break for the First Food",
       "difficulty": 4,
       "hint": "The first food is behind a breakable object.",
@@ -726,7 +726,7 @@
       ]
     },
     {
-      "id": "level_023",
+      "id": 23,
       "name": "Break and Turn",
       "difficulty": 4,
       "hint": "Break first, then turn to get the second food.",
@@ -773,7 +773,7 @@
       ]
     },
     {
-      "id": "level_024",
+      "id": 24,
       "name": "Long Route",
       "difficulty": 4,
       "hint": "There are two foods far apart.",
@@ -815,7 +815,7 @@
       "breakableBlockedPositions": []
     },
     {
-      "id": "level_025",
+      "id": 25,
       "name": "Break in the Middle",
       "difficulty": 4,
       "hint": "A breakable obstacle blocks one of the foods.",
@@ -870,7 +870,7 @@
       ]
     },
     {
-      "id": "level_026",
+      "id": 26,
       "name": "Three-Step Plan",
       "difficulty": 5,
       "hint": "Break, move, then collect both foods.",
@@ -929,7 +929,7 @@
       ]
     },
     {
-      "id": "level_027",
+      "id": 27,
       "name": "Three Foods",
       "difficulty": 5,
       "hint": "Plan your route carefully.",
@@ -996,7 +996,7 @@
       ]
     },
     {
-      "id": "level_028",
+      "id": 28,
       "name": "Breakable Crossroad",
       "difficulty": 5,
       "hint": "One breakable block controls the route.",
@@ -1063,7 +1063,7 @@
       ]
     },
     {
-      "id": "level_029",
+      "id": 29,
       "name": "Forced Break",
       "difficulty": 5,
       "hint": "You must break to continue to the right side.",
@@ -1134,7 +1134,7 @@
       ]
     },
     {
-      "id": "level_030",
+      "id": 30,
       "name": "Final Puzzle",
       "difficulty": 6,
       "hint": "Collect every food. At least one break is required.",

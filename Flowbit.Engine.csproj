@@ -61,6 +61,7 @@
     <Compile Include="Assets/Scripts/Engine/Scripts/ProgramDefinition.cs" />
     <Compile Include="Assets/Scripts/Engine/Scripts/Instructions/SequenceInstructionDefinition.cs" />
     <Compile Include="Assets/Scripts/Engine/Scripts/ProgramRunner.cs" />
+    <Compile Include="Assets/Scripts/Engine/Scripts/Instructions/IInstructionFactory.cs" />
     <Compile Include="Assets/Scripts/Engine/Scripts/IGame.cs" />
     <Compile Include="Assets/Scripts/Engine/Scripts/StepExecutionStatus.cs" />
   </ItemGroup>

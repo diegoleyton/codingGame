@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
+
 using Flowbit.EngineController;
 using Flowbit.MovingGame.Core;
 using Flowbit.MovingGame.Core.Instructions;
@@ -9,6 +11,7 @@ using Flowbit.MovingGame.Core.Levels;
 using Flowbit.Utilities.Core.Events;
 using Flowbit.GameBase.Definitions;
 using Flowbit.GameBase.Services;
+using Flowbit.Engine.Instructions;
 
 namespace Flowbit.MovingGame.Unity
 {
@@ -17,15 +20,31 @@ namespace Flowbit.MovingGame.Unity
     /// </summary>
     public sealed class MovingGameController : GameControllerBase<IMovingGame, InstructionType>
     {
+        [Header("Level Data")]
+        [SerializeField] private MovingGameLevelsLibrary levelsLibrary_;
+
         [Header("View References")]
         [SerializeField] private MovingGameView movingGameView_;
         [SerializeField] private GridRenderer gridRenderer_;
 
         private EventDispatcher eventDispatcher_;
+        private IAvailableInstructionsResolver<InstructionType> availableInstructionsResolver_;
+
+        private IInstructionFactory<IMovingGame, InstructionType> instructionFactory_ = new MovingGameInstructionFactory();
+
         private Core.MovingGame game_;
         private MovingGameLevelData currentLevelData_;
         private bool completedEventSent_;
         private bool failedEventSent_;
+
+        /// <summary>
+        /// Resolver used by the base controller to determine which instructions
+        /// are available for the currently loaded level.
+        /// </summary>
+        protected override IAvailableInstructionsResolver<InstructionType> AvailableInstructionsResolver =>
+            availableInstructionsResolver_;
+
+        protected override IInstructionFactory<IMovingGame, InstructionType> InstructionFactory => instructionFactory_;
 
         private void Start()
         {
@@ -43,44 +62,16 @@ namespace Flowbit.MovingGame.Unity
                 throw new ArgumentNullException(nameof(levelData));
             }
 
+            EnsureAvailableInstructionsResolverInitialized();
+
             currentLevelData_ = levelData;
             completedEventSent_ = false;
             failedEventSent_ = false;
 
+            ResolveAvailableInstructions(levelData.id);
+
             game_ = CreateGameFromLevelData(levelData);
             LoadGame(game_);
-        }
-
-        /// <summary>
-        /// Adds a move-forward instruction to the current program.
-        /// </summary>
-        public void AddMoveForwardInstruction()
-        {
-            AddInstructionToCurrentProgram(new MoveForwardInstructionDefinition());
-        }
-
-        /// <summary>
-        /// Adds a rotate-left instruction to the current program.
-        /// </summary>
-        public void AddRotateLeftInstruction()
-        {
-            AddInstructionToCurrentProgram(new RotateLeftInstructionDefinition());
-        }
-
-        /// <summary>
-        /// Adds a rotate-right instruction to the current program.
-        /// </summary>
-        public void AddRotateRightInstruction()
-        {
-            AddInstructionToCurrentProgram(new RotateRightInstructionDefinition());
-        }
-
-        /// <summary>
-        /// Adds a break-forward instruction to the current program.
-        /// </summary>
-        public void AddBreakForwardInstruction()
-        {
-            AddInstructionToCurrentProgram(new BreakForwardInstructionDefinition());
         }
 
         /// <summary>
@@ -114,6 +105,9 @@ namespace Flowbit.MovingGame.Unity
             if (movingGameView_ != null && game_ != null)
             {
                 movingGameView_.Initialize(gridRenderer_, game_);
+                movingGameView_.SetAvailableInstructions(
+                    GetAvailableInstructions(),
+                    OnAvailableInstructionClicked);
             }
         }
 
@@ -193,7 +187,7 @@ namespace Flowbit.MovingGame.Unity
                     completedEventSent_ = true;
                     failedEventSent_ = false;
 
-                    eventDispatcher_.Send(
+                    eventDispatcher_?.Send(
                         this,
                         new LevelCompletedEvent(currentLevelData_.id));
                 }
@@ -208,7 +202,7 @@ namespace Flowbit.MovingGame.Unity
                     failedEventSent_ = true;
                     completedEventSent_ = false;
 
-                    eventDispatcher_.Send(
+                    eventDispatcher_?.Send(
                         this,
                         new LevelFailedEvent(currentLevelData_.id));
                 }
@@ -218,6 +212,35 @@ namespace Flowbit.MovingGame.Unity
 
             completedEventSent_ = false;
             failedEventSent_ = false;
+        }
+
+        private void OnAvailableInstructionClicked(InstructionType instructionType)
+        {
+            AddInstructionToCurrentProgram(instructionType);
+        }
+
+        private void EnsureAvailableInstructionsResolverInitialized()
+        {
+            if (availableInstructionsResolver_ != null)
+            {
+                return;
+            }
+
+            if (levelsLibrary_ == null)
+            {
+                throw new InvalidOperationException(
+                    "Levels library is not assigned on MovingGameController.");
+            }
+
+            int levelCount = levelsLibrary_.GetLevelCount();
+            List<MovingGameLevelData> levels = new List<MovingGameLevelData>(levelCount);
+
+            for (int i = 0; i < levelCount; i++)
+            {
+                levels.Add(levelsLibrary_.GetLevelAt(i));
+            }
+
+            availableInstructionsResolver_ = new MovingGameAvailableInstructionsResolver(levels);
         }
 
         private Core.MovingGame CreateGameFromLevelData(MovingGameLevelData levelData)
