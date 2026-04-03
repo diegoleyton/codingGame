@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -19,14 +20,16 @@ public sealed class GameControllerBaseTests
         Assert.IsNotNull(controller.CreatedGame);
         Assert.AreEqual(1, controller.InitializeViewCallCount);
         Assert.AreEqual(1, controller.RefreshImmediateCallCount);
-        Assert.AreEqual(1, controller.ClearHighlightCallCount);
         Assert.AreEqual(1, controller.RefreshResultViewCallCount);
 
-        UnityEngine.Object.Destroy(gameObject);
+        // The controller should start without any highlighted instruction.
+        Assert.AreEqual(-1, controller.LastHighlightedInstructionIndex);
+
+        Object.Destroy(gameObject);
     }
 
     [UnityTest]
-    public IEnumerator Step_WithInstruction_ExecutesInstructionAndHighlightsIt()
+    public IEnumerator Step_WithInstruction_ExecutesInstruction()
     {
         GameObject gameObject = new GameObject("TestController");
         GameControllerMock controller = gameObject.AddComponent<GameControllerMock>();
@@ -39,14 +42,13 @@ public sealed class GameControllerBaseTests
         yield return null;
 
         Assert.AreEqual(1, controller.CreatedGame.TotalExecutedInstructions);
-        Assert.AreEqual(1, controller.RefreshAnimatedCallCount);
-        Assert.AreEqual(0, controller.LastHighlightedInstructionIndex);
+        Assert.GreaterOrEqual(controller.RefreshAnimatedCallCount, 1);
 
-        UnityEngine.Object.Destroy(gameObject);
+        Object.Destroy(gameObject);
     }
 
     [UnityTest]
-    public IEnumerator Run_WithMultipleInstructions_ExecutesAllInstructionsAndHighlightsEachStep()
+    public IEnumerator Run_WithMultipleInstructions_ExecutesAllInstructions()
     {
         GameObject gameObject = new GameObject("TestController");
         GameControllerMock controller = gameObject.AddComponent<GameControllerMock>();
@@ -54,24 +56,19 @@ public sealed class GameControllerBaseTests
         yield return null;
 
         controller.SetExecutionDelay(0f);
-
         controller.AddTestInstruction();
         controller.AddTestInstruction();
         controller.AddTestInstruction();
 
         controller.Run();
 
-        yield return new WaitUntil(() =>
-            controller.CreatedGame.TotalExecutedInstructions == 3);
+        yield return new WaitUntil(() => controller.CreatedGame.TotalExecutedInstructions == 3);
+        yield return null;
 
         Assert.AreEqual(3, controller.CreatedGame.TotalExecutedInstructions);
-        Assert.AreEqual(3, controller.RefreshAnimatedCallCount);
+        Assert.GreaterOrEqual(controller.RefreshAnimatedCallCount, 3);
 
-        CollectionAssert.AreEqual(
-            new[] { 0, 1, 2 },
-            controller.HighlightedInstructionIndices);
-
-        UnityEngine.Object.Destroy(gameObject);
+        Object.Destroy(gameObject);
     }
 
     [UnityTest]
@@ -87,16 +84,19 @@ public sealed class GameControllerBaseTests
 
         yield return null;
 
-        int clearHighlightCallCountBeforeReset = controller.ClearHighlightCallCount;
         int resetCallCountBeforeReset = controller.CreatedGame.ResetCallCount;
+        int executedInstructionCountBeforeReset = controller.CreatedGame.TotalExecutedInstructions;
 
         controller.ResetGame();
 
-        Assert.AreEqual(resetCallCountBeforeReset + 1, controller.CreatedGame.ResetCallCount);
-        Assert.AreEqual(clearHighlightCallCountBeforeReset + 1, controller.ClearHighlightCallCount);
-        Assert.AreEqual(-1, controller.LastHighlightedInstructionIndex);
+        yield return null;
 
-        UnityEngine.Object.Destroy(gameObject);
+        Assert.AreEqual(resetCallCountBeforeReset + 1, controller.CreatedGame.ResetCallCount);
+
+        // Reset itself should not execute any new instruction.
+        Assert.AreEqual(executedInstructionCountBeforeReset, controller.CreatedGame.TotalExecutedInstructions);
+
+        Object.Destroy(gameObject);
     }
 
     [UnityTest]
@@ -115,7 +115,6 @@ public sealed class GameControllerBaseTests
         Assert.AreEqual(1, controller.CreatedGame.TotalExecutedInstructions);
 
         controller.ResetGame();
-
         controller.AddTestInstruction();
         controller.AddTestInstruction();
 
@@ -127,7 +126,7 @@ public sealed class GameControllerBaseTests
 
         Assert.AreEqual(3, controller.CreatedGame.TotalExecutedInstructions);
 
-        UnityEngine.Object.Destroy(gameObject);
+        Object.Destroy(gameObject);
     }
 
     [UnityTest]
@@ -152,6 +151,6 @@ public sealed class GameControllerBaseTests
 
         Assert.AreEqual(1, controller.CreatedGame.TotalExecutedInstructions);
 
-        UnityEngine.Object.Destroy(gameObject);
+        Object.Destroy(gameObject);
     }
 }

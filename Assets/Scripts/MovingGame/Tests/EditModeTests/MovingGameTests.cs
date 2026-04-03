@@ -932,26 +932,20 @@ public sealed class MovingGameTests
     [Test]
     public void BreakForward_WithBreakableObstacle_RemovesIt()
     {
+        GridPosition obstaclePosition = new GridPosition(1, 2);
+
         MovingGame game = new MovingGame(
-            width: 5,
-            height: 5,
-            startCharacterPosition: new GridPosition(0, 0),
-            startCharacterDirection: Direction.Right,
-            foodPositions: new[]
-            {
-                new GridPosition(4, 0)
-            },
-            blockedPositions: Array.Empty<GridPosition>(),
-            breakableBlockedPositions: new[]
-            {
-                new GridPosition(1, 0)
-            });
+            width: 3,
+            height: 3,
+            startCharacterPosition: new GridPosition(1, 1),
+            startCharacterDirection: Direction.Up,
+            foodPositions: new[] { new GridPosition(0, 0) },
+            breakableBlockedPositions: new[] { obstaclePosition });
 
         game.BreakForward();
+        game.FinalizeStepAfterProcess();
 
-        Assert.IsFalse(game.IsBreakableBlocked(new GridPosition(1, 0)));
-        Assert.IsFalse(game.IsBlocked(new GridPosition(1, 0)));
-        Assert.AreEqual(0, game.GetBreakableBlockedPositions().Count);
+        Assert.IsFalse(game.IsBreakableBlocked(obstaclePosition));
     }
 
     [Test]
@@ -1022,6 +1016,7 @@ public sealed class MovingGameTests
             });
 
         game.BreakForward();
+        game.FinalizeStepAfterProcess();
         game.MoveForward(1);
 
         Assert.AreEqual(new GridPosition(1, 0), game.GetCharacterPosition());
@@ -1048,6 +1043,7 @@ public sealed class MovingGameTests
             });
 
         game.BreakForward();
+        game.FinalizeStepAfterProcess();
         game.MoveForward(2);
 
         Assert.AreEqual(new GridPosition(2, 0), game.GetCharacterPosition());
@@ -1074,6 +1070,7 @@ public sealed class MovingGameTests
             });
 
         game.BreakForward();
+        game.FinalizeStepAfterProcess();
 
         Assert.IsFalse(game.IsBreakableBlocked(new GridPosition(2, 3)));
     }
@@ -1097,6 +1094,7 @@ public sealed class MovingGameTests
             });
 
         game.BreakForward();
+        game.FinalizeStepAfterProcess();
 
         Assert.IsFalse(game.IsBreakableBlocked(new GridPosition(2, 1)));
     }
@@ -1120,6 +1118,7 @@ public sealed class MovingGameTests
             });
 
         game.BreakForward();
+        game.FinalizeStepAfterProcess();
 
         Assert.IsFalse(game.IsBreakableBlocked(new GridPosition(1, 2)));
     }
@@ -1143,6 +1142,7 @@ public sealed class MovingGameTests
             });
 
         game.BreakForward();
+        game.FinalizeStepAfterProcess();
 
         Assert.IsFalse(game.IsBreakableBlocked(new GridPosition(3, 2)));
     }
@@ -1238,12 +1238,73 @@ public sealed class MovingGameTests
             });
 
         game.BreakForward();
+        game.FinalizeStepAfterProcess();
         Assert.IsFalse(game.IsBreakableBlocked(new GridPosition(1, 0)));
 
         game.ResetGame();
 
         Assert.IsTrue(game.IsBreakableBlocked(new GridPosition(1, 0)));
     }
+
+
+    [Test]
+    public void BreakForward_DoesNotRemoveObstacleUntilFinalizeStepAfterProcess()
+    {
+        GridPosition obstaclePosition = new GridPosition(1, 0);
+
+        MovingGame game = new MovingGame(
+            width: 5,
+            height: 5,
+            startCharacterPosition: new GridPosition(0, 0),
+            startCharacterDirection: Direction.Right,
+            foodPositions: new[]
+            {
+                new GridPosition(4, 4)
+            },
+            blockedPositions: Array.Empty<GridPosition>(),
+            breakableBlockedPositions: new[]
+            {
+                obstaclePosition
+            });
+
+        game.BreakForward();
+
+        Assert.IsTrue(game.IsBreakableBlocked(obstaclePosition));
+        Assert.IsTrue(game.HasStepAfterProcess());
+        Assert.AreEqual(StepAfterProcessType.Break, game.GetStepAfterProcess().GetProcessType());
+
+        game.FinalizeStepAfterProcess();
+
+        Assert.IsFalse(game.IsBreakableBlocked(obstaclePosition));
+        Assert.IsFalse(game.HasStepAfterProcess());
+    }
+
+    [Test]
+    public void BreakForward_AfterWin_DoesNotCreateStepAfterProcess()
+    {
+        MovingGame game = new MovingGame(
+            width: 3,
+            height: 2,
+            startCharacterPosition: new GridPosition(0, 0),
+            startCharacterDirection: Direction.Right,
+            foodPositions: new[] { new GridPosition(1, 0) },
+            breakableBlockedPositions: new[] { new GridPosition(2, 0) });
+
+        game.MoveForward(1);
+        Assert.IsTrue(game.HasWon());
+
+        // Finalize the winning move process first.
+        game.FinalizeStepAfterProcess();
+        Assert.IsFalse(game.HasStepAfterProcess());
+
+        game.BreakForward();
+
+        Assert.IsFalse(game.HasStepAfterProcess());
+        Assert.IsTrue(game.HasWon());
+        Assert.IsFalse(game.HasFailed());
+        Assert.IsTrue(game.IsBreakableBlocked(new GridPosition(2, 0)));
+    }
+
 
     private static MovingGame CreateDefaultGame()
     {
