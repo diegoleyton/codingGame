@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+
 using Flowbit.Engine;
 using Flowbit.Engine.Instructions;
 using Flowbit.EngineController;
@@ -51,14 +52,22 @@ public sealed class GameMock : IGame
 }
 
 /// <summary>
+/// Test instruction ids used by the controller play mode tests.
+/// </summary>
+public enum TestInstructionType
+{
+    Primitive = 1
+}
+
+/// <summary>
 /// Simple primitive instruction used by tests.
 /// </summary>
 public sealed class InstructionDefinitionMock
-    : GameInstructionDefinitionBase<GameMock, int>
+    : GameInstructionDefinitionBase<GameMock, TestInstructionType>
 {
-    public override int GetInstructionId()
+    public override TestInstructionType GetInstructionId()
     {
-        return 1;
+        return TestInstructionType.Primitive;
     }
 
     public override string GetDisplayName()
@@ -71,17 +80,61 @@ public sealed class InstructionDefinitionMock
         return true;
     }
 
-    protected override void ExecuteTyped(GameMock game, InstructionInstance<int> instance)
+    protected override void ExecuteTyped(
+        GameMock game,
+        InstructionInstance<TestInstructionType> instructionInstance)
     {
         game.RegisterExecution();
     }
 }
 
 /// <summary>
+/// Factory used by tests to create instruction definitions from ids.
+/// </summary>
+public sealed class InstructionFactoryMock
+    : IInstructionFactory<GameMock, TestInstructionType>
+{
+    public GameInstructionDefinitionBase<GameMock, TestInstructionType> CreateInstruction(
+        TestInstructionType instructionType)
+    {
+        return instructionType switch
+        {
+            TestInstructionType.Primitive => new InstructionDefinitionMock(),
+            _ => throw new NotSupportedException(
+                $"Unsupported test instruction type '{instructionType}'.")
+        };
+    }
+}
+
+/// <summary>
+/// Available-instructions resolver used by tests.
+/// </summary>
+public sealed class AvailableInstructionsResolverMock
+    : AvailableInstructionsResolverBase<TestInstructionType>
+{
+    private static readonly IReadOnlyList<TestInstructionType> instructions_ =
+        new List<TestInstructionType>
+        {
+            TestInstructionType.Primitive
+        };
+
+    public override IReadOnlyList<TestInstructionType> Resolve(int levelId)
+    {
+        return instructions_;
+    }
+}
+
+/// <summary>
 /// Concrete controller used to test GameControllerBase behavior.
 /// </summary>
-public sealed class GameControllerMock : GameControllerBase<GameMock, int>
+public sealed class GameControllerMock : GameControllerBase<GameMock, TestInstructionType>
 {
+    private readonly IInstructionFactory<GameMock, TestInstructionType> instructionFactory_ =
+        new InstructionFactoryMock();
+
+    private readonly IAvailableInstructionsResolver<TestInstructionType>
+        availableInstructionsResolver_ = new AvailableInstructionsResolverMock();
+
     private GameMock createdGame_;
 
     public int InitializeViewCallCount { get; private set; }
@@ -89,19 +142,22 @@ public sealed class GameControllerMock : GameControllerBase<GameMock, int>
     public int RefreshAnimatedCallCount { get; private set; }
     public int ClearHighlightCallCount { get; private set; }
     public int RefreshResultViewCallCount { get; private set; }
+
     public int LastHighlightedInstructionIndex { get; private set; } = -1;
 
     public List<int> HighlightedInstructionIndices { get; } = new List<int>();
 
     public GameMock CreatedGame => createdGame_;
 
-    protected override IAvailableInstructionsResolver<int> AvailableInstructionsResolver => throw new NotImplementedException();
+    protected override IInstructionFactory<GameMock, TestInstructionType> InstructionFactory =>
+        instructionFactory_;
 
-    protected override IInstructionFactory<GameMock, int> InstructionFactory => throw new NotImplementedException();
+    protected override IAvailableInstructionsResolver<TestInstructionType>
+        AvailableInstructionsResolver => availableInstructionsResolver_;
 
     public void AddTestInstruction()
     {
-        AddInstructionToCurrentProgram(1);
+        AddInstructionToCurrentProgram(TestInstructionType.Primitive);
     }
 
     public void SetExecutionDelay(float seconds)
@@ -146,14 +202,18 @@ public sealed class GameControllerMock : GameControllerBase<GameMock, int>
     protected override void ClearInstructionHighlight()
     {
         base.ClearInstructionHighlight();
-
         ClearHighlightCallCount++;
         LastHighlightedInstructionIndex = -1;
     }
 
     protected override void RefreshResultView()
     {
+        base.RefreshResultView();
         RefreshResultViewCallCount++;
+    }
+
+    protected override void ApplyExecutedStepImmediate()
+    {
     }
 
     private static void SetPrivateFieldInHierarchy(
@@ -180,10 +240,5 @@ public sealed class GameControllerMock : GameControllerBase<GameMock, int>
 
         throw new InvalidOperationException(
             $"Field '{fieldName}' was not found in the type hierarchy.");
-    }
-
-    protected override void ApplyExecutedStepImmediate()
-    {
-        throw new NotImplementedException();
     }
 }
