@@ -34,7 +34,7 @@ namespace Flowbit.Engine
             rootExecutionFrame_ = null;
         }
 
-        public bool IsFinished()
+        public bool IsStopped()
         {
             if (program_ == null)
             {
@@ -97,8 +97,13 @@ namespace Flowbit.Engine
 
             EnsureInitialized();
 
-            if (rootExecutionFrame_ == null || rootExecutionFrame_.IsComplete())
+            if (rootExecutionFrame_ == null)
                 return -1;
+
+            if (rootExecutionFrame_.IsComplete())
+            {
+                return rootExecutionFrame_.GetCurrentInstructionIndex() - 1;
+            }
 
             return rootExecutionFrame_.GetCurrentInstructionIndex();
         }

@@ -1,16 +1,20 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Flowbit.EngineController
 {
     /// <summary>
-    /// Displays the current execution state for the play/pause controls.
+    /// Base view for execution controls such as play, pause, and stop.
     /// </summary>
     public abstract class ExecutionControlsViewBase : MonoBehaviour
     {
         /// <summary>
-        /// Updates the control visuals based on whether the game is running.
+        /// Updates the visual state of the play/pause control.
         /// </summary>
         public abstract void SetIsRunning(bool isRunning);
+
+        /// <summary>
+        /// Updates the visibility of the stop control.
+        /// </summary>
+        public abstract void SetStopButtonVisible(bool visible);
     }
 }

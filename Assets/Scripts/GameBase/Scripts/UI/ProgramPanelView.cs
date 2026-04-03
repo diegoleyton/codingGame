@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,19 +15,36 @@ namespace Flowbit.GameBase.UI
     /// </summary>
     public sealed class ProgramPanelView : ProgramViewBase
     {
-        [SerializeField] private Transform contentRoot_;
-        [SerializeField] private InstructionListItemView itemPrefab_;
-        [SerializeField] private InstructionsPresentationSettings instructionsPresentationSettings_;
-        [SerializeField] private GameObject instructionButtonContainer_;
-        [SerializeField] private ScrollRect scrollRect_;
-        [SerializeField] private ScrollRectInteractionTracker scrollRectTracker_;
-        [SerializeField] private float autoScrollTime_ = 0.2f;
-        [SerializeField] private GameObject uiBlocker_;
+        [SerializeField]
+        private Transform contentRoot_;
+
+        [SerializeField]
+        private InstructionListItemView itemPrefab_;
+
+        [SerializeField]
+        private InstructionsPresentationSettings instructionsPresentationSettings_;
+
+        [SerializeField]
+        private GameObject instructionButtonContainer_;
+
+        [SerializeField]
+        private ScrollRect scrollRect_;
+
+        [SerializeField]
+        private float autoScrollTime_ = 0.2f;
+
+        [SerializeField]
+        private ScrollRectInteractionTracker scrollRectInteractionTracker_;
+
+        [SerializeField]
+        private float autoScrollInteractionCooldown_ = 0.3f;
 
         private readonly List<InstructionListItemView> spawnedItems_ =
             new List<InstructionListItemView>();
 
         private Action<int> onInstructionSelected_;
+        private Coroutine autoScrollCoroutine_;
+        private bool suppressNextHighlightAutoScroll_;
 
         /// <summary>
         /// Rebuilds the visual list for the given program.
@@ -60,6 +78,9 @@ namespace Flowbit.GameBase.UI
 
                 spawnedItems_.Add(item);
             }
+
+            // Prevent the next highlight after a rebuild from triggering a sudden auto-scroll.
+            suppressNextHighlightAutoScroll_ = true;
         }
 
         /// <summary>
@@ -67,20 +88,7 @@ namespace Flowbit.GameBase.UI
         /// </summary>
         public override void HighlightIndex(int index)
         {
-            for (int i = 0; i < spawnedItems_.Count; i++)
-            {
-                bool highlighted = i == index;
-
-                if (highlighted && scrollRect_ != null && CanAutoScroll())
-                {
-                    StartCoroutine(
-                        scrollRect_.ScrollItemToTopSlotAnimated(
-                            spawnedItems_[i].GetRectTransform(),
-                            autoScrollTime_));
-                }
-
-                spawnedItems_[i].SetHighlighted(highlighted);
-            }
+            HighlightIndexInternal(index, allowAutoScroll: true);
         }
 
         /// <summary>
@@ -88,31 +96,125 @@ namespace Flowbit.GameBase.UI
         /// </summary>
         public override void ClearHighlight()
         {
+            StopAutoScrollCoroutine();
+
             for (int i = 0; i < spawnedItems_.Count; i++)
             {
                 spawnedItems_[i].SetHighlighted(false);
             }
         }
 
+        /// <summary>
+        /// Enables or disables the instruction editing controls.
+        /// </summary>
         public override void EnableInstructions(bool enabled)
         {
             instructionButtonContainer_?.SetActive(enabled);
-
-            // The program items themselves must stay clickable even while running,
-            // so we do not block the whole panel anymore.
-            if (uiBlocker_ != null)
-            {
-                uiBlocker_.SetActive(false);
-            }
         }
 
+        /// <summary>
+        /// Sets a callback invoked when the user clicks an instruction item.
+        /// </summary>
         public override void SetInstructionSelectedCallback(Action<int> onInstructionSelected)
         {
             onInstructionSelected_ = onInstructionSelected;
         }
 
+        /// <summary>
+        /// Highlights the item at the given index without triggering auto-scroll.
+        /// Useful after rebuilding the list or preserving state while removing instructions.
+        /// </summary>
+        public void HighlightIndexWithoutAutoScroll(int index)
+        {
+            HighlightIndexInternal(index, allowAutoScroll: false);
+        }
+
+        private void HighlightIndexInternal(int index, bool allowAutoScroll)
+        {
+            for (int i = 0; i < spawnedItems_.Count; i++)
+            {
+                spawnedItems_[i].SetHighlighted(i == index);
+            }
+
+            if (index < 0 || index >= spawnedItems_.Count || scrollRect_ == null)
+            {
+                suppressNextHighlightAutoScroll_ = false;
+                return;
+            }
+
+            if (!allowAutoScroll || suppressNextHighlightAutoScroll_ || !CanAutoScroll())
+            {
+                suppressNextHighlightAutoScroll_ = false;
+                return;
+            }
+
+            StopAutoScrollCoroutine();
+            autoScrollCoroutine_ = StartCoroutine(ScrollToHighlightedItemNextFrame(index));
+            suppressNextHighlightAutoScroll_ = false;
+        }
+
+        private IEnumerator ScrollToHighlightedItemNextFrame(int index)
+        {
+            // Wait one frame so layout groups / content size fitters can settle after rebuilds.
+            yield return null;
+
+            if (index < 0 || index >= spawnedItems_.Count || scrollRect_ == null)
+            {
+                autoScrollCoroutine_ = null;
+                yield break;
+            }
+
+            if (!CanAutoScroll())
+            {
+                autoScrollCoroutine_ = null;
+                yield break;
+            }
+
+            yield return scrollRect_.ScrollItemToTopSlotAnimated(
+                spawnedItems_[index].GetRectTransform(),
+                autoScrollTime_);
+
+            autoScrollCoroutine_ = null;
+        }
+
+        private bool CanAutoScroll()
+        {
+            if (scrollRect_ == null)
+            {
+                return false;
+            }
+
+            if (scrollRectInteractionTracker_ == null)
+            {
+                return true;
+            }
+
+            if (scrollRectInteractionTracker_.IsDragging)
+            {
+                return false;
+            }
+
+            if (Time.time - scrollRectInteractionTracker_.LastInteractionTime < autoScrollInteractionCooldown_)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private void StopAutoScrollCoroutine()
+        {
+            if (autoScrollCoroutine_ != null)
+            {
+                StopCoroutine(autoScrollCoroutine_);
+                autoScrollCoroutine_ = null;
+            }
+        }
+
         private void ClearItems()
         {
+            StopAutoScrollCoroutine();
+
             for (int i = 0; i < spawnedItems_.Count; i++)
             {
                 if (spawnedItems_[i] != null)
@@ -145,16 +247,6 @@ namespace Flowbit.GameBase.UI
             }
 
             return $"{displayName} ({string.Join(", ", parts)})";
-        }
-
-        private bool CanAutoScroll()
-        {
-            if (scrollRectTracker_ == null)
-            {
-                return true;
-            }
-
-            return !scrollRectTracker_.IsDragging;
         }
     }
 }

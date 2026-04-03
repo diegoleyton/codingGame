@@ -376,7 +376,7 @@ public sealed class ProgramRunnerTests
     public void Runner_IsFinished_BehavesCorrectly()
     {
         ProgramRunner runner = new ProgramRunner();
-        Assert.IsTrue(runner.IsFinished());
+        Assert.IsTrue(runner.IsStopped());
 
         ProgramDefinition program = new ProgramDefinition();
         program.AddInstruction(new InstructionInstance(
@@ -386,14 +386,14 @@ public sealed class ProgramRunnerTests
                 logEntry: "Alpha")));
 
         runner.LoadProgram(program);
-        Assert.IsFalse(runner.IsFinished());
+        Assert.IsFalse(runner.IsStopped());
 
         GameMock game = new GameMock();
         runner.ExecuteNextStep(game);
-        Assert.IsFalse(runner.IsFinished());
+        Assert.IsFalse(runner.IsStopped());
 
         runner.ExecuteNextStep(game);
-        Assert.IsTrue(runner.IsFinished());
+        Assert.IsTrue(runner.IsStopped());
     }
 
     [Test]
