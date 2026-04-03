@@ -6,7 +6,7 @@ using Flowbit.Utilities.Core.Events;
 using Flowbit.GameBase.Definitions;
 using Flowbit.GameBase.Services;
 using Flowbit.GameBase.Scenes;
-using Flowbit.Utilities.Navigation;
+using Flowbit.Utilities.Unity.UI;
 
 namespace Flowbit.MovingGame.Unity
 {
@@ -32,6 +32,8 @@ namespace Flowbit.MovingGame.Unity
         private bool currentLevelCompleted_;
         private bool currentLevelFailed_;
         private Coroutine showCompletedPopupCoroutine_;
+        private IDisposable navigationBlock_;
+        private ScreenBlocker screenBlocker_;
 
         protected override bool HasBackButton => true;
 
@@ -81,6 +83,7 @@ namespace Flowbit.MovingGame.Unity
             var serviceContainer = GlobalServiceContainer.ServiceContainer;
             eventDispatcher_ = serviceContainer.Get<EventDispatcher>();
             navigationService_ = serviceContainer.Get<IGameNavigationService>();
+            screenBlocker_ = serviceContainer.Get<ScreenBlocker>();
 
             RegisterEvents();
 
@@ -196,7 +199,10 @@ namespace Flowbit.MovingGame.Unity
 
         private IEnumerator ShowCompletedPopupRoutine()
         {
+
+            BlockScreen();
             yield return new WaitForSeconds(completedPopupDelaySeconds_);
+            UnblockScreen();
 
             int nextLevelIndex = currentLevelIndex_ + 1;
             bool hasNextLevel = nextLevelIndex < levelsLibrary_.GetLevelCount();
@@ -217,8 +223,25 @@ namespace Flowbit.MovingGame.Unity
             showCompletedPopupCoroutine_ = null;
         }
 
+        private void UnblockScreen()
+        {
+            if (navigationBlock_ != null)
+            {
+                navigationBlock_.Dispose();
+                navigationBlock_ = null;
+            }
+        }
+
+        private void BlockScreen()
+        {
+            UnblockScreen();
+            navigationBlock_ = screenBlocker_.BlockScope();
+        }
+
         private void StopCompletedPopupCoroutine()
         {
+            UnblockScreen();
+
             if (showCompletedPopupCoroutine_ != null)
             {
                 StopCoroutine(showCompletedPopupCoroutine_);
