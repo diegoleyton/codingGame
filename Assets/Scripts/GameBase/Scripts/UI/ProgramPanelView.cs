@@ -67,7 +67,7 @@ namespace Flowbit.GameBase.UI
 
                 GameObject instructionUi =
                     instructionsPresentationSettings_.CreateInstructionUi(
-                        (InstructionType)instructions[i].GetDefinition().GetInstructionId());
+                        instructions[i].GetDefinition().GetInstructionId());
 
                 item.SetInstructionView(instructionUi);
                 item.SetInstructionIndex((i + 1).ToString());
