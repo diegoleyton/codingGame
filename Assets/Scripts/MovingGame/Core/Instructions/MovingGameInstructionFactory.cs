@@ -26,6 +26,11 @@ namespace Flowbit.MovingGame.Core.Instructions
         /// <returns></returns>
         public GameInstructionDefinitionBase<IMovingGame, InstructionType> CreateInstruction(InstructionType instructionType)
         {
+            if (!instructionMap_.TryGetValue(instructionType, out var factory))
+            {
+                throw new NotSupportedException(
+                    $"Unsupported instruction type '{instructionType}'.");
+            }
             return instructionMap_[instructionType]();
         }
     }
