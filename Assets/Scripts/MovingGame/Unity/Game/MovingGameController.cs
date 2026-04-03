@@ -15,7 +15,7 @@ namespace Flowbit.MovingGame.Unity
     /// <summary>
     /// Coordinates the moving game runtime, scene view, and execution controls.
     /// </summary>
-    public sealed class MovingGameController : GameControllerBase<IMovingGame>
+    public sealed class MovingGameController : GameControllerBase<IMovingGame, InstructionType>
     {
         [Header("View References")]
         [SerializeField] private MovingGameView movingGameView_;

@@ -5,12 +5,12 @@ namespace Flowbit.Engine
     /// <summary>
     /// Read only values of a concrete use of an instruction definition inside a program.
     /// </summary>
-    public interface IReadOnlyInstructionInstance
+    public interface IReadOnlyInstructionInstance<TInstruction>
     {
         /// <summary>
         /// Returns the instruction definition used by this instance.
         /// </summary>
-        IInstructionDefinition GetDefinition();
+        IInstructionDefinition<TInstruction> GetDefinition();
 
         /// <summary>
         /// Returns all the parameters of this instruction instance, and their values.

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 /// Simple primitive instruction definition used by tests.
 /// </summary>
 internal sealed class MockPrimitiveInstructionDefinition
-    : GameInstructionDefinitionBase<GameMock>
+    : GameInstructionDefinitionBase<GameMock, int>
 {
     private readonly string id_;
     private readonly string displayName_;
@@ -77,7 +77,7 @@ internal sealed class MockPrimitiveInstructionDefinition
     /// <summary>
     /// Executes this instruction on the test game.
     /// </summary>
-    protected override void ExecuteTyped(GameMock game, InstructionInstance instance)
+    protected override void ExecuteTyped(GameMock game, InstructionInstance<int> instance)
     {
         if (supportsAmountParameter_)
         {
@@ -87,5 +87,21 @@ internal sealed class MockPrimitiveInstructionDefinition
         }
 
         game.Log(logEntry_);
+    }
+}
+
+internal sealed class MockSequenceInstructionDefinition : SequenceInstructionDefinition<int>
+{
+    public override int GetInstructionId()
+    {
+        return 20;
+    }
+}
+
+internal sealed class MockRepeatInstructionDefinition : RepeatInstructionDefinition<int>
+{
+    public override int GetInstructionId()
+    {
+        return 21;
     }
 }

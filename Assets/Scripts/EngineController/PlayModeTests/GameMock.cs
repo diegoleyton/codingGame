@@ -54,7 +54,7 @@ public sealed class GameMock : IGame
 /// Simple primitive instruction used by tests.
 /// </summary>
 public sealed class InstructionDefinitionMock
-    : GameInstructionDefinitionBase<GameMock>
+    : GameInstructionDefinitionBase<GameMock, int>
 {
     public override int GetInstructionId()
     {
@@ -71,7 +71,7 @@ public sealed class InstructionDefinitionMock
         return true;
     }
 
-    protected override void ExecuteTyped(GameMock game, InstructionInstance instance)
+    protected override void ExecuteTyped(GameMock game, InstructionInstance<int> instance)
     {
         game.RegisterExecution();
     }
@@ -80,7 +80,7 @@ public sealed class InstructionDefinitionMock
 /// <summary>
 /// Concrete controller used to test GameControllerBase behavior.
 /// </summary>
-public sealed class GameControllerMock : GameControllerBase<GameMock>
+public sealed class GameControllerMock : GameControllerBase<GameMock, int>
 {
     private GameMock createdGame_;
 

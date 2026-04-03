@@ -13,7 +13,7 @@ namespace Flowbit.GameBase.UI
     /// <summary>
     /// Displays the current program as a vertical list of instruction items.
     /// </summary>
-    public sealed class ProgramPanelView : ProgramViewBase
+    public sealed class ProgramPanelView : ProgramViewBase<InstructionType>
     {
         [SerializeField]
         private Transform contentRoot_;
@@ -49,7 +49,7 @@ namespace Flowbit.GameBase.UI
         /// <summary>
         /// Rebuilds the visual list for the given program.
         /// </summary>
-        public override void Rebuild(IReadOnlyList<IReadOnlyInstructionInstance> instructions)
+        public override void Rebuild(IReadOnlyList<IReadOnlyInstructionInstance<InstructionType>> instructions)
         {
             ClearItems();
 
@@ -226,7 +226,7 @@ namespace Flowbit.GameBase.UI
             spawnedItems_.Clear();
         }
 
-        private string BuildInstructionLabel(IReadOnlyInstructionInstance instruction)
+        private string BuildInstructionLabel(IReadOnlyInstructionInstance<InstructionType> instruction)
         {
             if (instruction == null)
             {

@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using Flowbit.Engine;
 
 namespace Flowbit.Engine.Instructions
 {
     /// <summary>
     /// Provides a base implementation for instruction definitions.
     /// </summary>
-    public abstract class InstructionDefinitionBase : IInstructionDefinition
+    public abstract class InstructionDefinitionBase<TInstruction> : IInstructionDefinition<TInstruction>
     {
         /// <summary>
         /// Returns the display name of this instruction definition.
@@ -17,7 +16,7 @@ namespace Flowbit.Engine.Instructions
         /// <summary>
         /// Returns the instruction id
         /// </summary>
-        public abstract int GetInstructionId();
+        public abstract TInstruction GetInstructionId();
 
         /// <summary>
         /// Returns whether this instruction executes directly without expanding child instructions.
@@ -46,7 +45,7 @@ namespace Flowbit.Engine.Instructions
         /// <summary>
         /// Executes this instruction instance on the given game.
         /// </summary>
-        public virtual void Execute(IGame game, InstructionInstance instance)
+        public virtual void Execute(IGame game, InstructionInstance<TInstruction> instance)
         {
             throw new InvalidOperationException($"{GetDisplayName()} cannot execute directly.");
         }
@@ -54,7 +53,7 @@ namespace Flowbit.Engine.Instructions
         /// <summary>
         /// Expands this instruction instance into child instruction instances.
         /// </summary>
-        public virtual IReadOnlyList<InstructionInstance> Expand(InstructionInstance instance)
+        public virtual IReadOnlyList<InstructionInstance<TInstruction>> Expand(InstructionInstance<TInstruction> instance)
         {
             throw new InvalidOperationException($"{GetDisplayName()} cannot expand.");
         }

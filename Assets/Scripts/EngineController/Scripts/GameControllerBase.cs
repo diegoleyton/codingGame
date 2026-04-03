@@ -9,12 +9,12 @@ namespace Flowbit.EngineController
     /// <summary>
     /// Coordinates the game runtime, scene view, and execution controls.
     /// </summary>
-    public abstract class GameControllerBase<TGame> : MonoBehaviour
+    public abstract class GameControllerBase<TGame, TInstruction> : MonoBehaviour
         where TGame : class, IGame
     {
         [Header("UI")]
         [SerializeField]
-        private ProgramViewBase programPanelView_;
+        private ProgramViewBase<TInstruction> programPanelView_;
 
         [SerializeField]
         private GameStatusViewBase gameStatusView_;
@@ -27,8 +27,8 @@ namespace Flowbit.EngineController
         private float stepDelaySeconds_ = 0.5f;
 
         private TGame game_;
-        private ProgramRunner runner_;
-        private ProgramDefinition currentProgram_;
+        private ProgramRunner<TInstruction> runner_;
+        private ProgramDefinition<TInstruction> currentProgram_;
         private Coroutine runCoroutine_;
         private Coroutine stepCoroutine_;
         private bool programDirty_;
@@ -47,7 +47,7 @@ namespace Flowbit.EngineController
         /// </summary>
         private void Start()
         {
-            runner_ = new ProgramRunner();
+            runner_ = new ProgramRunner<TInstruction>();
             programPanelView_?.SetInstructionSelectedCallback(JumpToInstructionState);
 
             if (ShouldCreateGameOnStart())
@@ -241,7 +241,7 @@ namespace Flowbit.EngineController
         /// <summary>
         /// Returns the current program definition.
         /// </summary>
-        protected ProgramDefinition GetCurrentProgram()
+        protected ProgramDefinition<TInstruction> GetCurrentProgram()
         {
             return currentProgram_;
         }
@@ -268,7 +268,7 @@ namespace Flowbit.EngineController
 
             if (runner_ == null)
             {
-                runner_ = new ProgramRunner();
+                runner_ = new ProgramRunner<TInstruction>();
             }
 
             game_ = game;
@@ -286,7 +286,7 @@ namespace Flowbit.EngineController
         /// Adds an instruction of the given instruction definition to the current program.
         /// </summary>
         protected void AddInstructionToCurrentProgram(
-            GameInstructionDefinitionBase<TGame> instructionDefinition)
+            GameInstructionDefinitionBase<TGame, TInstruction> instructionDefinition)
         {
             if (currentProgram_ == null)
             {
@@ -294,8 +294,8 @@ namespace Flowbit.EngineController
                     "A program must be created before adding instructions.");
             }
 
-            InstructionInstance instructionInstance =
-                new InstructionInstance(instructionDefinition);
+            InstructionInstance<TInstruction> instructionInstance =
+                new InstructionInstance<TInstruction>(instructionDefinition);
 
             currentProgram_.AddInstruction(instructionInstance);
             OnProgramChanged();
@@ -382,7 +382,7 @@ namespace Flowbit.EngineController
 
         private void CreateNewProgram()
         {
-            currentProgram_ = new ProgramDefinition();
+            currentProgram_ = new ProgramDefinition<TInstruction>();
             runner_.LoadProgram(currentProgram_);
             programDirty_ = false;
 

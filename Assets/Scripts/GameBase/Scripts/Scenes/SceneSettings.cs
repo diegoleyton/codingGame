@@ -115,7 +115,7 @@ namespace Flowbit.GameBase.Scenes
 
             public string GetName()
             {
-                return SceneType.GetId();
+                return SceneType.GeTInstruction();
             }
         }
     }

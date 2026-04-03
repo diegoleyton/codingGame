@@ -6,7 +6,7 @@ namespace Flowbit.Engine.Instructions
     /// <summary>
     /// Represents a composite instruction that expands into its child instructions in order.
     /// </summary>
-    public sealed class SequenceInstructionDefinition : InstructionDefinitionBase
+    public abstract class SequenceInstructionDefinition<TInstruction> : InstructionDefinitionBase<TInstruction>
     {
         /// <summary>
         /// Returns the display name of this instruction definition.
@@ -14,14 +14,6 @@ namespace Flowbit.Engine.Instructions
         public override string GetDisplayName()
         {
             return "Sequence";
-        }
-
-        /// <summary>
-        /// Returns the instruction ID
-        /// </summary>
-        public override int GetInstructionId()
-        {
-            return 21;
         }
 
         /// <summary>
@@ -43,7 +35,7 @@ namespace Flowbit.Engine.Instructions
         /// <summary>
         /// Expands this instruction instance into child instruction instances.
         /// </summary>
-        public override IReadOnlyList<InstructionInstance> Expand(InstructionInstance instance)
+        public override IReadOnlyList<InstructionInstance<TInstruction>> Expand(InstructionInstance<TInstruction> instance)
         {
             return instance.GetChildren();
         }

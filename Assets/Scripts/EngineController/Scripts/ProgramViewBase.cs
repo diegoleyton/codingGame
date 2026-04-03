@@ -8,12 +8,12 @@ namespace Flowbit.EngineController
     /// <summary>
     /// Displays the current program as a list of instruction items.
     /// </summary>
-    public abstract class ProgramViewBase : MonoBehaviour
+    public abstract class ProgramViewBase<TInstruction> : MonoBehaviour
     {
         /// <summary>
         /// Rebuilds the visual list for the given program.
         /// </summary>
-        public abstract void Rebuild(IReadOnlyList<IReadOnlyInstructionInstance> instructions);
+        public abstract void Rebuild(IReadOnlyList<IReadOnlyInstructionInstance<TInstruction>> instructions);
 
         /// <summary>
         /// Highlights the item at the given index.

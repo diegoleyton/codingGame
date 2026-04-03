@@ -6,16 +6,16 @@ namespace Flowbit.Engine
     /// <summary>
     /// Represents a program made of instruction instances.
     /// </summary>
-    public sealed class ProgramDefinition
+    public sealed class ProgramDefinition<TInstruction>
     {
-        private readonly List<InstructionInstance> instructions_;
+        private readonly List<InstructionInstance<TInstruction>> instructions_;
 
         /// <summary>
         /// Creates an empty program definition.
         /// </summary>
         public ProgramDefinition()
         {
-            instructions_ = new List<InstructionInstance>();
+            instructions_ = new List<InstructionInstance<TInstruction>>();
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Flowbit.Engine
         /// <summary>
         /// Returns the root instruction at the given index.
         /// </summary>
-        public InstructionInstance GetInstructionAt(int index)
+        public InstructionInstance<TInstruction> GetInstructionAt(int index)
         {
             return instructions_[index];
         }
@@ -37,7 +37,7 @@ namespace Flowbit.Engine
         /// <summary>
         /// Returns the root instructions as a read-only collection.
         /// </summary>
-        public IReadOnlyList<InstructionInstance> GetInstructions()
+        public IReadOnlyList<InstructionInstance<TInstruction>> GetInstructions()
         {
             return instructions_;
         }
@@ -45,9 +45,9 @@ namespace Flowbit.Engine
         /// <summary>
         /// Creates and return the root instructions as a read-only values.
         /// </summary>
-        public IReadOnlyList<IReadOnlyInstructionInstance> GenerateReadOnlyInstructions()
+        public IReadOnlyList<IReadOnlyInstructionInstance<TInstruction>> GenerateReadOnlyInstructions()
         {
-            List<IReadOnlyInstructionInstance> readOnlyInstructions = new List<IReadOnlyInstructionInstance>();
+            List<IReadOnlyInstructionInstance<TInstruction>> readOnlyInstructions = new List<IReadOnlyInstructionInstance<TInstruction>>();
             foreach (var instructionInstance in instructions_)
             {
                 readOnlyInstructions.Add(instructionInstance);
@@ -59,7 +59,7 @@ namespace Flowbit.Engine
         /// <summary>
         /// Adds a root instruction to the end of the program.
         /// </summary>
-        public void AddInstruction(InstructionInstance instruction)
+        public void AddInstruction(InstructionInstance<TInstruction> instruction)
         {
             if (instruction == null)
             {
@@ -72,7 +72,7 @@ namespace Flowbit.Engine
         /// <summary>
         /// Inserts a root instruction at the given index.
         /// </summary>
-        public void InsertInstruction(int index, InstructionInstance instruction)
+        public void InsertInstruction(int index, InstructionInstance<TInstruction> instruction)
         {
             if (instruction == null)
             {

@@ -23,7 +23,7 @@ namespace Flowbit.GameBase.Scenes
 
         protected bool initialized_ = false;
 
-        public string Id => sceneType_.GetId();
+        public string Id => sceneType_.GeTInstruction();
 
         private NavigationParams sceneParameters_;
 

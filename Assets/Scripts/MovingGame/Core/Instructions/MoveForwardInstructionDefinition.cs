@@ -9,7 +9,7 @@ namespace Flowbit.MovingGame.Core.Instructions
     /// <summary>
     /// Represents a primitive instruction that moves the agent forward.
     /// </summary>
-    public sealed class MoveForwardInstructionDefinition : GameInstructionDefinitionBase<IMovingGame>
+    public sealed class MoveForwardInstructionDefinition : GameInstructionDefinitionBase<IMovingGame, InstructionType>
     {
         private readonly InstructionParameterDefinition[] parameterDefinitions_;
 
@@ -27,9 +27,9 @@ namespace Flowbit.MovingGame.Core.Instructions
         /// <summary>
         /// Returns the instruction ID.
         /// </summary>
-        public override int GetInstructionId()
+        public override InstructionType GetInstructionId()
         {
-            return (int)InstructionType.MoveForward;
+            return InstructionType.MoveForward;
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Flowbit.MovingGame.Core.Instructions
         /// <summary>
         /// Executes this instruction instance on the given game.
         /// </summary>
-        protected override void ExecuteTyped(IMovingGame game, InstructionInstance instance)
+        protected override void ExecuteTyped(IMovingGame game, InstructionInstance<InstructionType> instance)
         {
             int steps = (int)instance.GetParameterValue("steps");
             if (steps <= 0)

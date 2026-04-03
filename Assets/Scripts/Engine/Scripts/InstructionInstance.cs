@@ -6,20 +6,20 @@ namespace Flowbit.Engine
     /// <summary>
     /// Represents one concrete use of an instruction definition inside a program.
     /// </summary>
-    public sealed class InstructionInstance : IReadOnlyInstructionInstance
+    public sealed class InstructionInstance<TInstruction> : IReadOnlyInstructionInstance<TInstruction>
     {
-        private readonly IInstructionDefinition definition_;
+        private readonly IInstructionDefinition<TInstruction> definition_;
         private readonly Dictionary<string, object> parameterValues_;
-        private readonly List<InstructionInstance> children_;
+        private readonly List<InstructionInstance<TInstruction>> children_;
 
         /// <summary>
         /// Creates a new instruction instance using the definition's default parameter values.
         /// </summary>
-        public InstructionInstance(IInstructionDefinition definition)
+        public InstructionInstance(IInstructionDefinition<TInstruction> definition)
         {
             definition_ = definition ?? throw new ArgumentNullException(nameof(definition));
             parameterValues_ = new Dictionary<string, object>();
-            children_ = new List<InstructionInstance>();
+            children_ = new List<InstructionInstance<TInstruction>>();
 
             IReadOnlyList<InstructionParameterDefinition> parameterDefinitions = definition_.GetParameterDefinitions();
 
@@ -32,7 +32,7 @@ namespace Flowbit.Engine
         /// <summary>
         /// Returns the instruction definition used by this instance.
         /// </summary>
-        public IInstructionDefinition GetDefinition()
+        public IInstructionDefinition<TInstruction> GetDefinition()
         {
             return definition_;
         }
@@ -86,7 +86,7 @@ namespace Flowbit.Engine
         /// <summary>
         /// Returns the child instruction instances of this instance.
         /// </summary>
-        public IReadOnlyList<InstructionInstance> GetChildren()
+        public IReadOnlyList<InstructionInstance<TInstruction>> GetChildren()
         {
             return children_;
         }
@@ -94,7 +94,7 @@ namespace Flowbit.Engine
         /// <summary>
         /// Adds a child instruction instance.
         /// </summary>
-        public void AddChild(InstructionInstance child)
+        public void AddChild(InstructionInstance<TInstruction> child)
         {
             if (child == null)
             {

@@ -25,7 +25,7 @@ namespace Flowbit.GameBase.Definitions
             {SceneType.MovingGameLevelSelectionPopup, "MovingGameLevelSelectionPopup"}
         };
 
-        public static string GetId(this SceneType sceneType)
+        public static string GeTInstruction(this SceneType sceneType)
         {
             return typeToId_[sceneType];
         }

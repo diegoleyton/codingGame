@@ -7,7 +7,7 @@ namespace Flowbit.Engine.Instructions
     /// <summary>
     /// Represents a composite instruction that repeats its child instructions a fixed number of times.
     /// </summary>
-    public sealed class RepeatInstructionDefinition : InstructionDefinitionBase
+    public abstract class RepeatInstructionDefinition<TInstruction> : InstructionDefinitionBase<TInstruction>
     {
         private readonly InstructionParameterDefinition[] parameterDefinitions_;
 
@@ -28,15 +28,6 @@ namespace Flowbit.Engine.Instructions
         public override string GetDisplayName()
         {
             return "Repeat";
-        }
-
-        /// <summary>
-        /// Returns the instruction ID
-        /// </summary>
-        public override int GetInstructionId()
-        {
-            //TODO: I need a way to define this
-            return 20;
         }
 
         /// <summary>
@@ -66,7 +57,7 @@ namespace Flowbit.Engine.Instructions
         /// <summary>
         /// Expands this instruction instance into repeated child instruction instances.
         /// </summary>
-        public override IReadOnlyList<InstructionInstance> Expand(InstructionInstance instance)
+        public override IReadOnlyList<InstructionInstance<TInstruction>> Expand(InstructionInstance<TInstruction> instance)
         {
             int count = (int)instance.GetParameterValue("count");
 
@@ -75,17 +66,17 @@ namespace Flowbit.Engine.Instructions
                 throw new InvalidOperationException("Repeat count must be greater than zero.");
             }
 
-            IReadOnlyList<InstructionInstance> children = instance.GetChildren();
+            IReadOnlyList<InstructionInstance<TInstruction>> children = instance.GetChildren();
             if (children.Count == 0)
             {
                 throw new InvalidOperationException("Repeat must contain at least one child instruction.");
             }
 
-            List<InstructionInstance> expanded = new List<InstructionInstance>(count * children.Count);
+            List<InstructionInstance<TInstruction>> expanded = new List<InstructionInstance<TInstruction>>(count * children.Count);
 
             for (int i = 0; i < count; i++)
             {
-                foreach (InstructionInstance child in children)
+                foreach (InstructionInstance<TInstruction> child in children)
                 {
                     expanded.Add(child);
                 }

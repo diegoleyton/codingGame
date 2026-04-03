@@ -18,7 +18,7 @@ public sealed class ProgramRunnerTests
                 logEntry: "Count",
                 supportsAmountParameter: true);
 
-        InstructionInstance instance = new InstructionInstance(definition);
+        InstructionInstance<int> instance = new InstructionInstance<int>(definition);
 
         Assert.AreEqual(1, instance.GetParameterValue("amount"));
     }
@@ -33,7 +33,7 @@ public sealed class ProgramRunnerTests
                 logEntry: "Count",
                 supportsAmountParameter: true);
 
-        InstructionInstance instance = new InstructionInstance(definition);
+        InstructionInstance<int> instance = new InstructionInstance<int>(definition);
         instance.SetParameterValue("amount", 3);
 
         Assert.AreEqual(3, instance.GetParameterValue("amount"));
@@ -42,7 +42,7 @@ public sealed class ProgramRunnerTests
     [Test]
     public void ProgramDefinition_AddNullInstruction_Throws()
     {
-        ProgramDefinition program = new ProgramDefinition();
+        ProgramDefinition<int> program = new ProgramDefinition<int>();
 
         Assert.Throws<ArgumentNullException>(() => program.AddInstruction(null));
     }
@@ -50,7 +50,7 @@ public sealed class ProgramRunnerTests
     [Test]
     public void Runner_ExecuteWithoutProgram_Throws()
     {
-        ProgramRunner runner = new ProgramRunner();
+        ProgramRunner<int> runner = new ProgramRunner<int>();
         GameMock game = new GameMock();
 
         Assert.Throws<InvalidOperationException>(() => runner.ExecuteNextStep(game));
@@ -59,9 +59,9 @@ public sealed class ProgramRunnerTests
     [Test]
     public void Runner_ExecuteWithNullGame_Throws()
     {
-        ProgramRunner runner = new ProgramRunner();
-        ProgramDefinition program = new ProgramDefinition();
-        program.AddInstruction(new InstructionInstance(
+        ProgramRunner<int> runner = new ProgramRunner<int>();
+        ProgramDefinition<int> program = new ProgramDefinition<int>();
+        program.AddInstruction(new InstructionInstance<int>(
             new MockPrimitiveInstructionDefinition(
                 id: "turn_left",
                 displayName: "Turn Left",
@@ -75,7 +75,7 @@ public sealed class ProgramRunnerTests
     [Test]
     public void Runner_WithSinglePrimitive_ExecutesInstruction()
     {
-        ProgramDefinition program = new ProgramDefinition();
+        ProgramDefinition<int> program = new ProgramDefinition<int>();
 
         MockPrimitiveInstructionDefinition definition =
             new MockPrimitiveInstructionDefinition(
@@ -84,16 +84,16 @@ public sealed class ProgramRunnerTests
                 logEntry: "Count",
                 supportsAmountParameter: true);
 
-        InstructionInstance instruction = new InstructionInstance(definition);
+        InstructionInstance<int> instruction = new InstructionInstance<int>(definition);
         instruction.SetParameterValue("amount", 3);
         program.AddInstruction(instruction);
 
-        ProgramRunner runner = new ProgramRunner();
+        ProgramRunner<int> runner = new ProgramRunner<int>();
         runner.LoadProgram(program);
 
         GameMock game = new GameMock();
 
-        StepResult result = runner.ExecuteNextStep(game);
+        StepResult<int> result = runner.ExecuteNextStep(game);
 
         Assert.AreEqual(StepExecutionStatus.ExecutedPrimitive, result.GetStatus());
         Assert.AreSame(instruction, result.GetExecutedInstruction());
@@ -103,20 +103,20 @@ public sealed class ProgramRunnerTests
     [Test]
     public void Runner_AfterLastInstruction_ReturnsCompletedProgram()
     {
-        ProgramDefinition program = new ProgramDefinition();
-        program.AddInstruction(new InstructionInstance(
+        ProgramDefinition<int> program = new ProgramDefinition<int>();
+        program.AddInstruction(new InstructionInstance<int>(
             new MockPrimitiveInstructionDefinition(
                 id: "turn_left",
                 displayName: "Turn Left",
                 logEntry: "TurnLeft")));
 
-        ProgramRunner runner = new ProgramRunner();
+        ProgramRunner<int> runner = new ProgramRunner<int>();
         runner.LoadProgram(program);
 
         GameMock game = new GameMock();
 
-        StepResult first = runner.ExecuteNextStep(game);
-        StepResult second = runner.ExecuteNextStep(game);
+        StepResult<int> first = runner.ExecuteNextStep(game);
+        StepResult<int> second = runner.ExecuteNextStep(game);
 
         Assert.AreEqual(StepExecutionStatus.ExecutedPrimitive, first.GetStatus());
         Assert.AreEqual(StepExecutionStatus.CompletedProgram, second.GetStatus());
@@ -126,20 +126,20 @@ public sealed class ProgramRunnerTests
     [Test]
     public void Runner_WhenGameAlreadyWon_ReturnsBlockedAndDoesNotExecute()
     {
-        ProgramDefinition program = new ProgramDefinition();
-        program.AddInstruction(new InstructionInstance(
+        ProgramDefinition<int> program = new ProgramDefinition<int>();
+        program.AddInstruction(new InstructionInstance<int>(
             new MockPrimitiveInstructionDefinition(
                 id: "log_instruction",
                 displayName: "Log Instruction",
                 logEntry: "Log")));
 
-        ProgramRunner runner = new ProgramRunner();
+        ProgramRunner<int> runner = new ProgramRunner<int>();
         runner.LoadProgram(program);
 
         GameMock game = new GameMock();
         game.SetWon(true);
 
-        StepResult result = runner.ExecuteNextStep(game);
+        StepResult<int> result = runner.ExecuteNextStep(game);
 
         Assert.AreEqual(StepExecutionStatus.BlockedByGameState, result.GetStatus());
         Assert.IsEmpty(game.GetLog());
@@ -148,20 +148,20 @@ public sealed class ProgramRunnerTests
     [Test]
     public void Runner_WhenGameAlreadyFailed_ReturnsBlockedAndDoesNotExecute()
     {
-        ProgramDefinition program = new ProgramDefinition();
-        program.AddInstruction(new InstructionInstance(
+        ProgramDefinition<int> program = new ProgramDefinition<int>();
+        program.AddInstruction(new InstructionInstance<int>(
             new MockPrimitiveInstructionDefinition(
                 id: "log_instruction",
                 displayName: "Log Instruction",
                 logEntry: "Log")));
 
-        ProgramRunner runner = new ProgramRunner();
+        ProgramRunner<int> runner = new ProgramRunner<int>();
         runner.LoadProgram(program);
 
         GameMock game = new GameMock();
         game.SetFailed(true);
 
-        StepResult result = runner.ExecuteNextStep(game);
+        StepResult<int> result = runner.ExecuteNextStep(game);
 
         Assert.AreEqual(StepExecutionStatus.BlockedByGameState, result.GetStatus());
         Assert.IsEmpty(game.GetLog());
@@ -170,21 +170,21 @@ public sealed class ProgramRunnerTests
     [Test]
     public void SequenceInstruction_ExecutesChildrenOnePrimitivePerStep()
     {
-        InstructionInstance sequence = new InstructionInstance(new SequenceInstructionDefinition());
+        InstructionInstance<int> sequence = new InstructionInstance<int>(new MockSequenceInstructionDefinition());
 
-        InstructionInstance instruction1 = new InstructionInstance(
+        InstructionInstance<int> instruction1 = new InstructionInstance<int>(
             new MockPrimitiveInstructionDefinition(
                 id: "first",
                 displayName: "First",
                 logEntry: "First"));
 
-        InstructionInstance instruction2 = new InstructionInstance(
+        InstructionInstance<int> instruction2 = new InstructionInstance<int>(
             new MockPrimitiveInstructionDefinition(
                 id: "second",
                 displayName: "Second",
                 logEntry: "Second"));
 
-        InstructionInstance instruction3 = new InstructionInstance(
+        InstructionInstance<int> instruction3 = new InstructionInstance<int>(
             new MockPrimitiveInstructionDefinition(
                 id: "third_counting",
                 displayName: "Third Counting",
@@ -197,18 +197,18 @@ public sealed class ProgramRunnerTests
         sequence.AddChild(instruction2);
         sequence.AddChild(instruction3);
 
-        ProgramDefinition program = new ProgramDefinition();
+        ProgramDefinition<int> program = new ProgramDefinition<int>();
         program.AddInstruction(sequence);
 
-        ProgramRunner runner = new ProgramRunner();
+        ProgramRunner<int> runner = new ProgramRunner<int>();
         runner.LoadProgram(program);
 
         GameMock game = new GameMock();
 
-        StepResult step1 = runner.ExecuteNextStep(game);
-        StepResult step2 = runner.ExecuteNextStep(game);
-        StepResult step3 = runner.ExecuteNextStep(game);
-        StepResult step4 = runner.ExecuteNextStep(game);
+        StepResult<int> step1 = runner.ExecuteNextStep(game);
+        StepResult<int> step2 = runner.ExecuteNextStep(game);
+        StepResult<int> step3 = runner.ExecuteNextStep(game);
+        StepResult<int> step4 = runner.ExecuteNextStep(game);
 
         Assert.AreEqual(StepExecutionStatus.ExecutedPrimitive, step1.GetStatus());
         Assert.AreEqual(StepExecutionStatus.ExecutedPrimitive, step2.GetStatus());
@@ -223,16 +223,16 @@ public sealed class ProgramRunnerTests
     [Test]
     public void RepeatInstruction_ExpandsAndExecutesRepeatedChildren()
     {
-        InstructionInstance repeat = new InstructionInstance(new RepeatInstructionDefinition());
+        InstructionInstance<int> repeat = new InstructionInstance<int>(new MockRepeatInstructionDefinition());
         repeat.SetParameterValue("count", 3);
 
-        repeat.AddChild(new InstructionInstance(
+        repeat.AddChild(new InstructionInstance<int>(
             new MockPrimitiveInstructionDefinition(
                 id: "alpha",
                 displayName: "Alpha",
                 logEntry: "Alpha")));
 
-        InstructionInstance countingInstruction = new InstructionInstance(
+        InstructionInstance<int> countingInstruction = new InstructionInstance<int>(
             new MockPrimitiveInstructionDefinition(
                 id: "beta",
                 displayName: "Beta",
@@ -242,10 +242,10 @@ public sealed class ProgramRunnerTests
         countingInstruction.SetParameterValue("amount", 1);
         repeat.AddChild(countingInstruction);
 
-        ProgramDefinition program = new ProgramDefinition();
+        ProgramDefinition<int> program = new ProgramDefinition<int>();
         program.AddInstruction(repeat);
 
-        ProgramRunner runner = new ProgramRunner();
+        ProgramRunner<int> runner = new ProgramRunner<int>();
         runner.LoadProgram(program);
 
         GameMock game = new GameMock();
@@ -255,7 +255,7 @@ public sealed class ProgramRunnerTests
             runner.ExecuteNextStep(game);
         }
 
-        StepResult completed = runner.ExecuteNextStep(game);
+        StepResult<int> completed = runner.ExecuteNextStep(game);
 
         CollectionAssert.AreEqual(
             new[]
@@ -272,15 +272,15 @@ public sealed class ProgramRunnerTests
     [Test]
     public void NestedComposite_ExecutesInCorrectOrder()
     {
-        InstructionInstance nestedSequence = new InstructionInstance(new SequenceInstructionDefinition());
+        InstructionInstance<int> nestedSequence = new InstructionInstance<int>(new MockSequenceInstructionDefinition());
 
-        nestedSequence.AddChild(new InstructionInstance(
+        nestedSequence.AddChild(new InstructionInstance<int>(
             new MockPrimitiveInstructionDefinition(
                 id: "turn",
                 displayName: "Turn",
                 logEntry: "Turn")));
 
-        InstructionInstance moveTwo = new InstructionInstance(
+        InstructionInstance<int> moveTwo = new InstructionInstance<int>(
             new MockPrimitiveInstructionDefinition(
                 id: "move_two",
                 displayName: "Move Two",
@@ -290,10 +290,10 @@ public sealed class ProgramRunnerTests
         moveTwo.SetParameterValue("amount", 2);
         nestedSequence.AddChild(moveTwo);
 
-        InstructionInstance repeat = new InstructionInstance(new RepeatInstructionDefinition());
+        InstructionInstance<int> repeat = new InstructionInstance<int>(new MockRepeatInstructionDefinition());
         repeat.SetParameterValue("count", 2);
 
-        InstructionInstance moveOne = new InstructionInstance(
+        InstructionInstance<int> moveOne = new InstructionInstance<int>(
             new MockPrimitiveInstructionDefinition(
                 id: "move_one",
                 displayName: "Move One",
@@ -305,10 +305,10 @@ public sealed class ProgramRunnerTests
         repeat.AddChild(moveOne);
         repeat.AddChild(nestedSequence);
 
-        ProgramDefinition program = new ProgramDefinition();
+        ProgramDefinition<int> program = new ProgramDefinition<int>();
         program.AddInstruction(repeat);
 
-        ProgramRunner runner = new ProgramRunner();
+        ProgramRunner<int> runner = new ProgramRunner<int>();
         runner.LoadProgram(program);
 
         GameMock game = new GameMock();
@@ -318,7 +318,7 @@ public sealed class ProgramRunnerTests
             runner.ExecuteNextStep(game);
         }
 
-        StepResult final = runner.ExecuteNextStep(game);
+        StepResult<int> final = runner.ExecuteNextStep(game);
 
         CollectionAssert.AreEqual(
             new[]
@@ -338,14 +338,14 @@ public sealed class ProgramRunnerTests
     [Test]
     public void Runner_ResetExecution_RunsProgramAgainFromStart()
     {
-        ProgramDefinition program = new ProgramDefinition();
-        program.AddInstruction(new InstructionInstance(
+        ProgramDefinition<int> program = new ProgramDefinition<int>();
+        program.AddInstruction(new InstructionInstance<int>(
             new MockPrimitiveInstructionDefinition(
                 id: "alpha",
                 displayName: "Alpha",
                 logEntry: "Alpha")));
 
-        InstructionInstance countingInstruction = new InstructionInstance(
+        InstructionInstance<int> countingInstruction = new InstructionInstance<int>(
             new MockPrimitiveInstructionDefinition(
                 id: "beta",
                 displayName: "Beta",
@@ -355,7 +355,7 @@ public sealed class ProgramRunnerTests
         countingInstruction.SetParameterValue("amount", 1);
         program.AddInstruction(countingInstruction);
 
-        ProgramRunner runner = new ProgramRunner();
+        ProgramRunner<int> runner = new ProgramRunner<int>();
         runner.LoadProgram(program);
 
         GameMock game = new GameMock();
@@ -373,13 +373,13 @@ public sealed class ProgramRunnerTests
     }
 
     [Test]
-    public void Runner_IsFinished_BehavesCorrectly()
+    public void Runner_IsStopped_BehavesCorrectly()
     {
-        ProgramRunner runner = new ProgramRunner();
+        ProgramRunner<int> runner = new ProgramRunner<int>();
         Assert.IsTrue(runner.IsStopped());
 
-        ProgramDefinition program = new ProgramDefinition();
-        program.AddInstruction(new InstructionInstance(
+        ProgramDefinition<int> program = new ProgramDefinition<int>();
+        program.AddInstruction(new InstructionInstance<int>(
             new MockPrimitiveInstructionDefinition(
                 id: "alpha",
                 displayName: "Alpha",
@@ -399,14 +399,14 @@ public sealed class ProgramRunnerTests
     [Test]
     public void Runner_WithEmptyProgram_CompletesImmediately()
     {
-        ProgramDefinition program = new ProgramDefinition();
+        ProgramDefinition<int> program = new ProgramDefinition<int>();
 
-        ProgramRunner runner = new ProgramRunner();
+        ProgramRunner<int> runner = new ProgramRunner<int>();
         runner.LoadProgram(program);
 
         GameMock game = new GameMock();
 
-        StepResult result = runner.ExecuteNextStep(game);
+        StepResult<int> result = runner.ExecuteNextStep(game);
 
         Assert.AreEqual(StepExecutionStatus.CompletedProgram, result.GetStatus());
         Assert.IsNull(result.GetExecutedInstruction());
@@ -415,22 +415,22 @@ public sealed class ProgramRunnerTests
     [Test]
     public void Runner_AfterCompletion_StaysCompleted()
     {
-        ProgramDefinition program = new ProgramDefinition();
-        program.AddInstruction(new InstructionInstance(
+        ProgramDefinition<int> program = new ProgramDefinition<int>();
+        program.AddInstruction(new InstructionInstance<int>(
             new MockPrimitiveInstructionDefinition(
                 id: "alpha",
                 displayName: "Alpha",
                 logEntry: "Alpha")));
 
-        ProgramRunner runner = new ProgramRunner();
+        ProgramRunner<int> runner = new ProgramRunner<int>();
         runner.LoadProgram(program);
 
         GameMock game = new GameMock();
 
         runner.ExecuteNextStep(game);
 
-        StepResult result1 = runner.ExecuteNextStep(game);
-        StepResult result2 = runner.ExecuteNextStep(game);
+        StepResult<int> result1 = runner.ExecuteNextStep(game);
+        StepResult<int> result2 = runner.ExecuteNextStep(game);
 
         Assert.AreEqual(StepExecutionStatus.CompletedProgram, result1.GetStatus());
         Assert.AreEqual(StepExecutionStatus.CompletedProgram, result2.GetStatus());
@@ -439,14 +439,14 @@ public sealed class ProgramRunnerTests
     [Test]
     public void InstructionInstance_AddChild_ToPrimitiveInstruction_Throws()
     {
-        InstructionInstance instruction = new InstructionInstance(
+        InstructionInstance<int> instruction = new InstructionInstance<int>(
             new MockPrimitiveInstructionDefinition(
                 id: "alpha",
                 displayName: "Alpha",
                 logEntry: "Alpha"));
 
         Assert.Throws<InvalidOperationException>(() =>
-            instruction.AddChild(new InstructionInstance(
+            instruction.AddChild(new InstructionInstance<int>(
                 new MockPrimitiveInstructionDefinition(
                     id: "beta",
                     displayName: "Beta",

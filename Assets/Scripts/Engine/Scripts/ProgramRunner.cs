@@ -6,22 +6,22 @@ namespace Flowbit.Engine
     /// <summary>
     /// Executes a program step by step for a given game.
     /// </summary>
-    public sealed class ProgramRunner
+    public sealed class ProgramRunner<TInstruction>
     {
-        private readonly Stack<ExecutionFrame> frames_;
-        private ProgramDefinition program_;
+        private readonly Stack<ExecutionFrame<TInstruction>> frames_;
+        private ProgramDefinition<TInstruction> program_;
         private bool isInitialized_;
-        private ExecutionFrame rootExecutionFrame_;
+        private ExecutionFrame<TInstruction> rootExecutionFrame_;
 
         public ProgramRunner()
         {
-            frames_ = new Stack<ExecutionFrame>();
+            frames_ = new Stack<ExecutionFrame<TInstruction>>();
             program_ = null;
             isInitialized_ = false;
             rootExecutionFrame_ = null;
         }
 
-        public void LoadProgram(ProgramDefinition program)
+        public void LoadProgram(ProgramDefinition<TInstruction> program)
         {
             program_ = program ?? throw new ArgumentNullException(nameof(program));
             ResetExecution();
@@ -49,7 +49,7 @@ namespace Flowbit.Engine
             return frames_.Count == 0;
         }
 
-        public StepResult ExecuteNextStep(IGame game)
+        public StepResult<TInstruction> ExecuteNextStep(IGame game)
         {
             if (game == null)
                 throw new ArgumentNullException(nameof(game));
@@ -58,13 +58,13 @@ namespace Flowbit.Engine
                 throw new InvalidOperationException("No program loaded.");
 
             if (game.HasWon() || game.HasFailed())
-                return new StepResult(StepExecutionStatus.BlockedByGameState, null);
+                return new StepResult<TInstruction>(StepExecutionStatus.BlockedByGameState, null);
 
             EnsureInitialized();
 
             while (frames_.Count > 0)
             {
-                ExecutionFrame topFrame = frames_.Peek();
+                ExecutionFrame<TInstruction> topFrame = frames_.Peek();
 
                 if (topFrame.IsComplete())
                 {
@@ -72,22 +72,22 @@ namespace Flowbit.Engine
                     continue;
                 }
 
-                InstructionInstance instruction = topFrame.GetCurrentInstruction();
+                InstructionInstance<TInstruction> instruction = topFrame.GetCurrentInstruction();
                 topFrame.Advance();
 
                 if (instruction.GetDefinition().IsPrimitive())
                 {
                     instruction.GetDefinition().Execute(game, instruction);
-                    return new StepResult(StepExecutionStatus.ExecutedPrimitive, instruction);
+                    return new StepResult<TInstruction>(StepExecutionStatus.ExecutedPrimitive, instruction);
                 }
 
-                IReadOnlyList<InstructionInstance> expanded =
+                IReadOnlyList<InstructionInstance<TInstruction>> expanded =
                     instruction.GetDefinition().Expand(instruction);
 
-                frames_.Push(new ExecutionFrame(expanded));
+                frames_.Push(new ExecutionFrame<TInstruction>(expanded));
             }
 
-            return new StepResult(StepExecutionStatus.CompletedProgram, null);
+            return new StepResult<TInstruction>(StepExecutionStatus.CompletedProgram, null);
         }
 
         public int GetCurrentInstructionIndex()
@@ -113,7 +113,7 @@ namespace Flowbit.Engine
             if (isInitialized_)
                 return;
 
-            rootExecutionFrame_ = new ExecutionFrame(program_.GetInstructions());
+            rootExecutionFrame_ = new ExecutionFrame<TInstruction>(program_.GetInstructions());
             frames_.Push(rootExecutionFrame_);
             isInitialized_ = true;
         }

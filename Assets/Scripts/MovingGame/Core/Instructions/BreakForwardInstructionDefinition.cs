@@ -7,14 +7,14 @@ namespace Flowbit.MovingGame.Core.Instructions
     /// <summary>
     /// Represents a primitive instruction that breaks the breakable obstacle in front of the agent.
     /// </summary>
-    public sealed class BreakForwardInstructionDefinition : GameInstructionDefinitionBase<IMovingGame>
+    public sealed class BreakForwardInstructionDefinition : GameInstructionDefinitionBase<IMovingGame, InstructionType>
     {
         /// <summary>
         /// Returns the instruction ID.
         /// </summary>
-        public override int GetInstructionId()
+        public override InstructionType GetInstructionId()
         {
-            return (int)InstructionType.BreakForward;
+            return InstructionType.BreakForward;
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace Flowbit.MovingGame.Core.Instructions
         /// <summary>
         /// Executes this instruction instance on the strongly typed game.
         /// </summary>
-        protected override void ExecuteTyped(IMovingGame game, InstructionInstance instance)
+        protected override void ExecuteTyped(IMovingGame game, InstructionInstance<InstructionType> instance)
         {
             game.BreakForward();
         }

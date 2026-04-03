@@ -6,15 +6,15 @@ namespace Flowbit.Engine
     /// <summary>
     /// Represents the execution state of a list of instruction instances.
     /// </summary>
-    internal sealed class ExecutionFrame
+    internal sealed class ExecutionFrame<TInstruction>
     {
-        private readonly IReadOnlyList<InstructionInstance> instructions_;
+        private readonly IReadOnlyList<InstructionInstance<TInstruction>> instructions_;
         private int currentIndex_;
 
         /// <summary>
         /// Creates a frame for the given instruction list.
         /// </summary>
-        public ExecutionFrame(IReadOnlyList<InstructionInstance> instructions)
+        public ExecutionFrame(IReadOnlyList<InstructionInstance<TInstruction>> instructions)
         {
             instructions_ = instructions ?? throw new ArgumentNullException(nameof(instructions));
             currentIndex_ = 0;
@@ -31,7 +31,7 @@ namespace Flowbit.Engine
         /// <summary>
         /// Returns the current instruction in this frame.
         /// </summary>
-        public InstructionInstance GetCurrentInstruction()
+        public InstructionInstance<TInstruction> GetCurrentInstruction()
         {
             if (IsComplete())
             {

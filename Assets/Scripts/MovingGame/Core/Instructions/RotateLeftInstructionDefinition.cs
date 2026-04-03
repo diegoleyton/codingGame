@@ -7,14 +7,14 @@ namespace Flowbit.MovingGame.Core.Instructions
     /// <summary>
     /// Represents a primitive instruction that rotates the agent to the left.
     /// </summary>
-    public sealed class RotateLeftInstructionDefinition : GameInstructionDefinitionBase<IMovingGame>
+    public sealed class RotateLeftInstructionDefinition : GameInstructionDefinitionBase<IMovingGame, InstructionType>
     {
         /// <summary>
         /// Returns the instruction ID.
         /// </summary>
-        public override int GetInstructionId()
+        public override InstructionType GetInstructionId()
         {
-            return (int)InstructionType.RotateLeft;
+            return InstructionType.RotateLeft;
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace Flowbit.MovingGame.Core.Instructions
         /// <summary>
         /// Executes this instruction instance on the given game.
         /// </summary>
-        protected override void ExecuteTyped(IMovingGame game, InstructionInstance instance)
+        protected override void ExecuteTyped(IMovingGame game, InstructionInstance<InstructionType> instance)
         {
             game.RotateLeft();
         }

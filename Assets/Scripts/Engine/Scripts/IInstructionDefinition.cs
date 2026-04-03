@@ -5,7 +5,7 @@ namespace Flowbit.Engine
     /// <summary>
     /// Represents the definition of an instruction that can be instantiated and executed.
     /// </summary>
-    public interface IInstructionDefinition
+    public interface IInstructionDefinition<TInstruction>
     {
         /// <summary>
         /// Returns the display name of this instruction definition.
@@ -26,7 +26,7 @@ namespace Flowbit.Engine
         /// Returns the instruction ID
         /// </summary>
         /// <returns></returns>
-        int GetInstructionId();
+        TInstruction GetInstructionId();
 
         /// <summary>
         /// Returns the parameter definitions for this instruction.
@@ -36,11 +36,11 @@ namespace Flowbit.Engine
         /// <summary>
         /// Executes this instruction instance on the given game.
         /// </summary>
-        void Execute(IGame game, InstructionInstance instance);
+        void Execute(IGame game, InstructionInstance<TInstruction> instance);
 
         /// <summary>
         /// Expands this instruction instance into child instruction instances.
         /// </summary>
-        IReadOnlyList<InstructionInstance> Expand(InstructionInstance instance);
+        IReadOnlyList<InstructionInstance<TInstruction>> Expand(InstructionInstance<TInstruction> instance);
     }
 }
