@@ -8,5 +8,17 @@ public enum SoundId
     PopupOpen,
     PopupClosed,
     Main,
-    Main2
+    Main2,
+    Win,
+    Lose,
+    MovingGameMove,
+    MovingGameRotate,
+    MovingGameAttack,
+    MovingGameBreak,
+    MovingGameGoalReached,
+    ProgramActionAdded,
+    ProgramActionDeleted,
+    ProgramActionsDeleted,
+    ProgramStep,
+    ProgramStop
 }

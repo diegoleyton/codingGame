@@ -6,7 +6,10 @@ using UnityEngine.UI;
 using Flowbit.Engine;
 using Flowbit.EngineController;
 using Flowbit.GameBase.Definitions;
+using Flowbit.GameBase.Services;
 using Flowbit.Utilities.Unity.UI;
+using Flowbit.Utilities.Core.Events;
+
 
 namespace Flowbit.GameBase.UI
 {
@@ -45,6 +48,12 @@ namespace Flowbit.GameBase.UI
         private Action<int> onInstructionSelected_;
         private Coroutine autoScrollCoroutine_;
         private bool suppressNextHighlightAutoScroll_;
+        private EventDispatcher eventDispatcher_;
+
+        private void Start()
+        {
+            eventDispatcher_ = GlobalServiceContainer.ServiceContainer.Get<EventDispatcher>();
+        }
 
         /// <summary>
         /// Rebuilds the visual list for the given program.
@@ -74,7 +83,7 @@ namespace Flowbit.GameBase.UI
                 item.SetInstructionLabel(BuildInstructionLabel(instructions[i]));
                 item.SetHighlighted(false);
                 item.SetInteractable(true);
-                item.SetClickAction(() => onInstructionSelected_?.Invoke(instructionIndex));
+                item.SetClickAction(() => OnInstructionSelected(instructionIndex));
 
                 spawnedItems_.Add(item);
             }
@@ -127,6 +136,12 @@ namespace Flowbit.GameBase.UI
         public void HighlightIndexWithoutAutoScroll(int index)
         {
             HighlightIndexInternal(index, allowAutoScroll: false);
+        }
+
+        private void OnInstructionSelected(int index)
+        {
+            eventDispatcher_.Send(new OnProgramStep());
+            onInstructionSelected_?.Invoke(index);
         }
 
         private void HighlightIndexInternal(int index, bool allowAutoScroll)

@@ -51,6 +51,8 @@
   <ItemGroup>
     <Compile Include="Assets/Scripts/GameBase/Definitions/Events/NavigationGameEvents.cs" />
     <Compile Include="Assets/Scripts/GameBase/Definitions/SceneType.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Definitions/Events/MovingGameEvents.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Definitions/Events/ProgramEvents.cs" />
     <Compile Include="Assets/Scripts/GameBase/Definitions/InstructionType.cs" />
     <Compile Include="Assets/Scripts/GameBase/Definitions/Events/LevelEvents.cs" />
   </ItemGroup>

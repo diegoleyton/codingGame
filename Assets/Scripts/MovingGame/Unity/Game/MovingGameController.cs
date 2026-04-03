@@ -18,7 +18,7 @@ namespace Flowbit.MovingGame.Unity
     /// <summary>
     /// Coordinates the moving game runtime, scene view, and execution controls.
     /// </summary>
-    public sealed class MovingGameController : GameControllerBase<IMovingGame, InstructionType>
+    public sealed class MovingGameController : GeneralGameController<IMovingGame>
     {
         [Header("Level Data")]
         [SerializeField] private MovingGameLevelsLibrary levelsLibrary_;
@@ -27,7 +27,6 @@ namespace Flowbit.MovingGame.Unity
         [SerializeField] private MovingGameView movingGameView_;
         [SerializeField] private GridRenderer gridRenderer_;
 
-        private EventDispatcher eventDispatcher_;
         private IAvailableInstructionsResolver<InstructionType> availableInstructionsResolver_;
 
         private IInstructionFactory<IMovingGame, InstructionType> instructionFactory_ = new MovingGameInstructionFactory();
@@ -45,12 +44,6 @@ namespace Flowbit.MovingGame.Unity
             availableInstructionsResolver_;
 
         protected override IInstructionFactory<IMovingGame, InstructionType> InstructionFactory => instructionFactory_;
-
-        private void Start()
-        {
-            var serviceContainer = GlobalServiceContainer.ServiceContainer;
-            eventDispatcher_ = serviceContainer.Get<EventDispatcher>();
-        }
 
         /// <summary>
         /// Loads the given level into the controller.
@@ -72,14 +65,6 @@ namespace Flowbit.MovingGame.Unity
 
             game_ = CreateGameFromLevelData(levelData);
             LoadGame(game_);
-        }
-
-        /// <summary>
-        /// Returns whether a game should be created automatically on start.
-        /// </summary>
-        protected override bool ShouldCreateGameOnStart()
-        {
-            return false;
         }
 
         /// <summary>
@@ -105,9 +90,6 @@ namespace Flowbit.MovingGame.Unity
             if (movingGameView_ != null && game_ != null)
             {
                 movingGameView_.Initialize(gridRenderer_, game_);
-                movingGameView_.SetAvailableInstructions(
-                    GetAvailableInstructions(),
-                    OnAvailableInstructionClicked);
             }
         }
 
@@ -212,11 +194,6 @@ namespace Flowbit.MovingGame.Unity
 
             completedEventSent_ = false;
             failedEventSent_ = false;
-        }
-
-        private void OnAvailableInstructionClicked(InstructionType instructionType)
-        {
-            AddInstructionToCurrentProgram(instructionType);
         }
 
         private void EnsureAvailableInstructionsResolverInitialized()

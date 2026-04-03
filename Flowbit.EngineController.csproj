@@ -54,6 +54,7 @@
     <Compile Include="Assets/Scripts/EngineController/Scripts/GameStatusViewBase.cs" />
     <Compile Include="Assets/Scripts/EngineController/Scripts/ProgramViewBase.cs" />
     <Compile Include="Assets/Scripts/EngineController/Scripts/ExecutionControlsViewBase.cs" />
+    <Compile Include="Assets/Scripts/EngineController/Scripts/InstructionSelectionPanelViewBase.cs" />
     <Compile Include="Assets/Scripts/EngineController/Scripts/GameControllerBase.cs" />
   </ItemGroup>
   <ItemGroup>

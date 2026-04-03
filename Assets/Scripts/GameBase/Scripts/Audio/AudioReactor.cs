@@ -37,6 +37,21 @@ namespace Flowbit.GameBase.Audio
             eventDispatcher_.Subscribe<OnPopupOpen>(_ => Play(SoundId.PopupOpen));
             eventDispatcher_.Subscribe<OnPopupClose>(_ => Play(SoundId.PopupClosed));
             eventDispatcher_.Subscribe<OnFirstScene>(_ => PlayLoop(SoundId.Main));
+
+            eventDispatcher_.Subscribe<LevelCompletedEvent>(_ => Play(SoundId.Win));
+            eventDispatcher_.Subscribe<LevelFailedEvent>(_ => Play(SoundId.Lose));
+
+            eventDispatcher_.Subscribe<OnMovingGameAttack>(_ => Play(SoundId.MovingGameAttack));
+            eventDispatcher_.Subscribe<OnMovingGameBreak>(_ => Play(SoundId.MovingGameBreak));
+            eventDispatcher_.Subscribe<OnMovingGameMove>(_ => Play(SoundId.MovingGameMove));
+            eventDispatcher_.Subscribe<OnMovingGameRotate>(_ => Play(SoundId.MovingGameRotate));
+            eventDispatcher_.Subscribe<OnMovingGameGoalReached>(_ => Play(SoundId.MovingGameGoalReached));
+
+            eventDispatcher_.Subscribe<OnInstructionAdded>(_ => Play(SoundId.ProgramActionAdded));
+            eventDispatcher_.Subscribe<OnInstructionRemoved>(_ => Play(SoundId.ProgramActionDeleted));
+            eventDispatcher_.Subscribe<OnAllInstructionsRemoved>(_ => Play(SoundId.ProgramActionsDeleted));
+            eventDispatcher_.Subscribe<OnProgramStep>(_ => Play(SoundId.ProgramStep));
+            eventDispatcher_.Subscribe<OnProgramStopped>(_ => Play(SoundId.ProgramStop));
         }
 
         private void OnNextScene(OnNextScene e)

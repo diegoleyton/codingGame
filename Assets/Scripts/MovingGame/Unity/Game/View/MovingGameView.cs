@@ -9,6 +9,7 @@ using Flowbit.GameBase.Definitions;
 using Flowbit.GameBase.UI;
 using Flowbit.GameBase.Services;
 using Flowbit.MovingGame.Core;
+using Flowbit.Utilities.Core.Events;
 
 namespace Flowbit.MovingGame.Unity
 {
@@ -47,13 +48,11 @@ namespace Flowbit.MovingGame.Unity
 
         private readonly List<GameObject> spawnedFood_ = new List<GameObject>();
         private readonly HashSet<GridPosition> lastFoodPositions_ = new HashSet<GridPosition>();
-        private readonly List<InstructionListItemView> spawnedInstructionItems_ =
-            new List<InstructionListItemView>();
 
         private GridRenderer gridRenderer_;
         private Core.MovingGame game_;
 
-        private InstructionsPresentationSettings instructionsPresentationSettings_;
+        private EventDispatcher eventDispatcher_;
 
         /// <summary>
         /// Initializes the view with the given grid renderer and game.
@@ -62,45 +61,7 @@ namespace Flowbit.MovingGame.Unity
         {
             gridRenderer_ = gridRenderer;
             game_ = game;
-            instructionsPresentationSettings_ = GlobalServiceContainer.ServiceContainer.Get<GameResources>().InstructionsPresentationSettings;
-        }
-
-        /// <summary>
-        /// Rebuilds the available instruction items for the current level.
-        /// </summary>
-        public void SetAvailableInstructions(
-            IReadOnlyList<InstructionType> instructions,
-            Action<InstructionType> onInstructionClicked)
-        {
-            ClearAvailableInstructionItems();
-
-            if (availableInstructionsRoot_ == null ||
-                availableInstructionItemPrefab_ == null ||
-                instructionsPresentationSettings_ == null ||
-                instructions == null)
-            {
-                return;
-            }
-
-            for (int i = 0; i < instructions.Count; i++)
-            {
-                InstructionType instructionType = instructions[i];
-
-                InstructionListItemView itemView = Instantiate(
-                    availableInstructionItemPrefab_,
-                    availableInstructionsRoot_);
-
-                itemView.name = $"{instructionType}Item";
-
-                GameObject instructionUi =
-                    instructionsPresentationSettings_.CreateInstructionUi(instructionType);
-
-                itemView.SetInstructionView(instructionUi);
-                itemView.SetClickAction(() => onInstructionClicked?.Invoke(instructionType));
-                itemView.SetInteractable(true);
-
-                spawnedInstructionItems_.Add(itemView);
-            }
+            eventDispatcher_ = GlobalServiceContainer.ServiceContainer.Get<EventDispatcher>();
         }
 
         /// <summary>
@@ -153,10 +114,12 @@ namespace Flowbit.MovingGame.Unity
             }
             else if (shouldAnimateMovement)
             {
+                eventDispatcher_.Send(new OnMovingGameMove());
                 duration = moveDurationSeconds_;
             }
             else if (shouldAnimateRotation)
             {
+                eventDispatcher_.Send(new OnMovingGameRotate());
                 duration = rotateDurationSeconds_;
             }
 
@@ -237,6 +200,7 @@ namespace Flowbit.MovingGame.Unity
             RebuildFoodVisuals(false);
 
             SetPetAnimationState(PetAnimationStateType.Attack);
+            eventDispatcher_.Send(new OnMovingGameAttack());
 
             if (attackDurationSeconds_ > 0f)
             {
@@ -245,7 +209,9 @@ namespace Flowbit.MovingGame.Unity
 
             if (stepAfterProcess.HasPosition() && stepAfterProcess.IsBreakable())
             {
+
                 SpawnBreakPrefab(stepAfterProcess.GetPosition());
+                eventDispatcher_.Send(new OnMovingGameBreak());
 
                 if (breakDelaySeconds_ > 0f)
                 {
@@ -348,6 +314,7 @@ namespace Flowbit.MovingGame.Unity
                 ? consumedFoodEffectRoot_
                 : transform;
 
+            eventDispatcher_.Send(new OnMovingGameGoalReached());
             GameObject effectObject = Instantiate(
                 consumedFoodEffectPrefab_,
                 GridToWorld(position),
@@ -368,19 +335,6 @@ namespace Flowbit.MovingGame.Unity
             }
 
             spawnedFood_.Clear();
-        }
-
-        private void ClearAvailableInstructionItems()
-        {
-            for (int i = 0; i < spawnedInstructionItems_.Count; i++)
-            {
-                if (spawnedInstructionItems_[i] != null)
-                {
-                    Destroy(spawnedInstructionItems_[i].gameObject);
-                }
-            }
-
-            spawnedInstructionItems_.Clear();
         }
 
         private void SetPetAnimationState(PetAnimationStateType stateType)

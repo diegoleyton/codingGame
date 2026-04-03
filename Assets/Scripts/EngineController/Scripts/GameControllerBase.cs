@@ -21,6 +21,9 @@ namespace Flowbit.EngineController
         private GameStatusViewBase gameStatusView_;
 
         [SerializeField]
+        private InstructionSelectionPanelViewBase<TInstruction> instructionSelectionPanelView_;
+
+        [SerializeField]
         private ExecutionControlsViewBase executionControlsView_;
 
         [Header("Execution")]
@@ -132,27 +135,6 @@ namespace Flowbit.EngineController
         }
 
         /// <summary>
-        /// Stops the execution flow.
-        /// If the program is running, it pauses after the current step finishes.
-        /// If the program is not running but a current instruction exists, or the program is stopped at the end,
-        /// it returns to the initial state.
-        /// </summary>
-        public void Stop()
-        {
-            if (runCoroutine_ != null)
-            {
-                pauseRequested_ = true;
-                RefreshExecutionControlsView();
-                return;
-            }
-
-            if (HasCurrentInstruction() || IsStoppedAtProgramEnd())
-            {
-                ResetGame();
-            }
-        }
-
-        /// <summary>
         /// Resets the game and execution state.
         /// </summary>
         public void ResetGame()
@@ -172,6 +154,7 @@ namespace Flowbit.EngineController
             SetInitialState();
             RefreshResultView();
             RefreshExecutionControlsView();
+            OnGameReset();
         }
 
         /// <summary>
@@ -185,6 +168,8 @@ namespace Flowbit.EngineController
             {
                 return;
             }
+
+            OnAllInstructionsDeleted();
 
             game_.ResetGame();
             CreateNewProgram();
@@ -224,6 +209,8 @@ namespace Flowbit.EngineController
             {
                 return;
             }
+
+            OnInstructionDeleted();
 
             int previousSelectedInstructionIndex = selectedInstructionIndex_;
             bool wasStoppedAtProgramEnd = isStoppedAtProgramEnd_;
@@ -293,6 +280,7 @@ namespace Flowbit.EngineController
             CreateNewProgram();
             programPanelView_?.SetInstructionSelectedCallback(JumpToInstructionState);
 
+            SetAvailableInstructions();
             InitializeView();
             RefreshViewImmediate();
             SetInitialState();
@@ -443,6 +431,12 @@ namespace Flowbit.EngineController
         {
             return availableInstructions_ ?? Array.Empty<TInstruction>();
         }
+
+        protected virtual void OnInstructionDeleted() { }
+        protected virtual void OnAllInstructionsDeleted() { }
+
+        protected virtual void OnGameReset() { }
+
         private void CreateNewProgram()
         {
             currentProgram_ = new ProgramDefinition<TInstruction>();
@@ -768,6 +762,18 @@ namespace Flowbit.EngineController
             }
 
             return previousSelectedInstructionIndex - 1;
+        }
+
+        private void SetAvailableInstructions()
+        {
+            instructionSelectionPanelView_?.SetAvailableInstructions(
+                GetAvailableInstructions(),
+                OnAvailableInstructionClicked);
+        }
+
+        private void OnAvailableInstructionClicked(TInstruction instructionType)
+        {
+            AddInstructionToCurrentProgram(instructionType);
         }
     }
 }
