@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: ProgramDelete
   m_EditorClassIdentifier: 
   _clips:
-  - {fileID: 8300000, guid: 8479041907fb2477a98b5c7a88cc8205, type: 3}
+  - {fileID: 8300000, guid: e98f6a8722c894e01b60d05bf44cdff8, type: 3}
   _volumeRange: {x: 0.3, y: 0.35}
-  _pitchRange: {x: 0.8, y: 1.2}
+  _pitchRange: {x: 0.8, y: 1.4}

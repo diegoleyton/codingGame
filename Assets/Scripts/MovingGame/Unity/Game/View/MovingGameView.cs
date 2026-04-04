@@ -200,7 +200,6 @@ namespace Flowbit.MovingGame.Unity
             RebuildFoodVisuals(false);
 
             SetPetAnimationState(PetAnimationStateType.Attack);
-            eventDispatcher_.Send(new OnMovingGameAttack());
 
             if (attackDurationSeconds_ > 0f)
             {
@@ -217,6 +216,10 @@ namespace Flowbit.MovingGame.Unity
                 {
                     yield return new WaitForSeconds(breakDelaySeconds_);
                 }
+            }
+            else
+            {
+                eventDispatcher_.Send(new OnMovingGameAttack());
             }
 
             SetPetAnimationState(PetAnimationStateType.Idle);

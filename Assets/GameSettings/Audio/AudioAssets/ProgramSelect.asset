@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: ProgramSelect
   m_EditorClassIdentifier: 
   _clips:
-  - {fileID: 8300000, guid: 7a3ea8dddd9ee4ee483c27c2ec3126d4, type: 3}
-  _volumeRange: {x: 0.9, y: 1.1}
-  _pitchRange: {x: 0.7, y: 1.8}
+  - {fileID: 8300000, guid: dea7813b90b074d1680f5e16f93dd678, type: 3}
+  _volumeRange: {x: 1.1, y: 1.2}
+  _pitchRange: {x: 0.65, y: 1.26}

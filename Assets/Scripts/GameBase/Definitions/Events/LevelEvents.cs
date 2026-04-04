@@ -42,4 +42,9 @@ namespace Flowbit.GameBase.Definitions
 
         public int LevelId { get; }
     }
+
+    /// <summary>
+    /// Event called when a level completed popup has been open
+    /// </summary>
+    public sealed class OnLevelCompletedPopupEvent : IEvent { }
 }

@@ -851,7 +851,7 @@ MonoBehaviour:
   moveDurationSeconds_: 0.5
   moveAnimationSeconds_: 0.3
   rotateDurationSeconds_: 0.5
-  attackDurationSeconds_: 0.9
+  attackDurationSeconds_: 0.65
   animateMovement_: 1
   animateRotation_: 1
 --- !u!1 &330585543
@@ -1746,7 +1746,7 @@ MonoBehaviour:
   sceneType_: 1
   levelsLibrary_: {fileID: 800599476}
   movingGameController_: {fileID: 501291889}
-  defaultLevelIndex_: 0
+  defaultLevelIndex_: 29
   completedPopupDelaySeconds_: 1.5
 --- !u!114 &800599476
 MonoBehaviour:

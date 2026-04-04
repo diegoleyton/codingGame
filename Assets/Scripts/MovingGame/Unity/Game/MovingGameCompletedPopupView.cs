@@ -1,9 +1,11 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using Flowbit.Utilities.Navigation;
 using Flowbit.GameBase.Character;
 using Flowbit.GameBase.Scenes;
+using Flowbit.GameBase.Services;
+using Flowbit.GameBase.Definitions;
+using Flowbit.Utilities.Core.Events;
 
 namespace Flowbit.MovingGame.Unity
 {
@@ -33,6 +35,10 @@ namespace Flowbit.MovingGame.Unity
             onContinueAction_ = popupParams.OnContinue;
             onRetryAction_ = popupParams.OnRetry;
             onCloseAction_ = popupParams.OnClose;
+
+            GlobalServiceContainer.ServiceContainer.Get<EventDispatcher>().Send(
+                        this,
+                        new OnLevelCompletedPopupEvent());
 
             if (titleText_ != null)
             {

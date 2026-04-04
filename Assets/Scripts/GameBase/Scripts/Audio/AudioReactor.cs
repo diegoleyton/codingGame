@@ -38,7 +38,7 @@ namespace Flowbit.GameBase.Audio
             eventDispatcher_.Subscribe<OnPopupClose>(_ => Play(SoundId.PopupClosed));
             eventDispatcher_.Subscribe<OnFirstScene>(_ => PlayLoop(SoundId.Main));
 
-            eventDispatcher_.Subscribe<LevelCompletedEvent>(_ => Play(SoundId.Win));
+            eventDispatcher_.Subscribe<OnLevelCompletedPopupEvent>(_ => Play(SoundId.Win));
             eventDispatcher_.Subscribe<LevelFailedEvent>(_ => Play(SoundId.Lose));
 
             eventDispatcher_.Subscribe<OnMovingGameAttack>(_ => Play(SoundId.MovingGameAttack));
