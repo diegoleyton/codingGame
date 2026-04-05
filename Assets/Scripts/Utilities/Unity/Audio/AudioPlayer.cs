@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Flowbit.Utilities.Coroutines;
 
@@ -56,6 +57,8 @@ namespace Flowbit.Utilities.Audio
                 return false;
             }
 
+            PrepareClip(clip);
+
             AudioSource source = _oneShotPool.GetAvailableSource();
             if (source == null)
             {
@@ -86,6 +89,8 @@ namespace Flowbit.Utilities.Audio
             {
                 return false;
             }
+
+            PrepareClip(clip);
 
             int audioId = Convert.ToInt32(key);
             AudioSource source = _loopingPool.GetOrCreateSource(audioId);
@@ -148,6 +153,9 @@ namespace Flowbit.Utilities.Audio
                 return false;
             }
 
+            PrepareClip(fromSource.clip);
+            PrepareClip(toClip);
+
             CancelActiveLoopTransition();
 
             AudioSource toSource = _loopingPool.GetOrCreateSource(toAudioId);
@@ -161,7 +169,16 @@ namespace Flowbit.Utilities.Audio
                 return false;
             }
 
-            int toTimeSamples = GetMappedTimeSamples(fromSource, toClip);
+            const double scheduleLeadTimeSeconds = 0.05d;
+
+            double dspNow = AudioSettings.dspTime;
+            double dspStartTime = dspNow + scheduleLeadTimeSeconds;
+
+            int toTimeSamples = GetMappedTimeSamplesAtDspTime(
+                fromSource,
+                toClip,
+                dspStartTime,
+                dspNow);
 
             toSource.Stop();
             toSource.clip = toClip;
@@ -169,7 +186,7 @@ namespace Flowbit.Utilities.Audio
             toSource.pitch = toPitch;
             toSource.volume = 0f;
             toSource.timeSamples = toTimeSamples;
-            toSource.Play();
+            toSource.PlayScheduled(dspStartTime);
 
             _activeLoopTransition = new LoopTransition(
                 fromAudioId: fromAudioId,
@@ -178,9 +195,12 @@ namespace Flowbit.Utilities.Audio
                 toSource: toSource,
                 fromStartVolume: fromSource.volume,
                 toTargetVolume: toVolume,
-                durationSeconds: durationSeconds);
+                durationSeconds: durationSeconds,
+                dspStartTime: dspStartTime);
 
-            _loopTransitionCoroutine = _coroutineService.StartCoroutine(RunLoopTransition(_activeLoopTransition));
+            _loopTransitionCoroutine = _coroutineService.StartCoroutine(
+                RunLoopTransition(_activeLoopTransition));
+
             return true;
         }
 
@@ -219,9 +239,7 @@ namespace Flowbit.Utilities.Audio
 
         private IEnumerator RunLoopTransition(LoopTransition transition)
         {
-            float elapsedSeconds = 0f;
-
-            while (elapsedSeconds < transition.DurationSeconds)
+            while (AudioSettings.dspTime < transition.DspStartTime)
             {
                 if (!IsTransitionStillValid(transition))
                 {
@@ -229,8 +247,22 @@ namespace Flowbit.Utilities.Audio
                     yield break;
                 }
 
-                elapsedSeconds += Time.deltaTime;
-                float t = Mathf.Clamp01(elapsedSeconds / transition.DurationSeconds);
+                yield return null;
+            }
+
+            double fadeStartDspTime = transition.DspStartTime;
+            double fadeEndDspTime = fadeStartDspTime + transition.DurationSeconds;
+
+            while (AudioSettings.dspTime < fadeEndDspTime)
+            {
+                if (!IsTransitionStillValid(transition))
+                {
+                    CleanupTransitionState();
+                    yield break;
+                }
+
+                double now = AudioSettings.dspTime;
+                float t = Mathf.Clamp01((float)((now - fadeStartDspTime) / transition.DurationSeconds));
 
                 transition.FromSource.volume = Mathf.Lerp(
                     transition.FromStartVolume,
@@ -247,6 +279,7 @@ namespace Flowbit.Utilities.Audio
 
             if (IsTransitionStillValid(transition))
             {
+                transition.FromSource.volume = 0f;
                 transition.ToSource.volume = transition.ToTargetVolume;
                 _loopingPool.ReleaseSource(transition.FromAudioId);
             }
@@ -276,6 +309,16 @@ namespace Flowbit.Utilities.Audio
                 return;
             }
 
+            if (_activeLoopTransition.ToSource != null)
+            {
+                _activeLoopTransition.ToSource.Stop();
+            }
+
+            if (_activeLoopTransition.FromSource != null)
+            {
+                _activeLoopTransition.FromSource.volume = _activeLoopTransition.FromStartVolume;
+            }
+
             if (_activeLoopTransition.ToAudioId != _activeLoopTransition.FromAudioId)
             {
                 _loopingPool.ReleaseSource(_activeLoopTransition.ToAudioId);
@@ -290,19 +333,54 @@ namespace Flowbit.Utilities.Audio
             _activeLoopTransition = null;
         }
 
-        private static int GetMappedTimeSamples(AudioSource fromSource, AudioClip toClip)
+        private static void PrepareClip(AudioClip clip)
         {
-            if (fromSource.clip == null || toClip == null)
+            if (clip == null)
+            {
+                return;
+            }
+
+            if (clip.loadState == AudioDataLoadState.Unloaded)
+            {
+                clip.LoadAudioData();
+            }
+        }
+
+        private static int GetMappedTimeSamplesAtDspTime(
+            AudioSource fromSource,
+            AudioClip toClip,
+            double targetDspTime,
+            double currentDspTime)
+        {
+            if (fromSource == null || fromSource.clip == null || toClip == null)
             {
                 return 0;
             }
 
-            if (fromSource.clip.samples <= 0 || toClip.samples <= 0)
+            AudioClip fromClip = fromSource.clip;
+
+            if (fromClip.samples <= 0 || toClip.samples <= 0 || fromClip.frequency <= 0)
             {
                 return 0;
             }
 
-            float normalizedTime = (float)fromSource.timeSamples / fromSource.clip.samples;
+            int currentFromSamples = fromSource.timeSamples;
+            double secondsUntilStart = Math.Max(0d, targetDspTime - currentDspTime);
+
+            double advancedSamples =
+                secondsUntilStart *
+                fromClip.frequency *
+                Mathf.Abs(fromSource.pitch);
+
+            int predictedFromSamples = currentFromSamples + Mathf.RoundToInt((float)advancedSamples);
+
+            predictedFromSamples %= fromClip.samples;
+            if (predictedFromSamples < 0)
+            {
+                predictedFromSamples += fromClip.samples;
+            }
+
+            float normalizedTime = (float)predictedFromSamples / fromClip.samples;
             normalizedTime = Mathf.Repeat(normalizedTime, 1f);
 
             int mappedSamples = Mathf.RoundToInt(normalizedTime * toClip.samples);
@@ -350,6 +428,7 @@ namespace Flowbit.Utilities.Audio
             public float FromStartVolume { get; }
             public float ToTargetVolume { get; }
             public float DurationSeconds { get; }
+            public double DspStartTime { get; }
 
             public LoopTransition(
                 int fromAudioId,
@@ -358,7 +437,8 @@ namespace Flowbit.Utilities.Audio
                 AudioSource toSource,
                 float fromStartVolume,
                 float toTargetVolume,
-                float durationSeconds)
+                float durationSeconds,
+                double dspStartTime)
             {
                 FromAudioId = fromAudioId;
                 ToAudioId = toAudioId;
@@ -367,6 +447,7 @@ namespace Flowbit.Utilities.Audio
                 FromStartVolume = fromStartVolume;
                 ToTargetVolume = toTargetVolume;
                 DurationSeconds = Mathf.Max(0.01f, durationSeconds);
+                DspStartTime = dspStartTime;
             }
         }
     }
