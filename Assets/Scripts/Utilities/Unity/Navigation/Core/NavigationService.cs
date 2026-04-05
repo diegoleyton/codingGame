@@ -130,30 +130,29 @@ namespace Flowbit.Utilities.Navigation
             {
                 NavigationHistoryEntry previousEntry = sceneHistory_.Pop();
 
-                NavigationTransitionContext prepareContext =
-                    new NavigationTransitionContext(
-                        currentSceneNode_?.Target,
-                        currentSceneNode_?.Node,
-                        previousEntry.NavigationParams);
+                NavigationTransitionContext prepareContext = new NavigationTransitionContext(
+                    currentSceneNode_?.Target,
+                    currentSceneNode_?.Node,
+                    previousEntry.NavigationParams);
 
                 yield return backTransitionStrategy_.PrepareTransition(prepareContext);
 
                 CloseAllOpenedPrefabsImmediately();
 
                 ResolvedNavigationNode previousSceneNode = null;
+
                 yield return ResolveSceneTarget(
                     previousEntry.Target,
                     previousEntry.NavigationParams,
-                    shouldInitialize: false,
+                    shouldInitialize: true,
                     onResolved: resolvedNode => previousSceneNode = resolvedNode);
 
                 currentSceneNode_ = previousSceneNode;
 
-                NavigationTransitionContext finishContext =
-                    new NavigationTransitionContext(
-                        previousSceneNode.Target,
-                        previousSceneNode.Node,
-                        previousEntry.NavigationParams);
+                NavigationTransitionContext finishContext = new NavigationTransitionContext(
+                    previousSceneNode.Target,
+                    previousSceneNode.Node,
+                    previousEntry.NavigationParams);
 
                 yield return backTransitionStrategy_.FinishTransition(finishContext);
             }
