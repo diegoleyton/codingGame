@@ -2,7 +2,8 @@
     "name": "Flowbit.MovingGame.Editor",
     "rootNamespace": "",
     "references": [
-        "Flowbit.MovingGame.Core"
+        "Flowbit.MovingGame.Core",
+        "Flowbit.GameBase"
     ],
     "includePlatforms": [
         "Editor"

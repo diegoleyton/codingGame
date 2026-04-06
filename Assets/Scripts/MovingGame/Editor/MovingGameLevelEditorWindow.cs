@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using Flowbit.GameBase.GamesSettings;
 using Flowbit.MovingGame.Core.Levels;
 
 using UnityEditor;
@@ -25,6 +26,19 @@ namespace Flowbit.MovingGame.Editor
 
         private const float LevelsPanelWidth = 220f;
         private const float CellButtonSize = 52f;
+        private const float CellPadding = 4f;
+        private const string MovingGameSettingsAssetPath = "Assets/GameSettings/MovingGameSettings.asset";
+        private const string CellFrameTexturePath = "Assets/Images/cartoon/cartoon_square_frame.png";
+        private const string FoodTexturePath = "Assets/Images/dog/cartoon_bone_2.png";
+        private const string BlockedTexturePath = "Assets/Images/cartoon/cartoon_block_2.png";
+        private const string BreakableTexturePath = "Assets/Images/cartoon/cartoon_brakable.png";
+        private const string HoleTexturePath = "Assets/Images/cartoon/cartoon_hole_torn.png";
+        private const string SwitchTexturePath = "Assets/Images/cartoon/cartoon_button_switch.png";
+        private const string SwitchBaseTexturePath = "Assets/Images/cartoon/cartoon_button_switch_2.png";
+        private const string StartTexturePath = "Assets/Images/dog/cartoon_dog_top_head.png";
+
+        private static readonly Color EmptyCellTint = new(0.98f, 0.98f, 0.96f, 1f);
+        private static readonly Color ToggleOffTint = new(1f, 1f, 1f, 0.22f);
 
         private readonly GUIContent[] brushLabels_ =
         {
@@ -48,6 +62,19 @@ namespace Flowbit.MovingGame.Editor
         private string levelsAssetPath_ = MovingGameLevelEditorSerializer.DefaultLevelsAssetPath;
         private string statusMessage_ = string.Empty;
         private MessageType statusMessageType_ = MessageType.Info;
+        private GUIStyle cellOverlayLabelStyle_;
+        private GUIStyle cellDirectionLabelStyle_;
+        private GUIStyle cellCoordinateLabelStyle_;
+        private GUIStyle cellBadgeLabelStyle_;
+        private Texture2D cellFrameTexture_;
+        private Texture2D foodTexture_;
+        private Texture2D blockedTexture_;
+        private Texture2D breakableTexture_;
+        private Texture2D holeTexture_;
+        private Texture2D switchTexture_;
+        private Texture2D switchBaseTexture_;
+        private Texture2D startTexture_;
+        private MovingGameSettings movingGameSettings_;
 
         [MenuItem("Tools/Moving Game/Level Editor")]
         public static void OpenWindow()
@@ -60,6 +87,8 @@ namespace Flowbit.MovingGame.Editor
 
         private void OnEnable()
         {
+            EnsureEditorAssetsLoaded();
+
             if (fileData_ == null)
             {
                 ReloadLevels();
@@ -144,6 +173,19 @@ namespace Flowbit.MovingGame.Editor
             }
 
             EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+
+            if (GUILayout.Button("Move Up"))
+            {
+                MoveSelectedLevel(-1);
+            }
+
+            if (GUILayout.Button("Move Down"))
+            {
+                MoveSelectedLevel(1);
+            }
+
+            EditorGUILayout.EndHorizontal();
 
             levelsScroll_ = EditorGUILayout.BeginScrollView(levelsScroll_);
 
@@ -176,7 +218,7 @@ namespace Flowbit.MovingGame.Editor
             EditorGUILayout.LabelField("Level Details", EditorStyles.boldLabel);
 
             EditorGUI.BeginChangeCheck();
-            level.id = EditorGUILayout.IntField("Id", level.id);
+            EditorGUILayout.LabelField("Id", level.id.ToString());
             level.name = EditorGUILayout.TextField("Name", level.name);
             level.hint = EditorGUILayout.TextField("Hint", level.hint);
             level.difficulty = EditorGUILayout.IntSlider("Difficulty", level.difficulty, 1, 6);
@@ -256,15 +298,13 @@ namespace Flowbit.MovingGame.Editor
                 for (int x = 0; x < level.width; x++)
                 {
                     Rect rect = GUILayoutUtility.GetRect(CellButtonSize, CellButtonSize, GUILayout.Width(CellButtonSize), GUILayout.Height(CellButtonSize));
-                    Color previousColor = GUI.backgroundColor;
-                    GUI.backgroundColor = CellColor(level, x, y);
 
-                    if (GUI.Button(rect, CellLabel(level, x, y)))
+                    if (GUI.Button(rect, GUIContent.none))
                     {
                         ApplyBrush(level, x, y);
                     }
 
-                    GUI.backgroundColor = previousColor;
+                    DrawCellVisual(level, x, y, rect);
                 }
 
                 EditorGUILayout.EndHorizontal();
@@ -393,8 +433,10 @@ namespace Flowbit.MovingGame.Editor
 
         private void AddNewLevel()
         {
-            fileData_.levels.Add(CreateDefaultLevel(NextLevelId()));
-            selectedLevelIndex_ = fileData_.levels.Count - 1;
+            int insertIndex = Mathf.Clamp(selectedLevelIndex_ + 1, 0, fileData_.levels.Count);
+            fileData_.levels.Insert(insertIndex, CreateDefaultLevel(insertIndex + 1));
+            selectedLevelIndex_ = insertIndex;
+            ResequenceLevelIds();
             SetStatus("Added a new level.", MessageType.Info);
         }
 
@@ -402,10 +444,10 @@ namespace Flowbit.MovingGame.Editor
         {
             MovingGameLevelData source = fileData_.levels[selectedLevelIndex_];
             MovingGameLevelData clone = CloneLevel(source);
-            clone.id = NextLevelId();
             clone.name = $"{clone.name} Copy";
             fileData_.levels.Insert(selectedLevelIndex_ + 1, clone);
             selectedLevelIndex_++;
+            ResequenceLevelIds();
             SetStatus("Duplicated the selected level.", MessageType.Info);
         }
 
@@ -419,7 +461,24 @@ namespace Flowbit.MovingGame.Editor
 
             fileData_.levels.RemoveAt(selectedLevelIndex_);
             selectedLevelIndex_ = Mathf.Clamp(selectedLevelIndex_, 0, fileData_.levels.Count - 1);
+            ResequenceLevelIds();
             SetStatus("Deleted the selected level.", MessageType.Info);
+        }
+
+        private void MoveSelectedLevel(int direction)
+        {
+            int targetIndex = selectedLevelIndex_ + direction;
+            if (targetIndex < 0 || targetIndex >= fileData_.levels.Count)
+            {
+                return;
+            }
+
+            (fileData_.levels[selectedLevelIndex_], fileData_.levels[targetIndex]) =
+                (fileData_.levels[targetIndex], fileData_.levels[selectedLevelIndex_]);
+
+            selectedLevelIndex_ = targetIndex;
+            ResequenceLevelIds();
+            SetStatus(direction < 0 ? "Moved level up." : "Moved level down.", MessageType.Info);
         }
 
         private void SaveLevels()
@@ -497,6 +556,8 @@ namespace Flowbit.MovingGame.Editor
                 ClampAndPruneLevel(level);
                 DeduplicateLevel(level);
             }
+
+            ResequenceLevelIds();
         }
 
         private void ClampAndPruneLevel(MovingGameLevelData level)
@@ -580,101 +641,87 @@ namespace Flowbit.MovingGame.Editor
             return level.startPosition.x == x && level.startPosition.y == y;
         }
 
-        private string CellLabel(MovingGameLevelData level, int x, int y)
+        private void DrawCellVisual(MovingGameLevelData level, int x, int y, Rect rect)
         {
+            EnsureEditorAssetsLoaded();
+
+            Rect backgroundRect = Shrink(rect, 1f);
+            EditorGUI.DrawRect(backgroundRect, EmptyCellTint);
+            DrawTexture(backgroundRect, cellFrameTexture_, Color.white);
+
             if (IsStart(level, x, y))
             {
-                return $"S\n{Arrow(level.startDirection)}";
+                DrawTexture(Shrink(rect, 10f), startTexture_, Color.white);
+                DrawLabel(
+                    new Rect(rect.x + 4f, rect.y + 4f, rect.width - 8f, 16f),
+                    "START",
+                    cellBadgeLabelStyle_,
+                    new Color(0.18f, 0.52f, 0.22f, 0.9f));
+                DrawLabel(
+                    new Rect(rect.x, rect.yMax - 18f, rect.width, 14f),
+                    Arrow(level.startDirection),
+                    cellDirectionLabelStyle_);
+                return;
             }
 
             ToggleSwitchTileData toggleSwitch = level.toggleSwitchTiles.FirstOrDefault(tile => tile.x == x && tile.y == y);
             if (toggleSwitch != null)
             {
-                return $"SW\n{toggleSwitch.groupId}";
+                Color groupColor = GetGroupColor(toggleSwitch.groupId);
+                DrawTexture(Shrink(rect, 8f), switchBaseTexture_, new Color(0.83f, 0.83f, 0.83f, 1f));
+                DrawTexture(Shrink(rect, 8f), switchTexture_, groupColor);
+                DrawGroupBadge(rect, toggleSwitch.groupId, groupColor, "SW");
+                return;
             }
 
             ToggleBlockedTileData toggleObstacle = level.toggleBlockedTiles.FirstOrDefault(tile => tile.x == x && tile.y == y);
             if (toggleObstacle != null)
             {
-                return toggleObstacle.isOn
-                    ? $"TG\n{toggleObstacle.groupId}"
-                    : $"tg\n{toggleObstacle.groupId}";
+                Color groupColor = GetGroupColor(toggleObstacle.groupId);
+                DrawTexture(Shrink(rect, 8f), blockedTexture_, groupColor);
+
+                if (!toggleObstacle.isOn)
+                {
+                    EditorGUI.DrawRect(Shrink(rect, 8f), ToggleOffTint);
+                }
+
+                DrawGroupBadge(rect, toggleObstacle.groupId, groupColor, toggleObstacle.isOn ? "TG" : "tg");
+                return;
             }
 
             if (level.foodPositions.Any(position => position.x == x && position.y == y))
             {
-                return "F";
+                DrawTexture(Shrink(rect, 9f), foodTexture_, Color.white);
+                return;
             }
 
             if (level.blockedPositions.Any(position => position.x == x && position.y == y))
             {
-                return "B";
+                DrawTexture(Shrink(rect, 8f), blockedTexture_, Color.white);
+                return;
             }
 
             if (level.breakableBlockedPositions.Any(position => position.x == x && position.y == y))
             {
-                return "BR";
+                DrawTexture(Shrink(rect, 8f), breakableTexture_, Color.white);
+                return;
             }
 
             if (level.holePositions.Any(position => position.x == x && position.y == y))
             {
-                return "H";
+                DrawTexture(Shrink(rect, 6f), holeTexture_, Color.white);
+                return;
             }
 
-            return $"{x},{y}";
-        }
-
-        private Color CellColor(MovingGameLevelData level, int x, int y)
-        {
-            if (IsStart(level, x, y))
-            {
-                return new Color(0.6f, 0.9f, 0.6f);
-            }
-
-            if (level.foodPositions.Any(position => position.x == x && position.y == y))
-            {
-                return new Color(1f, 0.9f, 0.45f);
-            }
-
-            if (level.blockedPositions.Any(position => position.x == x && position.y == y))
-            {
-                return new Color(0.6f, 0.6f, 0.65f);
-            }
-
-            if (level.breakableBlockedPositions.Any(position => position.x == x && position.y == y))
-            {
-                return new Color(0.9f, 0.65f, 0.45f);
-            }
-
-            if (level.holePositions.Any(position => position.x == x && position.y == y))
-            {
-                return new Color(0.25f, 0.25f, 0.25f);
-            }
-
-            ToggleBlockedTileData toggleObstacle = level.toggleBlockedTiles.FirstOrDefault(tile => tile.x == x && tile.y == y);
-            if (toggleObstacle != null)
-            {
-                return toggleObstacle.isOn
-                    ? new Color(0.45f, 0.7f, 1f)
-                    : new Color(0.72f, 0.84f, 1f);
-            }
-
-            if (level.toggleSwitchTiles.Any(tile => tile.x == x && tile.y == y))
-            {
-                return new Color(0.85f, 0.55f, 1f);
-            }
-
-            return new Color(0.9f, 0.9f, 0.9f);
+            DrawLabel(
+                new Rect(rect.x, rect.yMax - 16f, rect.width, 14f),
+                $"{x},{y}",
+                cellCoordinateLabelStyle_);
         }
 
         private void EnsureSelectedLevelIsValid()
         {
             selectedLevelIndex_ = Mathf.Clamp(selectedLevelIndex_, 0, Mathf.Max(0, fileData_.levels.Count - 1));
-        }
-
-        private int NextLevelId()
-        {
-            return fileData_.levels.Count == 0 ? 1 : fileData_.levels.Max(level => level.id) + 1;
         }
 
         private static MovingGameLevelData CreateDefaultLevel(int id)
@@ -752,6 +799,113 @@ namespace Flowbit.MovingGame.Editor
                 "Left" => "<",
                 _ => ">"
             };
+        }
+
+        private void ResequenceLevelIds()
+        {
+            if (fileData_?.levels == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < fileData_.levels.Count; i++)
+            {
+                if (fileData_.levels[i] != null)
+                {
+                    fileData_.levels[i].id = i + 1;
+                }
+            }
+        }
+
+        private void EnsureEditorAssetsLoaded()
+        {
+            cellFrameTexture_ ??= AssetDatabase.LoadAssetAtPath<Texture2D>(CellFrameTexturePath);
+            foodTexture_ ??= AssetDatabase.LoadAssetAtPath<Texture2D>(FoodTexturePath);
+            blockedTexture_ ??= AssetDatabase.LoadAssetAtPath<Texture2D>(BlockedTexturePath);
+            breakableTexture_ ??= AssetDatabase.LoadAssetAtPath<Texture2D>(BreakableTexturePath);
+            holeTexture_ ??= AssetDatabase.LoadAssetAtPath<Texture2D>(HoleTexturePath);
+            switchTexture_ ??= AssetDatabase.LoadAssetAtPath<Texture2D>(SwitchTexturePath);
+            switchBaseTexture_ ??= AssetDatabase.LoadAssetAtPath<Texture2D>(SwitchBaseTexturePath);
+            startTexture_ ??= AssetDatabase.LoadAssetAtPath<Texture2D>(StartTexturePath);
+            movingGameSettings_ ??= AssetDatabase.LoadAssetAtPath<MovingGameSettings>(MovingGameSettingsAssetPath);
+
+            cellOverlayLabelStyle_ ??= new GUIStyle(EditorStyles.whiteMiniLabel)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                fontStyle = FontStyle.Bold,
+                normal = { textColor = Color.white }
+            };
+
+            cellDirectionLabelStyle_ ??= new GUIStyle(EditorStyles.whiteBoldLabel)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                fontSize = 13,
+                normal = { textColor = new Color(0.14f, 0.14f, 0.14f, 1f) }
+            };
+
+            cellCoordinateLabelStyle_ ??= new GUIStyle(EditorStyles.miniLabel)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                normal = { textColor = new Color(0.35f, 0.35f, 0.35f, 0.95f) }
+            };
+
+            cellBadgeLabelStyle_ ??= new GUIStyle(EditorStyles.miniBoldLabel)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                fontSize = 8,
+                normal = { textColor = Color.white }
+            };
+        }
+
+        private Color GetGroupColor(int groupId)
+        {
+            return movingGameSettings_ != null
+                ? movingGameSettings_.GetColorForGroupId(groupId)
+                : Color.white;
+        }
+
+        private void DrawGroupBadge(Rect rect, int groupId, Color badgeColor, string prefix)
+        {
+            Rect badgeRect = new(rect.x + 3f, rect.y + 3f, 26f, 14f);
+            EditorGUI.DrawRect(badgeRect, badgeColor);
+            DrawLabel(badgeRect, prefix, cellBadgeLabelStyle_);
+
+            DrawLabel(
+                new Rect(rect.x, rect.yMax - 16f, rect.width, 14f),
+                $"G{groupId}",
+                cellOverlayLabelStyle_);
+        }
+
+        private static Rect Shrink(Rect rect, float amount)
+        {
+            return new Rect(
+                rect.x + amount,
+                rect.y + amount,
+                Mathf.Max(0f, rect.width - (amount * 2f)),
+                Mathf.Max(0f, rect.height - (amount * 2f)));
+        }
+
+        private static void DrawTexture(Rect rect, Texture2D texture, Color color)
+        {
+            if (texture == null)
+            {
+                return;
+            }
+
+            Color previousColor = GUI.color;
+            GUI.color = color;
+            GUI.DrawTexture(rect, texture, ScaleMode.ScaleToFit, true);
+            GUI.color = previousColor;
+        }
+
+        private static void DrawLabel(Rect rect, string text, GUIStyle style, Color? background = null)
+        {
+            if (background.HasValue)
+            {
+                EditorGUI.DrawRect(rect, background.Value);
+            }
+
+            GUI.Label(rect, text, style);
         }
 
         private void SetStatus(string message, MessageType messageType)
