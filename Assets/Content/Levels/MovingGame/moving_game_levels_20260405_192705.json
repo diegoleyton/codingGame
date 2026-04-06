@@ -4,1355 +4,941 @@
   "levels": [
     {
       "id": 1,
-      "name": "First Steps",
+      "name": "Baby Step",
       "difficulty": 1,
-      "hint": "Move forward to reach the food.",
-      "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
+      "hint": "Move forward once to grab the snack.",
+      "width": 3,
+      "height": 1,
+      "startPosition": { "x": 0, "y": 0 },
       "startDirection": "Right",
-      "foodPositions": [
-        {
-          "x": 2,
-          "y": 0
-        }
-      ],
+      "foodPositions": [{ "x": 1, "y": 0 }],
       "blockedPositions": [],
       "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 2,
-      "name": "Straight Line",
+      "name": "Two Paws",
       "difficulty": 1,
-      "hint": "Keep moving forward.",
-      "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
+      "hint": "Keep moving in the same direction.",
+      "width": 4,
+      "height": 1,
+      "startPosition": { "x": 0, "y": 0 },
       "startDirection": "Right",
-      "foodPositions": [
-        {
-          "x": 3,
-          "y": 0
-        }
-      ],
+      "foodPositions": [{ "x": 2, "y": 0 }],
       "blockedPositions": [],
       "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 3,
-      "name": "Face Up",
+      "name": "Up We Go",
       "difficulty": 1,
-      "hint": "Going up also works.",
-      "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
+      "hint": "Forward also works when facing up.",
+      "width": 1,
+      "height": 4,
+      "startPosition": { "x": 0, "y": 0 },
       "startDirection": "Up",
-      "foodPositions": [
-        {
-          "x": 0,
-          "y": 2
-        }
-      ],
+      "foodPositions": [{ "x": 0, "y": 2 }],
       "blockedPositions": [],
       "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 4,
-      "name": "One Turn",
+      "name": "Tall Trail",
       "difficulty": 1,
-      "hint": "Turn before moving.",
-      "width": 5,
+      "hint": "Walk straight to the top.",
+      "width": 1,
       "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
-      "startDirection": "Right",
-      "foodPositions": [
-        {
-          "x": 3,
-          "y": 1
-        }
-      ],
+      "startPosition": { "x": 0, "y": 0 },
+      "startDirection": "Up",
+      "foodPositions": [{ "x": 0, "y": 4 }],
       "blockedPositions": [],
       "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 5,
-      "name": "Downward Path",
+      "name": "Full Sprint",
       "difficulty": 1,
-      "hint": "Think about direction first.",
+      "hint": "The snack is far, but the path is clear.",
       "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
-      "startDirection": "Down",
-      "foodPositions": [
-        {
-          "x": 2,
-          "y": 2
-        }
-      ],
+      "height": 1,
+      "startPosition": { "x": 0, "y": 0 },
+      "startDirection": "Right",
+      "foodPositions": [{ "x": 4, "y": 0 }],
       "blockedPositions": [],
       "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 6,
-      "name": "Long Walk",
+      "name": "Middle Mark",
       "difficulty": 1,
-      "hint": "Several moves in a row.",
+      "hint": "Stop on the food, not at the edge.",
       "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
+      "height": 1,
+      "startPosition": { "x": 0, "y": 0 },
       "startDirection": "Right",
-      "foodPositions": [
-        {
-          "x": 4,
-          "y": 2
-        }
-      ],
+      "foodPositions": [{ "x": 3, "y": 0 }],
       "blockedPositions": [],
       "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 7,
-      "name": "Around the Wall",
-      "difficulty": 2,
-      "hint": "You cannot go straight through the wall.",
-      "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
-      "startDirection": "Right",
-      "foodPositions": [
-        {
-          "x": 3,
-          "y": 0
-        }
-      ],
-      "blockedPositions": [
-        {
-          "x": 2,
-          "y": 0
-        }
-      ],
+      "name": "Short Ladder",
+      "difficulty": 1,
+      "hint": "Climb two cells upward.",
+      "width": 2,
+      "height": 3,
+      "startPosition": { "x": 1, "y": 0 },
+      "startDirection": "Up",
+      "foodPositions": [{ "x": 1, "y": 2 }],
+      "blockedPositions": [],
       "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 8,
-      "name": "Corner Detour",
-      "difficulty": 2,
-      "hint": "Walk around the blocks.",
+      "name": "Final Straight",
+      "difficulty": 1,
+      "hint": "One last movement-only level.",
       "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
+      "height": 2,
+      "startPosition": { "x": 0, "y": 1 },
       "startDirection": "Right",
-      "foodPositions": [
-        {
-          "x": 4,
-          "y": 2
-        }
-      ],
-      "blockedPositions": [
-        {
-          "x": 2,
-          "y": 0
-        },
-        {
-          "x": 2,
-          "y": 1
-        }
-      ],
+      "foodPositions": [{ "x": 4, "y": 1 }],
+      "blockedPositions": [],
       "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 9,
-      "name": "Blocked Above",
+      "name": "First Turn",
       "difficulty": 2,
-      "hint": "The shortest path is not always open.",
-      "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
-      "startDirection": "Up",
-      "foodPositions": [
-        {
-          "x": 0,
-          "y": 2
-        }
-      ],
-      "blockedPositions": [
-        {
-          "x": 0,
-          "y": 1
-        },
-        {
-          "x": 1,
-          "y": 1
-        }
-      ],
+      "hint": "Rotate before you move.",
+      "width": 3,
+      "height": 3,
+      "startPosition": { "x": 0, "y": 0 },
+      "startDirection": "Right",
+      "foodPositions": [{ "x": 0, "y": 2 }],
+      "blockedPositions": [],
       "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 10,
-      "name": "Zig Zag",
+      "name": "Turn And Walk",
       "difficulty": 2,
-      "hint": "Follow the open spaces.",
-      "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
+      "hint": "Face up, then keep going.",
+      "width": 4,
+      "height": 4,
+      "startPosition": { "x": 1, "y": 0 },
       "startDirection": "Right",
-      "foodPositions": [
-        {
-          "x": 4,
-          "y": 2
-        }
-      ],
-      "blockedPositions": [
-        {
-          "x": 3,
-          "y": 0
-        },
-        {
-          "x": 1,
-          "y": 1
-        },
-        {
-          "x": 3,
-          "y": 1
-        },
-        {
-          "x": 1,
-          "y": 2
-        }
-      ],
+      "foodPositions": [{ "x": 1, "y": 3 }],
+      "blockedPositions": [],
       "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 11,
-      "name": "Wall Gap",
+      "name": "Right Corner",
       "difficulty": 2,
-      "hint": "There is only one way around.",
-      "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
-      "startDirection": "Right",
-      "foodPositions": [
-        {
-          "x": 4,
-          "y": 2
-        }
-      ],
-      "blockedPositions": [
-        {
-          "x": 1,
-          "y": 1
-        },
-        {
-          "x": 2,
-          "y": 1
-        },
-        {
-          "x": 3,
-          "y": 1
-        },
-        {
-          "x": 4,
-          "y": 1
-        },
-        {
-          "x": 3,
-          "y": 2
-        }
-      ],
+      "hint": "Make one turn to reach the corner.",
+      "width": 4,
+      "height": 4,
+      "startPosition": { "x": 0, "y": 0 },
+      "startDirection": "Up",
+      "foodPositions": [{ "x": 3, "y": 0 }],
+      "blockedPositions": [],
       "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 12,
-      "name": "Split Walls",
+      "name": "Two Bends",
       "difficulty": 2,
-      "hint": "Go around both barriers.",
-      "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
-      "startDirection": "Up",
-      "foodPositions": [
-        {
-          "x": 4,
-          "y": 0
-        }
-      ],
-      "blockedPositions": [
-        {
-          "x": 3,
-          "y": 0
-        },
-        {
-          "x": 1,
-          "y": 1
-        },
-        {
-          "x": 2,
-          "y": 1
-        },
-        {
-          "x": 1,
-          "y": 2
-        },
-        {
-          "x": 2,
-          "y": 2
-        },
-        {
-          "x": 2,
-          "y": 3
-        },
-        {
-          "x": 3,
-          "y": 3
-        }
-      ],
+      "hint": "You need more than one rotation here.",
+      "width": 4,
+      "height": 4,
+      "startPosition": { "x": 0, "y": 0 },
+      "startDirection": "Right",
+      "foodPositions": [{ "x": 2, "y": 2 }],
+      "blockedPositions": [],
       "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 13,
-      "name": "First Break",
-      "difficulty": 3,
-      "hint": "Break the object in front of you.",
+      "name": "Top Shelf",
+      "difficulty": 2,
+      "hint": "Turn, walk, and turn again if needed.",
       "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
+      "height": 4,
+      "startPosition": { "x": 0, "y": 1 },
       "startDirection": "Right",
-      "foodPositions": [
-        {
-          "x": 2,
-          "y": 0
-        }
-      ],
+      "foodPositions": [{ "x": 4, "y": 3 }],
       "blockedPositions": [],
-      "breakableBlockedPositions": [
-        {
-          "x": 1,
-          "y": 0
-        }
-      ],
+      "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 14,
-      "name": "Break Then Move",
-      "difficulty": 3,
-      "hint": "You must break before going forward.",
-      "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
+      "name": "Spin Practice",
+      "difficulty": 2,
+      "hint": "The goal is behind you and above you.",
+      "width": 3,
+      "height": 3,
+      "startPosition": { "x": 2, "y": 0 },
       "startDirection": "Right",
-      "foodPositions": [
-        {
-          "x": 3,
-          "y": 0
-        }
-      ],
-      "blockedPositions": [
-        {
-          "x": 1,
-          "y": 1
-        },
-        {
-          "x": 1,
-          "y": 2
-        }
-      ],
-      "breakableBlockedPositions": [
-        {
-          "x": 1,
-          "y": 0
-        }
-      ],
+      "foodPositions": [{ "x": 0, "y": 2 }],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 15,
-      "name": "Break Upward",
-      "difficulty": 3,
-      "hint": "The obstacle blocks the only path.",
-      "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
+      "name": "Tiny Route",
+      "difficulty": 2,
+      "hint": "Build a small path using turns and moves.",
+      "width": 3,
+      "height": 4,
+      "startPosition": { "x": 1, "y": 0 },
       "startDirection": "Up",
-      "foodPositions": [
-        {
-          "x": 0,
-          "y": 2
-        }
-      ],
-      "blockedPositions": [
-        {
-          "x": 1,
-          "y": 1
-        },
-        {
-          "x": 1,
-          "y": 2
-        }
-      ],
-      "breakableBlockedPositions": [
-        {
-          "x": 0,
-          "y": 1
-        }
-      ],
+      "foodPositions": [{ "x": 2, "y": 3 }],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 16,
-      "name": "Break in the Hall",
-      "difficulty": 3,
-      "hint": "There is no way around the breakable object.",
+      "name": "Ready To Navigate",
+      "difficulty": 2,
+      "hint": "Movement and rotation together unlock every path.",
       "width": 5,
       "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
-      "startDirection": "Right",
-      "foodPositions": [
-        {
-          "x": 4,
-          "y": 0
-        }
-      ],
-      "blockedPositions": [
-        {
-          "x": 0,
-          "y": 1
-        },
-        {
-          "x": 1,
-          "y": 1
-        },
-        {
-          "x": 2,
-          "y": 1
-        },
-        {
-          "x": 3,
-          "y": 1
-        },
-        {
-          "x": 4,
-          "y": 1
-        }
-      ],
-      "breakableBlockedPositions": [
-        {
-          "x": 1,
-          "y": 0
-        }
-      ],
+      "startPosition": { "x": 0, "y": 0 },
+      "startDirection": "Up",
+      "foodPositions": [{ "x": 4, "y": 4 }],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 17,
-      "name": "Break to Continue",
+      "name": "First Wall",
       "difficulty": 3,
-      "hint": "The corridor is blocked. Break it.",
-      "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
+      "hint": "Walls cannot be crossed, so go around.",
+      "width": 4,
+      "height": 3,
+      "startPosition": { "x": 0, "y": 1 },
       "startDirection": "Right",
-      "foodPositions": [
-        {
-          "x": 4,
-          "y": 2
-        }
-      ],
-      "blockedPositions": [
-        {
-          "x": 0,
-          "y": 1
-        },
-        {
-          "x": 1,
-          "y": 1
-        },
-        {
-          "x": 2,
-          "y": 1
-        },
-        {
-          "x": 3,
-          "y": 1
-        }
-      ],
-      "breakableBlockedPositions": [
-        {
-          "x": 1,
-          "y": 0
-        }
-      ],
+      "foodPositions": [{ "x": 3, "y": 1 }],
+      "blockedPositions": [{ "x": 1, "y": 1 }],
+      "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 18,
-      "name": "Break or No Progress",
+      "name": "L Shape",
       "difficulty": 3,
-      "hint": "You cannot reach the food without breaking first.",
-      "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
-      "startDirection": "Up",
-      "foodPositions": [
-        {
-          "x": 4,
-          "y": 0
-        }
-      ],
+      "hint": "The direct route is closed by a small corner wall.",
+      "width": 4,
+      "height": 4,
+      "startPosition": { "x": 0, "y": 0 },
+      "startDirection": "Right",
+      "foodPositions": [{ "x": 3, "y": 2 }],
       "blockedPositions": [
-        {
-          "x": 1,
-          "y": 1
-        },
-        {
-          "x": 2,
-          "y": 1
-        },
-        {
-          "x": 3,
-          "y": 1
-        },
-        {
-          "x": 4,
-          "y": 1
-        }
+        { "x": 1, "y": 0 },
+        { "x": 1, "y": 1 }
       ],
-      "breakableBlockedPositions": [
-        {
-          "x": 2,
-          "y": 0
-        },
-        {
-          "x": 3,
-          "y": 0
-        },
-        {
-          "x": 0,
-          "y": 1
-        }
-      ],
+      "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 19,
-      "name": "Two Foods",
-      "difficulty": 4,
-      "hint": "Eat both foods to win.",
+      "name": "Narrow Gate",
+      "difficulty": 3,
+      "hint": "Find the opening and pass through it.",
       "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
-      "startDirection": "Right",
-      "foodPositions": [
-        {
-          "x": 2,
-          "y": 0
-        },
-        {
-          "x": 4,
-          "y": 3
-        }
+      "height": 4,
+      "startPosition": { "x": 0, "y": 0 },
+      "startDirection": "Up",
+      "foodPositions": [{ "x": 4, "y": 3 }],
+      "blockedPositions": [
+        { "x": 2, "y": 0 },
+        { "x": 2, "y": 1 },
+        { "x": 2, "y": 3 }
       ],
-      "blockedPositions": [],
       "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 20,
-      "name": "Vertical Double",
-      "difficulty": 4,
-      "hint": "One food is not enough.",
+      "name": "Wall Hugger",
+      "difficulty": 3,
+      "hint": "Follow the edge to get around the blocks.",
       "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
-      "startDirection": "Up",
-      "foodPositions": [
-        {
-          "x": 4,
-          "y": 0
-        },
-        {
-          "x": 1,
-          "y": 2
-        }
-      ],
+      "height": 4,
+      "startPosition": { "x": 0, "y": 1 },
+      "startDirection": "Right",
+      "foodPositions": [{ "x": 4, "y": 1 }],
       "blockedPositions": [
-        {
-          "x": 1,
-          "y": 1
-        }
+        { "x": 1, "y": 1 },
+        { "x": 2, "y": 1 },
+        { "x": 3, "y": 1 }
       ],
       "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 21,
-      "name": "Wall and Two Foods",
-      "difficulty": 4,
-      "hint": "Collect both foods while avoiding the wall.",
+      "name": "Small Maze",
+      "difficulty": 3,
+      "hint": "A few turns and a detour will solve it.",
       "width": 5,
       "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
+      "startPosition": { "x": 0, "y": 0 },
       "startDirection": "Right",
-      "foodPositions": [
-        {
-          "x": 3,
-          "y": 0
-        },
-        {
-          "x": 4,
-          "y": 2
-        }
-      ],
+      "foodPositions": [{ "x": 4, "y": 4 }],
       "blockedPositions": [
-        {
-          "x": 2,
-          "y": 0
-        },
-        {
-          "x": 2,
-          "y": 1
-        },
-        {
-          "x": 2,
-          "y": 2
-        }
+        { "x": 1, "y": 0 },
+        { "x": 1, "y": 1 },
+        { "x": 1, "y": 3 },
+        { "x": 3, "y": 1 },
+        { "x": 3, "y": 2 },
+        { "x": 3, "y": 3 }
       ],
       "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 22,
-      "name": "Break for the First Food",
-      "difficulty": 4,
-      "hint": "The first food is behind a breakable object.",
+      "name": "Cross Corridor",
+      "difficulty": 3,
+      "hint": "Use the open corridor, not the blocked center.",
       "width": 5,
       "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
+      "startPosition": { "x": 0, "y": 2 },
       "startDirection": "Right",
-      "foodPositions": [
-        {
-          "x": 2,
-          "y": 0
-        },
-        {
-          "x": 4,
-          "y": 2
-        }
-      ],
+      "foodPositions": [{ "x": 4, "y": 2 }],
       "blockedPositions": [
-        {
-          "x": 1,
-          "y": 1
-        },
-        {
-          "x": 2,
-          "y": 1
-        },
-        {
-          "x": 1,
-          "y": 2
-        },
-        {
-          "x": 1,
-          "y": 3
-        },
-        {
-          "x": 1,
-          "y": 4
-        }
+        { "x": 2, "y": 1 },
+        { "x": 2, "y": 2 },
+        { "x": 2, "y": 3 }
       ],
-      "breakableBlockedPositions": [
-        {
-          "x": 1,
-          "y": 0
-        }
-      ],
+      "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 23,
-      "name": "Break and Turn",
-      "difficulty": 4,
-      "hint": "Break first, then turn to get the second food.",
+      "name": "Side Streets",
+      "difficulty": 3,
+      "hint": "The center is blocked, so take the side path.",
       "width": 5,
       "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
+      "startPosition": { "x": 0, "y": 0 },
       "startDirection": "Up",
-      "foodPositions": [
-        {
-          "x": 4,
-          "y": 0
-        },
-        {
-          "x": 0,
-          "y": 2
-        }
-      ],
+      "foodPositions": [{ "x": 4, "y": 4 }],
       "blockedPositions": [
-        {
-          "x": 1,
-          "y": 1
-        },
-        {
-          "x": 2,
-          "y": 1
-        },
-        {
-          "x": 3,
-          "y": 1
-        },
-        {
-          "x": 4,
-          "y": 1
-        }
+        { "x": 1, "y": 2 },
+        { "x": 2, "y": 2 },
+        { "x": 3, "y": 2 }
       ],
-      "breakableBlockedPositions": [
-        {
-          "x": 0,
-          "y": 1
-        }
-      ],
+      "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 24,
-      "name": "Long Route",
-      "difficulty": 4,
-      "hint": "There are two foods far apart.",
+      "name": "Closed Shortcut",
+      "difficulty": 3,
+      "hint": "The shortcut is sealed, but another route exists.",
       "width": 5,
       "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
+      "startPosition": { "x": 0, "y": 1 },
       "startDirection": "Right",
-      "foodPositions": [
-        {
-          "x": 4,
-          "y": 0
-        },
-        {
-          "x": 0,
-          "y": 4
-        }
-      ],
+      "foodPositions": [{ "x": 4, "y": 3 }],
       "blockedPositions": [
-        {
-          "x": 1,
-          "y": 1
-        },
-        {
-          "x": 2,
-          "y": 1
-        },
-        {
-          "x": 3,
-          "y": 1
-        },
-        {
-          "x": 1,
-          "y": 4
-        }
+        { "x": 1, "y": 1 },
+        { "x": 2, "y": 1 },
+        { "x": 3, "y": 1 },
+        { "x": 3, "y": 2 }
       ],
       "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 25,
-      "name": "Break in the Middle",
+      "name": "First Jump",
       "difficulty": 4,
-      "hint": "A breakable obstacle blocks one of the foods.",
+      "hint": "Jump over the hole to land safely.",
       "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
+      "height": 3,
+      "startPosition": { "x": 0, "y": 1 },
       "startDirection": "Right",
-      "foodPositions": [
-        {
-          "x": 3,
-          "y": 0
-        },
-        {
-          "x": 4,
-          "y": 2
-        }
-      ],
-      "blockedPositions": [
-        {
-          "x": 1,
-          "y": 1
-        }
-      ],
-      "breakableBlockedPositions": [
-        {
-          "x": 1,
-          "y": 0
-        },
-        {
-          "x": 3,
-          "y": 1
-        },
-        {
-          "x": 4,
-          "y": 1
-        },
-        {
-          "x": 3,
-          "y": 2
-        },
-        {
-          "x": 3,
-          "y": 3
-        },
-        {
-          "x": 4,
-          "y": 3
-        }
-      ],
+      "foodPositions": [{ "x": 2, "y": 1 }],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [],
+      "holePositions": [{ "x": 1, "y": 1 }],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 26,
-      "name": "Three-Step Plan",
-      "difficulty": 5,
-      "hint": "Break, move, then collect both foods.",
+      "name": "Jump Lane",
+      "difficulty": 4,
+      "hint": "The center lane teaches a clean jump.",
       "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
-      "startDirection": "Up",
-      "foodPositions": [
-        {
-          "x": 4,
-          "y": 0
-        },
-        {
-          "x": 0,
-          "y": 2
-        }
-      ],
-      "blockedPositions": [
-        {
-          "x": 0,
-          "y": 1
-        },
-        {
-          "x": 1,
-          "y": 1
-        },
-        {
-          "x": 3,
-          "y": 1
-        },
-        {
-          "x": 3,
-          "y": 3
-        }
-      ],
-      "breakableBlockedPositions": [
-        {
-          "x": 3,
-          "y": 0
-        },
-        {
-          "x": 2,
-          "y": 1
-        },
-        {
-          "x": 3,
-          "y": 2
-        },
-        {
-          "x": 3,
-          "y": 4
-        }
-      ],
+      "height": 3,
+      "startPosition": { "x": 0, "y": 1 },
+      "startDirection": "Right",
+      "foodPositions": [{ "x": 4, "y": 1 }],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [],
+      "holePositions": [{ "x": 1, "y": 1 }],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 27,
-      "name": "Three Foods",
-      "difficulty": 5,
-      "hint": "Plan your route carefully.",
+      "name": "Forced Leap",
+      "difficulty": 4,
+      "hint": "The side cells are blocked, so the jump is required.",
       "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
+      "height": 3,
+      "startPosition": { "x": 0, "y": 1 },
       "startDirection": "Right",
-      "foodPositions": [
-        {
-          "x": 3,
-          "y": 0
-        },
-        {
-          "x": 0,
-          "y": 2
-        },
-        {
-          "x": 4,
-          "y": 2
-        }
-      ],
+      "foodPositions": [{ "x": 4, "y": 1 }],
       "blockedPositions": [
-        {
-          "x": 2,
-          "y": 0
-        },
-        {
-          "x": 2,
-          "y": 1
-        },
-        {
-          "x": 2,
-          "y": 3
-        }
+        { "x": 1, "y": 0 },
+        { "x": 1, "y": 2 }
       ],
-      "breakableBlockedPositions": [
-        {
-          "x": 0,
-          "y": 1
-        },
-        {
-          "x": 1,
-          "y": 1
-        },
-        {
-          "x": 3,
-          "y": 1
-        },
-        {
-          "x": 4,
-          "y": 1
-        },
-        {
-          "x": 2,
-          "y": 2
-        },
-        {
-          "x": 2,
-          "y": 4
-        }
-      ],
+      "breakableBlockedPositions": [],
+      "holePositions": [{ "x": 1, "y": 1 }],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 28,
-      "name": "Breakable Crossroad",
-      "difficulty": 5,
-      "hint": "One breakable block controls the route.",
+      "name": "Leap Then Turn",
+      "difficulty": 4,
+      "hint": "Jump first, then rotate to reach the food.",
       "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
-      "startDirection": "Up",
-      "foodPositions": [
-        {
-          "x": 4,
-          "y": 0
-        },
-        {
-          "x": 0,
-          "y": 2
-        },
-        {
-          "x": 4,
-          "y": 4
-        }
-      ],
+      "height": 4,
+      "startPosition": { "x": 0, "y": 1 },
+      "startDirection": "Right",
+      "foodPositions": [{ "x": 2, "y": 3 }],
       "blockedPositions": [
-        {
-          "x": 1,
-          "y": 1
-        },
-        {
-          "x": 3,
-          "y": 1
-        },
-        {
-          "x": 1,
-          "y": 3
-        },
-        {
-          "x": 3,
-          "y": 3
-        }
+        { "x": 1, "y": 0 },
+        { "x": 1, "y": 2 }
       ],
-      "breakableBlockedPositions": [
-        {
-          "x": 0,
-          "y": 1
-        },
-        {
-          "x": 2,
-          "y": 1
-        },
-        {
-          "x": 4,
-          "y": 1
-        },
-        {
-          "x": 2,
-          "y": 3
-        },
-        {
-          "x": 3,
-          "y": 4
-        }
-      ],
+      "breakableBlockedPositions": [],
+      "holePositions": [{ "x": 1, "y": 1 }],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 29,
-      "name": "Forced Break",
-      "difficulty": 5,
-      "hint": "You must break to continue to the right side.",
+      "name": "Double Gap",
+      "difficulty": 4,
+      "hint": "You can solve this with two separate jumps.",
       "width": 5,
-      "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
+      "height": 3,
+      "startPosition": { "x": 0, "y": 1 },
       "startDirection": "Right",
-      "foodPositions": [
-        {
-          "x": 3,
-          "y": 0
-        },
-        {
-          "x": 0,
-          "y": 2
-        },
-        {
-          "x": 4,
-          "y": 2
-        }
-      ],
-      "blockedPositions": [
-        {
-          "x": 2,
-          "y": 0
-        },
-        {
-          "x": 2,
-          "y": 1
-        },
-        {
-          "x": 1,
-          "y": 3
-        },
-        {
-          "x": 2,
-          "y": 3
-        }
-      ],
-      "breakableBlockedPositions": [
-        {
-          "x": 1,
-          "y": 0
-        },
-        {
-          "x": 4,
-          "y": 0
-        },
-        {
-          "x": 3,
-          "y": 1
-        },
-        {
-          "x": 4,
-          "y": 1
-        },
-        {
-          "x": 2,
-          "y": 2
-        },
-        {
-          "x": 2,
-          "y": 4
-        }
+      "foodPositions": [{ "x": 4, "y": 1 }],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [],
+      "holePositions": [
+        { "x": 1, "y": 1 },
+        { "x": 3, "y": 1 }
       ],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 30,
-      "name": "Final Puzzle",
-      "difficulty": 6,
-      "hint": "Collect every food. At least one break is required.",
+      "name": "Upper Bridge",
+      "difficulty": 4,
+      "hint": "Rotate, line up with the gap, and jump across.",
       "width": 5,
       "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
+      "startPosition": { "x": 0, "y": 0 },
       "startDirection": "Up",
-      "foodPositions": [
-        {
-          "x": 4,
-          "y": 0
-        },
-        {
-          "x": 0,
-          "y": 2
-        },
-        {
-          "x": 4,
-          "y": 3
-        },
-        {
-          "x": 0,
-          "y": 4
-        }
-      ],
+      "foodPositions": [{ "x": 4, "y": 4 }],
       "blockedPositions": [
-        {
-          "x": 1,
-          "y": 1
-        },
-        {
-          "x": 3,
-          "y": 1
-        },
-        {
-          "x": 1,
-          "y": 3
-        },
-        {
-          "x": 3,
-          "y": 3
-        }
+        { "x": 2, "y": 0 },
+        { "x": 2, "y": 1 },
+        { "x": 2, "y": 3 },
+        { "x": 2, "y": 4 }
       ],
-      "breakableBlockedPositions": [
-        {
-          "x": 3,
-          "y": 0
-        },
-        {
-          "x": 0,
-          "y": 1
-        },
-        {
-          "x": 4,
-          "y": 1
-        },
-        {
-          "x": 2,
-          "y": 2
-        },
-        {
-          "x": 0,
-          "y": 3
-        },
-        {
-          "x": 3,
-          "y": 4
-        }
-      ],
+      "breakableBlockedPositions": [],
+      "holePositions": [{ "x": 2, "y": 2 }],
       "toggleBlockedTiles": [],
       "toggleSwitchTiles": []
     },
     {
       "id": 31,
-      "name": "Switch",
-      "difficulty": 6,
-      "hint": "Unlock color obstacles using switches",
+      "name": "Landing Zone",
+      "difficulty": 4,
+      "hint": "Plan the jump so you land on an open cell.",
       "width": 5,
       "height": 5,
-      "startPosition": {
-        "x": 0,
-        "y": 0
-      },
-      "startDirection": "Up",
+      "startPosition": { "x": 0, "y": 2 },
+      "startDirection": "Right",
+      "foodPositions": [{ "x": 4, "y": 4 }],
+      "blockedPositions": [
+        { "x": 1, "y": 1 },
+        { "x": 1, "y": 3 },
+        { "x": 3, "y": 3 }
+      ],
+      "breakableBlockedPositions": [],
+      "holePositions": [{ "x": 1, "y": 2 }],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
+    },
+    {
+      "id": 32,
+      "name": "Two Treats",
+      "difficulty": 4,
+      "hint": "You win only after collecting both foods.",
+      "width": 4,
+      "height": 4,
+      "startPosition": { "x": 0, "y": 0 },
+      "startDirection": "Right",
       "foodPositions": [
-        {
-          "x": 0,
-          "y": 4
-        },
-        {
-          "x": 4,
-          "y": 4
-        }
+        { "x": 3, "y": 0 },
+        { "x": 3, "y": 3 }
       ],
       "blockedPositions": [],
       "breakableBlockedPositions": [],
+      "holePositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
+    },
+    {
+      "id": 33,
+      "name": "Snack Sweep",
+      "difficulty": 4,
+      "hint": "Collect every snack on the route.",
+      "width": 5,
+      "height": 3,
+      "startPosition": { "x": 0, "y": 1 },
+      "startDirection": "Right",
+      "foodPositions": [
+        { "x": 2, "y": 1 },
+        { "x": 4, "y": 1 }
+      ],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [],
+      "holePositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
+    },
+    {
+      "id": 34,
+      "name": "Three Stops",
+      "difficulty": 4,
+      "hint": "There are three goals, so your route matters.",
+      "width": 4,
+      "height": 4,
+      "startPosition": { "x": 0, "y": 0 },
+      "startDirection": "Up",
+      "foodPositions": [
+        { "x": 0, "y": 3 },
+        { "x": 3, "y": 3 },
+        { "x": 3, "y": 0 }
+      ],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [],
+      "holePositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
+    },
+    {
+      "id": 35,
+      "name": "Leap For Lunch",
+      "difficulty": 4,
+      "hint": "Jump to one goal, then continue to the second.",
+      "width": 5,
+      "height": 3,
+      "startPosition": { "x": 0, "y": 1 },
+      "startDirection": "Right",
+      "foodPositions": [
+        { "x": 2, "y": 1 },
+        { "x": 4, "y": 1 }
+      ],
+      "blockedPositions": [
+        { "x": 1, "y": 0 },
+        { "x": 1, "y": 2 }
+      ],
+      "breakableBlockedPositions": [],
+      "holePositions": [{ "x": 1, "y": 1 }],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
+    },
+    {
+      "id": 36,
+      "name": "Corner Cleanup",
+      "difficulty": 4,
+      "hint": "Clear both corners before finishing the level.",
+      "width": 5,
+      "height": 5,
+      "startPosition": { "x": 2, "y": 2 },
+      "startDirection": "Up",
+      "foodPositions": [
+        { "x": 0, "y": 4 },
+        { "x": 4, "y": 4 }
+      ],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [],
+      "holePositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
+    },
+    {
+      "id": 37,
+      "name": "Five Crumbs",
+      "difficulty": 4,
+      "hint": "A long route is fine as long as you collect them all.",
+      "width": 5,
+      "height": 5,
+      "startPosition": { "x": 0, "y": 0 },
+      "startDirection": "Right",
+      "foodPositions": [
+        { "x": 2, "y": 0 },
+        { "x": 4, "y": 0 },
+        { "x": 4, "y": 2 },
+        { "x": 2, "y": 4 },
+        { "x": 0, "y": 4 }
+      ],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [],
+      "holePositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
+    },
+    {
+      "id": 38,
+      "name": "First Break",
+      "difficulty": 5,
+      "hint": "Break the obstacle in front of you before moving on.",
+      "width": 4,
+      "height": 1,
+      "startPosition": { "x": 0, "y": 0 },
+      "startDirection": "Right",
+      "foodPositions": [{ "x": 3, "y": 0 }],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [{ "x": 1, "y": 0 }],
+      "holePositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
+    },
+    {
+      "id": 39,
+      "name": "Break And Turn",
+      "difficulty": 5,
+      "hint": "Open the path, then rotate toward the food.",
+      "width": 4,
+      "height": 4,
+      "startPosition": { "x": 0, "y": 1 },
+      "startDirection": "Right",
+      "foodPositions": [{ "x": 2, "y": 3 }],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [{ "x": 1, "y": 1 }],
+      "holePositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
+    },
+    {
+      "id": 40,
+      "name": "Double Break",
+      "difficulty": 5,
+      "hint": "Two breakable blocks stand between you and the goal.",
+      "width": 5,
+      "height": 1,
+      "startPosition": { "x": 0, "y": 0 },
+      "startDirection": "Right",
+      "foodPositions": [{ "x": 4, "y": 0 }],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [
+        { "x": 1, "y": 0 },
+        { "x": 3, "y": 0 }
+      ],
+      "holePositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
+    },
+    {
+      "id": 41,
+      "name": "Break For Both",
+      "difficulty": 5,
+      "hint": "Break the block, then collect both foods.",
+      "width": 5,
+      "height": 3,
+      "startPosition": { "x": 0, "y": 1 },
+      "startDirection": "Right",
+      "foodPositions": [
+        { "x": 2, "y": 1 },
+        { "x": 4, "y": 1 }
+      ],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [{ "x": 1, "y": 1 }],
+      "holePositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
+    },
+    {
+      "id": 42,
+      "name": "Break Then Jump",
+      "difficulty": 5,
+      "hint": "Use break first, then line up a jump over the hole.",
+      "width": 5,
+      "height": 3,
+      "startPosition": { "x": 0, "y": 1 },
+      "startDirection": "Right",
+      "foodPositions": [{ "x": 4, "y": 1 }],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [{ "x": 1, "y": 1 }],
+      "holePositions": [{ "x": 3, "y": 1 }],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
+    },
+    {
+      "id": 43,
+      "name": "Crack The Maze",
+      "difficulty": 5,
+      "hint": "Some walls go around, one wall must be broken.",
+      "width": 5,
+      "height": 5,
+      "startPosition": { "x": 0, "y": 0 },
+      "startDirection": "Up",
+      "foodPositions": [{ "x": 4, "y": 4 }],
+      "blockedPositions": [
+        { "x": 1, "y": 1 },
+        { "x": 1, "y": 2 },
+        { "x": 3, "y": 2 },
+        { "x": 3, "y": 3 }
+      ],
+      "breakableBlockedPositions": [{ "x": 2, "y": 2 }],
+      "holePositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
+    },
+    {
+      "id": 44,
+      "name": "Blue Switch",
+      "difficulty": 6,
+      "hint": "Step on the switch to open the blue gate.",
+      "width": 5,
+      "height": 5,
+      "startPosition": { "x": 0, "y": 0 },
+      "startDirection": "Up",
+      "foodPositions": [{ "x": 4, "y": 4 }],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [],
+      "holePositions": [],
       "toggleBlockedTiles": [
-        {
-          "x": 0,
-          "y": 2,
-          "groupId": 1,
-          "isOn": false
-        },
-        {
-          "x": 4,
-          "y": 2,
-          "groupId": 2,
-          "isOn": false
-        },
-        {
-          "x": 0,
-          "y": 3,
-          "groupId": 1,
-          "isOn": true
-        },
-        {
-          "x": 1,
-          "y": 3,
-          "groupId": 1,
-          "isOn": true
-        },
-        {
-          "x": 3,
-          "y": 3,
-          "groupId": 2,
-          "isOn": true
-        },
-        {
-          "x": 4,
-          "y": 3,
-          "groupId": 2,
-          "isOn": true
-        },
-        {
-          "x": 1,
-          "y": 4,
-          "groupId": 1,
-          "isOn": true
-        },
-        {
-          "x": 3,
-          "y": 4,
-          "groupId": 2,
-          "isOn": true
-        }
+        { "x": 2, "y": 3, "groupId": 1, "isOn": true },
+        { "x": 3, "y": 3, "groupId": 1, "isOn": true }
       ],
       "toggleSwitchTiles": [
-        {
-          "x": 1,
-          "y": 1,
-          "groupId": 1
-        },
-        {
-          "x": 3,
-          "y": 1,
-          "groupId": 2
-        }
+        { "x": 1, "y": 1, "groupId": 1 }
+      ]
+    },
+    {
+      "id": 45,
+      "name": "Switchback Path",
+      "difficulty": 6,
+      "hint": "Hit the switch, then return through the opened route.",
+      "width": 5,
+      "height": 5,
+      "startPosition": { "x": 0, "y": 0 },
+      "startDirection": "Right",
+      "foodPositions": [{ "x": 4, "y": 4 }],
+      "blockedPositions": [
+        { "x": 2, "y": 0 },
+        { "x": 2, "y": 1 }
+      ],
+      "breakableBlockedPositions": [],
+      "holePositions": [],
+      "toggleBlockedTiles": [
+        { "x": 3, "y": 2, "groupId": 1, "isOn": true },
+        { "x": 3, "y": 3, "groupId": 1, "isOn": true }
+      ],
+      "toggleSwitchTiles": [
+        { "x": 1, "y": 3, "groupId": 1 }
+      ]
+    },
+    {
+      "id": 46,
+      "name": "Gatekeeper",
+      "difficulty": 6,
+      "hint": "The switch controls a whole gate, not just one tile.",
+      "width": 5,
+      "height": 5,
+      "startPosition": { "x": 2, "y": 0 },
+      "startDirection": "Up",
+      "foodPositions": [{ "x": 2, "y": 4 }],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [],
+      "holePositions": [],
+      "toggleBlockedTiles": [
+        { "x": 1, "y": 2, "groupId": 1, "isOn": true },
+        { "x": 2, "y": 2, "groupId": 1, "isOn": true },
+        { "x": 3, "y": 2, "groupId": 1, "isOn": true }
+      ],
+      "toggleSwitchTiles": [
+        { "x": 0, "y": 1, "groupId": 1 }
+      ]
+    },
+    {
+      "id": 47,
+      "name": "Switch, Jump, Snack",
+      "difficulty": 6,
+      "hint": "Open the gate, then combine movement with a jump.",
+      "width": 5,
+      "height": 5,
+      "startPosition": { "x": 0, "y": 0 },
+      "startDirection": "Up",
+      "foodPositions": [{ "x": 4, "y": 4 }],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [],
+      "holePositions": [{ "x": 3, "y": 2 }],
+      "toggleBlockedTiles": [
+        { "x": 2, "y": 1, "groupId": 1, "isOn": true },
+        { "x": 2, "y": 2, "groupId": 1, "isOn": true }
+      ],
+      "toggleSwitchTiles": [
+        { "x": 1, "y": 0, "groupId": 1 }
+      ]
+    },
+    {
+      "id": 48,
+      "name": "Two Colors",
+      "difficulty": 6,
+      "hint": "Each switch opens a different color gate.",
+      "width": 5,
+      "height": 5,
+      "startPosition": { "x": 0, "y": 0 },
+      "startDirection": "Up",
+      "foodPositions": [{ "x": 4, "y": 4 }],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [],
+      "holePositions": [],
+      "toggleBlockedTiles": [
+        { "x": 1, "y": 3, "groupId": 1, "isOn": true },
+        { "x": 2, "y": 3, "groupId": 1, "isOn": true },
+        { "x": 3, "y": 1, "groupId": 2, "isOn": true },
+        { "x": 3, "y": 2, "groupId": 2, "isOn": true }
+      ],
+      "toggleSwitchTiles": [
+        { "x": 1, "y": 1, "groupId": 1 },
+        { "x": 4, "y": 0, "groupId": 2 }
+      ]
+    },
+    {
+      "id": 49,
+      "name": "Twin Gates",
+      "difficulty": 6,
+      "hint": "Open one gate, then the other, to finish the route.",
+      "width": 5,
+      "height": 5,
+      "startPosition": { "x": 0, "y": 2 },
+      "startDirection": "Right",
+      "foodPositions": [{ "x": 4, "y": 4 }],
+      "blockedPositions": [
+        { "x": 2, "y": 0 },
+        { "x": 2, "y": 4 }
+      ],
+      "breakableBlockedPositions": [],
+      "holePositions": [],
+      "toggleBlockedTiles": [
+        { "x": 2, "y": 1, "groupId": 1, "isOn": true },
+        { "x": 2, "y": 2, "groupId": 2, "isOn": true },
+        { "x": 2, "y": 3, "groupId": 1, "isOn": true }
+      ],
+      "toggleSwitchTiles": [
+        { "x": 0, "y": 0, "groupId": 1 },
+        { "x": 4, "y": 2, "groupId": 2 }
+      ]
+    },
+    {
+      "id": 50,
+      "name": "Master Walk",
+      "difficulty": 6,
+      "hint": "Use every skill you learned to clear the final route.",
+      "width": 5,
+      "height": 5,
+      "startPosition": { "x": 0, "y": 0 },
+      "startDirection": "Right",
+      "foodPositions": [
+        { "x": 4, "y": 0 },
+        { "x": 4, "y": 4 }
+      ],
+      "blockedPositions": [
+        { "x": 0, "y": 3 },
+        { "x": 1, "y": 3 }
+      ],
+      "breakableBlockedPositions": [{ "x": 3, "y": 0 }],
+      "holePositions": [{ "x": 3, "y": 2 }],
+      "toggleBlockedTiles": [
+        { "x": 2, "y": 1, "groupId": 1, "isOn": true },
+        { "x": 2, "y": 4, "groupId": 2, "isOn": true }
+      ],
+      "toggleSwitchTiles": [
+        { "x": 0, "y": 2, "groupId": 1 },
+        { "x": 4, "y": 1, "groupId": 2 }
       ]
     }
   ]

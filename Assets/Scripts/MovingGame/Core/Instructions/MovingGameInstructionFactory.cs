@@ -16,7 +16,8 @@ namespace Flowbit.MovingGame.Core.Instructions
             {InstructionType.MoveForward, () => new MoveForwardInstructionDefinition()},
             {InstructionType.RotateLeft, () => new RotateLeftInstructionDefinition()},
             {InstructionType.RotateRight, () => new RotateRightInstructionDefinition()},
-            {InstructionType.BreakForward, () => new BreakForwardInstructionDefinition()}
+            {InstructionType.BreakForward, () => new BreakForwardInstructionDefinition()},
+            {InstructionType.JumpForward, () => new JumpForwardInstructionDefinition()}
         };
 
         /// <summary>

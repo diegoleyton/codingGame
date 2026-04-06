@@ -20,6 +20,7 @@ namespace Flowbit.MovingGame.Core.Levels
         public List<PositionData> foodPositions;
         public List<PositionData> blockedPositions;
         public List<PositionData> breakableBlockedPositions;
+        public List<PositionData> holePositions;
         public List<ToggleBlockedTileData> toggleBlockedTiles;
         public List<ToggleSwitchTileData> toggleSwitchTiles;
 

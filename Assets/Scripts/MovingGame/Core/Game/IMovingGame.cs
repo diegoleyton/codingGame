@@ -29,6 +29,12 @@ namespace Flowbit.MovingGame.Core
         void BreakForward();
 
         /// <summary>
+        /// Jumps exactly two cells forward.
+        /// The jump fails if either crossed cell is out of bounds or blocked.
+        /// </summary>
+        void JumpForward();
+
+        /// <summary>
         /// Returns the positions of all remaining food items.
         /// </summary>
         IReadOnlyCollection<GridPosition> GetFoodPositions();
@@ -43,6 +49,12 @@ namespace Flowbit.MovingGame.Core
         /// Returns the positions of breakable obstacles.
         /// </summary>
         IReadOnlyCollection<GridPosition> GetBreakableBlockedPositions();
+
+        /// <summary>
+        /// Returns the positions of hole cells.
+        /// Holes block walking, but can be crossed by jumping.
+        /// </summary>
+        IReadOnlyCollection<GridPosition> GetHolePositions();
 
         /// <summary>
         /// Returns the positions visited by the character.

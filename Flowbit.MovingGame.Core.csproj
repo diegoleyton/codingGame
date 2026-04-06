@@ -63,6 +63,7 @@
     <Compile Include="Assets/Scripts/MovingGame/Core/Game/GridPosition.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Core/Game/ToggleBlockedObstacleState.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Core/Levels/MovingGameLevelsParser.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Core/Instructions/JumpForwardInstructionDefinition.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Core/Game/MovingGame.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Core/Game/ToggleSwitchTileState.cs" />
   </ItemGroup>

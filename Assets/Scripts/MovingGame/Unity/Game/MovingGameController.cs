@@ -226,6 +226,8 @@ namespace Flowbit.MovingGame.Unity
             List<GridPosition> blockedPositions = ConvertPositions(levelData.blockedPositions);
             List<GridPosition> breakableBlockedPositions =
                 ConvertPositions(levelData.breakableBlockedPositions);
+            List<GridPosition> holePositions =
+                ConvertPositions(levelData.holePositions);
 
             List<ToggleBlockedObstacleState> toggleBlockedObstacles =
                 ConvertToggleBlockedTiles(levelData.toggleBlockedTiles);
@@ -241,6 +243,7 @@ namespace Flowbit.MovingGame.Unity
                 foodPositions: foodPositions,
                 blockedPositions: blockedPositions,
                 breakableBlockedPositions: breakableBlockedPositions,
+                holePositions: holePositions,
                 toggleBlockedObstacles: toggleBlockedObstacles,
                 toggleSwitchTiles: toggleSwitchTiles);
         }
@@ -257,6 +260,7 @@ namespace Flowbit.MovingGame.Unity
                 game_.GetHeight(),
                 game_.GetBlockedPositions(),
                 game_.GetBreakableBlockedPositions(),
+                game_.GetHolePositions(),
                 game_.GetVisitedPositions(),
                 game_.GetToggleBlockedObstacles(),
                 game_.GetToggleSwitchTiles());

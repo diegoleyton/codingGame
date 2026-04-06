@@ -10,6 +10,7 @@ namespace Flowbit.GameBase.Definitions
         MoveForward,
         RotateLeft,
         RotateRight,
-        BreakForward
+        BreakForward,
+        JumpForward
     }
 }

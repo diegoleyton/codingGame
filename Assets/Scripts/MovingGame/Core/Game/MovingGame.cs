@@ -16,6 +16,7 @@ namespace Flowbit.MovingGame.Core
         private readonly HashSet<GridPosition> startFoodPositions_;
         private readonly HashSet<GridPosition> blockedPositions_;
         private readonly HashSet<GridPosition> startBreakableBlockedPositions_;
+        private readonly HashSet<GridPosition> holePositions_;
         private readonly Dictionary<GridPosition, ToggleBlockedObstacleState> startToggleBlockedByPosition_;
         private readonly Dictionary<GridPosition, ToggleSwitchTileState> toggleSwitchesByPosition_;
 
@@ -37,6 +38,7 @@ namespace Flowbit.MovingGame.Core
             IReadOnlyCollection<GridPosition> foodPositions,
             IReadOnlyCollection<GridPosition> blockedPositions = null,
             IReadOnlyCollection<GridPosition> breakableBlockedPositions = null,
+            IReadOnlyCollection<GridPosition> holePositions = null,
             IReadOnlyCollection<ToggleBlockedObstacleState> toggleBlockedObstacles = null,
             IReadOnlyCollection<ToggleSwitchTileState> toggleSwitchTiles = null)
         {
@@ -71,6 +73,10 @@ namespace Flowbit.MovingGame.Core
                 ? new HashSet<GridPosition>(breakableBlockedPositions)
                 : new HashSet<GridPosition>();
 
+            holePositions_ = holePositions != null
+                ? new HashSet<GridPosition>(holePositions)
+                : new HashSet<GridPosition>();
+
             startToggleBlockedByPosition_ = toggleBlockedObstacles != null
                 ? toggleBlockedObstacles.ToDictionary(x => x.Position, x => x.Clone())
                 : new Dictionary<GridPosition, ToggleBlockedObstacleState>();
@@ -98,6 +104,7 @@ namespace Flowbit.MovingGame.Core
         public IReadOnlyCollection<GridPosition> GetFoodPositions() => foodPositions_;
         public IReadOnlyCollection<GridPosition> GetBlockedPositions() => blockedPositions_;
         public IReadOnlyCollection<GridPosition> GetBreakableBlockedPositions() => breakableBlockedPositions_;
+        public IReadOnlyCollection<GridPosition> GetHolePositions() => holePositions_;
         public IReadOnlyCollection<GridPosition> GetVisitedPositions() => visitedPositions_;
         public bool HasStepAfterProcess() => stepAfterProcess_.GetProcessType() != StepAfterProcessType.None;
         public StepAfterProcess GetStepAfterProcess() => stepAfterProcess_;
@@ -141,7 +148,9 @@ namespace Flowbit.MovingGame.Core
 
         public bool IsBlocked(GridPosition position)
         {
-            if (blockedPositions_.Contains(position) || breakableBlockedPositions_.Contains(position))
+            if (blockedPositions_.Contains(position) ||
+                breakableBlockedPositions_.Contains(position) ||
+                holePositions_.Contains(position))
             {
                 return true;
             }
@@ -313,6 +322,38 @@ namespace Flowbit.MovingGame.Core
                 isBreakable);
         }
 
+        public void JumpForward()
+        {
+            if (hasWon_ || hasFailed_)
+            {
+                return;
+            }
+
+            ClearStepAfterProcess();
+
+            GridPosition skippedPosition = GetForwardPosition(characterPosition_, characterDirection_);
+            GridPosition landingPosition = GetForwardPosition(skippedPosition, characterDirection_);
+
+            if (!CanJumpThrough(skippedPosition) || !CanJumpThrough(landingPosition))
+            {
+                hasFailed_ = true;
+                return;
+            }
+
+            characterPosition_ = landingPosition;
+            visitedPositions_.Add(characterPosition_);
+
+            ConsumeFoodAtCurrentPosition();
+            ProcessLandingTile(characterPosition_);
+            UpdateWinState();
+
+            stepAfterProcess_ = new StepAfterProcess(
+                StepAfterProcessType.Jump,
+                default,
+                false,
+                false);
+        }
+
         public bool IsInsideBounds(GridPosition position)
         {
             int x = position.GetX();
@@ -393,6 +434,25 @@ namespace Flowbit.MovingGame.Core
                         nameof(startBreakableBlockedPositions_));
                 }
             }
+
+            foreach (GridPosition holePosition in holePositions_)
+            {
+                ValidateObstaclePosition(holePosition);
+
+                if (blockedPositions_.Contains(holePosition))
+                {
+                    throw new ArgumentException(
+                        "A position cannot be both a solid obstacle and a hole.",
+                        nameof(holePositions_));
+                }
+
+                if (startBreakableBlockedPositions_.Contains(holePosition))
+                {
+                    throw new ArgumentException(
+                        "A position cannot be both a breakable obstacle and a hole.",
+                        nameof(holePositions_));
+                }
+            }
         }
 
         private void ValidateToggleTiles()
@@ -415,6 +475,11 @@ namespace Flowbit.MovingGame.Core
                 {
                     throw new ArgumentException("A position cannot be both breakable and toggle-blocked.");
                 }
+
+                if (holePositions_.Contains(obstacle.Position))
+                {
+                    throw new ArgumentException("A position cannot be both a hole and toggle-blocked.");
+                }
             }
 
             foreach (ToggleSwitchTileState toggle in toggleSwitchesByPosition_.Values)
@@ -430,7 +495,27 @@ namespace Flowbit.MovingGame.Core
                 {
                     throw new ArgumentException("A toggle switch tile cannot also contain food.");
                 }
+
+                if (holePositions_.Contains(toggle.Position))
+                {
+                    throw new ArgumentException("A toggle switch tile cannot also be a hole.");
+                }
             }
+        }
+
+        private bool CanJumpThrough(GridPosition position)
+        {
+            if (!IsInsideBounds(position))
+            {
+                return false;
+            }
+
+            if (blockedPositions_.Contains(position) || breakableBlockedPositions_.Contains(position))
+            {
+                return false;
+            }
+
+            return !(toggleBlockedByPosition_.TryGetValue(position, out ToggleBlockedObstacleState state) && state.IsOn);
         }
 
         private void ValidateObstaclePosition(GridPosition obstaclePosition)

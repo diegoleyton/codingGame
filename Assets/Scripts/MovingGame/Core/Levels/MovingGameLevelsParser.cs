@@ -62,10 +62,32 @@ namespace Flowbit.MovingGame.Core.Levels
                 level.foodPositions ??= new List<PositionData>();
                 level.blockedPositions ??= new List<PositionData>();
                 level.breakableBlockedPositions ??= new List<PositionData>();
+                level.holePositions ??= new List<PositionData>();
                 level.toggleBlockedTiles ??= new List<ToggleBlockedTileData>();
                 level.toggleSwitchTiles ??= new List<ToggleSwitchTileData>();
 
+                ValidatePositions(level, level.foodPositions, "foodPositions");
+                ValidatePositions(level, level.blockedPositions, "blockedPositions");
+                ValidatePositions(level, level.breakableBlockedPositions, "breakableBlockedPositions");
+                ValidatePositions(level, level.holePositions, "holePositions");
                 ValidateToggleData(level);
+            }
+        }
+
+        private static void ValidatePositions(
+            MovingGameLevelData level,
+            List<PositionData> positions,
+            string source)
+        {
+            foreach (PositionData position in positions)
+            {
+                if (position == null)
+                {
+                    throw new InvalidOperationException(
+                        $"Level '{level.id}' contains a null entry in '{source}'.");
+                }
+
+                ValidatePosition(level, position.x, position.y, source);
             }
         }
 

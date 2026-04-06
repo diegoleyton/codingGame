@@ -38,6 +38,12 @@ namespace Flowbit.MovingGame.Unity
                 result.Add(InstructionType.BreakForward);
             }
 
+            if (levelData.holePositions != null &&
+                levelData.holePositions.Count > 0)
+            {
+                result.Add(InstructionType.JumpForward);
+            }
+
             return result;
         }
 

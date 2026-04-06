@@ -37,6 +37,11 @@ namespace Flowbit.MovingGame.Unity
         [SerializeField] private Transform breakRoot_;
         [SerializeField] private float breakDelaySeconds_ = 0.25f;
 
+        [Header("Jump")]
+        [SerializeField] private float jumpDelaySeconds_ = 0.2f;
+        [SerializeField] private float jumpDurationSeconds_ = 0.35f;
+        [SerializeField] private float jumpArcHeight_ = 0.45f;
+
         [Header("Animation")]
         [SerializeField] private float moveDurationSeconds_ = 0.2f;
         [SerializeField] private float moveAnimationSeconds_ = 0.2f;
@@ -212,6 +217,10 @@ namespace Flowbit.MovingGame.Unity
                 case StepAfterProcessType.Break:
                     yield return ExecuteBreakAfterProcess(stepAfterProcess);
                     yield break;
+
+                case StepAfterProcessType.Jump:
+                    yield return ExecuteJumpAfterProcess();
+                    yield break;
             }
         }
 
@@ -243,6 +252,58 @@ namespace Flowbit.MovingGame.Unity
             }
 
             SetPetAnimationState(PetAnimationStateType.Idle);
+        }
+
+        private IEnumerator ExecuteJumpAfterProcess()
+        {
+            if (game_ == null || character_ == null)
+            {
+                RefreshImmediate(game_);
+                yield break;
+            }
+
+            GridPosition endGridPosition = game_.GetCharacterPosition();
+            Vector3 startPosition = GridToWorld(lastCharacterGridPosition_);
+            Vector3 endPosition = GridToWorld(endGridPosition);
+
+            eventDispatcher_?.Send(new OnMovingGameMove());
+            SetPetAnimationState(PetAnimationStateType.Walk);
+
+            float duration = jumpDurationSeconds_ > 0f ? jumpDurationSeconds_ : moveDurationSeconds_;
+
+            if (duration <= 0f)
+            {
+                character_.position = endPosition;
+            }
+            else
+            {
+                float elapsed = 0f;
+
+                while (elapsed < duration)
+                {
+                    elapsed += Time.deltaTime;
+                    float t = Mathf.Clamp01(elapsed / duration);
+                    float easedT = EaseOutQuad(t);
+                    Vector3 position = Vector3.Lerp(startPosition, endPosition, easedT);
+                    float arcOffset = 4f * jumpArcHeight_ * t * (1f - t);
+                    position += Vector3.up * arcOffset;
+                    character_.position = position;
+                    yield return null;
+                }
+            }
+
+            character_.position = endPosition;
+            character_.rotation = DirectionToRotation(game_.GetCharacterDirection());
+            RebuildFoodVisuals(false);
+
+            if (jumpDelaySeconds_ > 0f)
+            {
+                yield return new WaitForSeconds(jumpDelaySeconds_);
+            }
+
+            SendSwitchEventIfNeeded(!lastCharacterGridPosition_.Equals(endGridPosition));
+            SetPetAnimationState(PetAnimationStateType.Idle);
+            lastCharacterGridPosition_ = endGridPosition;
         }
 
         private void SpawnBreakPrefab(GridPosition position)

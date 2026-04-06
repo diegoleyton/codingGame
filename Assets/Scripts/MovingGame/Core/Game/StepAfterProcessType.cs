@@ -8,6 +8,7 @@ namespace Flowbit.MovingGame.Core
         None = 0,
         Move = 1,
         Rotate = 2,
-        Break = 3
+        Break = 3,
+        Jump = 4
     }
 }

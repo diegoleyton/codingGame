@@ -14,6 +14,7 @@ namespace Flowbit.MovingGame.Unity
         [SerializeField] private GameObject visitedCellPrefab_;
         [SerializeField] private GameObject blockedCellPrefab_;
         [SerializeField] private GameObject breakableBlockedCellPrefab_;
+        [SerializeField] private GameObject holeCellPrefab_;
         [SerializeField] private GameObject groupedBlockedCellPrefab_;
         [SerializeField] private GameObject toggleSwitchCellPrefab_;
         [SerializeField] private Transform cellsRoot_;
@@ -31,7 +32,7 @@ namespace Flowbit.MovingGame.Unity
 
         public void RenderGrid(int width, int height)
         {
-            RenderGrid(width, height, null, null, null, null, null);
+            RenderGrid(width, height, null, null, null, null, null, null);
         }
 
         public void RenderGrid(
@@ -39,7 +40,7 @@ namespace Flowbit.MovingGame.Unity
             int height,
             IReadOnlyCollection<GridPosition> blockedPositions)
         {
-            RenderGrid(width, height, blockedPositions, null, null, null, null);
+            RenderGrid(width, height, blockedPositions, null, null, null, null, null);
         }
 
         public void RenderGrid(
@@ -48,7 +49,7 @@ namespace Flowbit.MovingGame.Unity
             IReadOnlyCollection<GridPosition> blockedPositions,
             IReadOnlyCollection<GridPosition> breakableBlockedPositions)
         {
-            RenderGrid(width, height, blockedPositions, breakableBlockedPositions, null, null, null);
+            RenderGrid(width, height, blockedPositions, breakableBlockedPositions, null, null, null, null);
         }
 
         /// <summary>
@@ -60,6 +61,7 @@ namespace Flowbit.MovingGame.Unity
             int height,
             IReadOnlyCollection<GridPosition> blockedPositions,
             IReadOnlyCollection<GridPosition> breakableBlockedPositions,
+            IReadOnlyCollection<GridPosition> holePositions,
             IReadOnlyCollection<GridPosition> visitedPositions,
             IReadOnlyCollection<ToggleBlockedObstacleState> toggleBlockedObstacles,
             IReadOnlyCollection<ToggleSwitchTileState> toggleSwitchTiles)
@@ -84,6 +86,10 @@ namespace Flowbit.MovingGame.Unity
 
             HashSet<GridPosition> visitedLookup = visitedPositions != null
                 ? new HashSet<GridPosition>(visitedPositions)
+                : new HashSet<GridPosition>();
+
+            HashSet<GridPosition> holeLookup = holePositions != null
+                ? new HashSet<GridPosition>(holePositions)
                 : new HashSet<GridPosition>();
 
             Dictionary<GridPosition, ToggleBlockedObstacleState> toggleBlockedLookup = new();
@@ -156,6 +162,15 @@ namespace Flowbit.MovingGame.Unity
                             worldPosition,
                             parent,
                             $"BreakableBlockedCell_{x}_{y}");
+                    }
+
+                    if (holeLookup.Contains(gridPosition) && holeCellPrefab_ != null)
+                    {
+                        SpawnOverlay(
+                            holeCellPrefab_,
+                            worldPosition,
+                            parent,
+                            $"HoleCell_{x}_{y}");
                     }
 
                     if (toggleBlockedLookup.TryGetValue(gridPosition, out ToggleBlockedObstacleState groupedObstacle) &&

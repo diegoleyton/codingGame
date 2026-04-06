@@ -848,6 +848,11 @@ MonoBehaviour:
   breakPrefab_: {fileID: 8238055016132422236, guid: 0372e0471efc345a4be5223cd86cd08c, type: 3}
   breakRoot_: {fileID: 0}
   breakDelaySeconds_: 0.5
+  jumpPrefab_: {fileID: 8238055016132422236, guid: 0372e0471efc345a4be5223cd86cd08c, type: 3}
+  jumpRoot_: {fileID: 0}
+  jumpDelaySeconds_: 0.25
+  jumpDurationSeconds_: 0.55
+  jumpArcHeight_: 0.6
   moveDurationSeconds_: 0.5
   moveAnimationSeconds_: 0.3
   rotateDurationSeconds_: 0.5
@@ -3757,6 +3762,7 @@ MonoBehaviour:
   visitedCellPrefab_: {fileID: 2927773417660818734, guid: 133336a1983d64226b52a5ec512b3901, type: 3}
   blockedCellPrefab_: {fileID: 2927773417660818734, guid: a7e43be8c533a418a96c9eb9a6b87148, type: 3}
   breakableBlockedCellPrefab_: {fileID: 2927773417660818734, guid: a8539335817c74388965936f9ac83fdd, type: 3}
+  holeCellPrefab_: {fileID: 2927773417660818734, guid: 4ac9d7e1f2034b8ab17c9d5e6f708192, type: 3}
   groupedBlockedCellPrefab_: {fileID: 4955284160564529774, guid: 1dcf8b9326a1345019fcc4374ee7a45a, type: 3}
   toggleSwitchCellPrefab_: {fileID: 2877896094695884451, guid: 91c10fd2c17414059a509c3e9747a6bc, type: 3}
   cellsRoot_: {fileID: 0}
