@@ -13,6 +13,11 @@ namespace Flowbit.GameBase.Definitions
     public sealed class OnMovingGameRotate : IEvent { }
 
     /// <summary>
+    /// Event called when a character jumps.
+    /// </summary>
+    public sealed class OnMovingGameJump : IEvent { }
+
+    /// <summary>
     /// Event called when an obstacle is broken
     /// </summary>
     public sealed class OnMovingGameBreak : IEvent { }

@@ -21,5 +21,6 @@ public enum SoundId
     ProgramActionsDeleted,
     ProgramStep,
     ProgramStop,
-    MovingGameSwitch
+    MovingGameSwitch,
+    MovingGameJump
 }

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6ac44c74826714b8392245fc76fd4b5e, type: 3}
-  m_Name: MovingGameSwitch
+  m_Name: MovingGameJump
   m_EditorClassIdentifier: 
   _clips:
-  - {fileID: 8300000, guid: 158b6890a7379489e8300038c6a0ee91, type: 3}
-  _volumeRange: {x: 0.2, y: 0.25}
-  _pitchRange: {x: 0.8, y: 1.2}
+  - {fileID: 8300000, guid: 1d873434967ec49519d57d3059a63762, type: 3}
+  _volumeRange: {x: 0.2, y: 0.3}
+  _pitchRange: {x: 1, y: 1.3}

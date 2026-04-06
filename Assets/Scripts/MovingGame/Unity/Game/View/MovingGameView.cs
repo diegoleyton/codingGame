@@ -266,7 +266,7 @@ namespace Flowbit.MovingGame.Unity
             Vector3 startPosition = GridToWorld(lastCharacterGridPosition_);
             Vector3 endPosition = GridToWorld(endGridPosition);
 
-            eventDispatcher_?.Send(new OnMovingGameMove());
+            eventDispatcher_?.Send(new OnMovingGameJump());
             SetPetAnimationState(PetAnimationStateType.Walk);
 
             float duration = jumpDurationSeconds_ > 0f ? jumpDurationSeconds_ : moveDurationSeconds_;

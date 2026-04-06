@@ -44,6 +44,7 @@ namespace Flowbit.GameBase.Audio
             eventDispatcher_.Subscribe<OnMovingGameAttack>(_ => Play(SoundId.MovingGameAttack));
             eventDispatcher_.Subscribe<OnMovingGameBreak>(_ => Play(SoundId.MovingGameBreak));
             eventDispatcher_.Subscribe<OnMovingGameMove>(_ => Play(SoundId.MovingGameMove));
+            eventDispatcher_.Subscribe<OnMovingGameJump>(_ => Play(SoundId.MovingGameJump));
             eventDispatcher_.Subscribe<OnMovingGameRotate>(_ => Play(SoundId.MovingGameRotate));
             eventDispatcher_.Subscribe<OnMovingGameGoalReached>(_ => Play(SoundId.MovingGameGoalReached));
             eventDispatcher_.Subscribe<OnMovingGameSwitch>(_ => Play(SoundId.MovingGameSwitch));
