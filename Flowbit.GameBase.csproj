@@ -79,6 +79,7 @@
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/Transitions/PopupTransformTransition.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/IGameNavigationService.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/InstructionSelectionPanelView.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Scripts/GamesSettings/MovingGameSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/Scripts/GameBase/Scripts/Flowbit.GameBase.asmdef" />

@@ -20,6 +20,8 @@ namespace Flowbit.MovingGame.Core.Levels
         public List<PositionData> foodPositions;
         public List<PositionData> blockedPositions;
         public List<PositionData> breakableBlockedPositions;
+        public List<ToggleBlockedTileData> toggleBlockedTiles;
+        public List<ToggleSwitchTileData> toggleSwitchTiles;
 
         public Dificulty GetDificulty()
         {
@@ -27,10 +29,12 @@ namespace Flowbit.MovingGame.Core.Levels
             {
                 return Dificulty.Easy;
             }
+
             if (difficulty <= 4)
             {
                 return Dificulty.Normal;
             }
+
             return Dificulty.Hard;
         }
     }
@@ -43,6 +47,23 @@ namespace Flowbit.MovingGame.Core.Levels
     {
         public int x;
         public int y;
+    }
+
+    [Serializable]
+    public sealed class ToggleBlockedTileData
+    {
+        public int x;
+        public int y;
+        public int groupId;
+        public bool isOn;
+    }
+
+    [Serializable]
+    public sealed class ToggleSwitchTileData
+    {
+        public int x;
+        public int y;
+        public int groupId;
     }
 
     /// <summary>

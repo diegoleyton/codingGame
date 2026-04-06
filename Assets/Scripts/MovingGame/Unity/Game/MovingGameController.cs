@@ -227,6 +227,12 @@ namespace Flowbit.MovingGame.Unity
             List<GridPosition> breakableBlockedPositions =
                 ConvertPositions(levelData.breakableBlockedPositions);
 
+            List<ToggleBlockedObstacleState> toggleBlockedObstacles =
+                ConvertToggleBlockedTiles(levelData.toggleBlockedTiles);
+
+            List<ToggleSwitchTileState> toggleSwitchTiles =
+                ConvertToggleSwitchTiles(levelData.toggleSwitchTiles);
+
             return new Core.MovingGame(
                 width: levelData.width,
                 height: levelData.height,
@@ -234,7 +240,9 @@ namespace Flowbit.MovingGame.Unity
                 startCharacterDirection: ParseDirection(levelData.startDirection),
                 foodPositions: foodPositions,
                 blockedPositions: blockedPositions,
-                breakableBlockedPositions: breakableBlockedPositions);
+                breakableBlockedPositions: breakableBlockedPositions,
+                toggleBlockedObstacles: toggleBlockedObstacles,
+                toggleSwitchTiles: toggleSwitchTiles);
         }
 
         private void RenderGrid()
@@ -249,7 +257,62 @@ namespace Flowbit.MovingGame.Unity
                 game_.GetHeight(),
                 game_.GetBlockedPositions(),
                 game_.GetBreakableBlockedPositions(),
-                game_.GetVisitedPositions());
+                game_.GetVisitedPositions(),
+                game_.GetToggleBlockedObstacles(),
+                game_.GetToggleSwitchTiles());
+        }
+
+        private static List<ToggleBlockedObstacleState> ConvertToggleBlockedTiles(
+    List<ToggleBlockedTileData> tiles)
+        {
+            List<ToggleBlockedObstacleState> result = new List<ToggleBlockedObstacleState>();
+
+            if (tiles == null)
+            {
+                return result;
+            }
+
+            for (int i = 0; i < tiles.Count; i++)
+            {
+                ToggleBlockedTileData tile = tiles[i];
+                if (tile == null)
+                {
+                    continue;
+                }
+
+                result.Add(new ToggleBlockedObstacleState(
+                    new GridPosition(tile.x, tile.y),
+                    tile.groupId,
+                    tile.isOn));
+            }
+
+            return result;
+        }
+
+        private static List<ToggleSwitchTileState> ConvertToggleSwitchTiles(
+            List<ToggleSwitchTileData> tiles)
+        {
+            List<ToggleSwitchTileState> result = new List<ToggleSwitchTileState>();
+
+            if (tiles == null)
+            {
+                return result;
+            }
+
+            for (int i = 0; i < tiles.Count; i++)
+            {
+                ToggleSwitchTileData tile = tiles[i];
+                if (tile == null)
+                {
+                    continue;
+                }
+
+                result.Add(new ToggleSwitchTileState(
+                    new GridPosition(tile.x, tile.y),
+                    tile.groupId));
+            }
+
+            return result;
         }
 
         private static List<GridPosition> ConvertPositions(List<PositionData> positions)

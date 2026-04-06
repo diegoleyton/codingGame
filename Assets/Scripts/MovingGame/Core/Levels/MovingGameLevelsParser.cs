@@ -18,9 +18,7 @@ namespace Flowbit.MovingGame.Core.Levels
                 throw new ArgumentException("JSON cannot be null or empty.", nameof(json));
             }
 
-            MovingGameLevelsFileData fileData =
-                UnityEngine.JsonUtility.FromJson<MovingGameLevelsFileData>(json);
-
+            MovingGameLevelsFileData fileData = UnityEngine.JsonUtility.FromJson<MovingGameLevelsFileData>(json);
             if (fileData == null)
             {
                 throw new InvalidOperationException("Failed to parse moving game levels JSON.");
@@ -48,36 +46,70 @@ namespace Flowbit.MovingGame.Core.Levels
 
                 if (level.width <= 0 || level.height <= 0)
                 {
-                    throw new InvalidOperationException(
-                        $"Level '{level.id}' has invalid dimensions.");
+                    throw new InvalidOperationException($"Level '{level.id}' has invalid dimensions.");
                 }
 
                 if (level.startPosition == null)
                 {
-                    throw new InvalidOperationException(
-                        $"Level '{level.id}' is missing startPosition.");
+                    throw new InvalidOperationException($"Level '{level.id}' is missing startPosition.");
                 }
 
                 if (string.IsNullOrWhiteSpace(level.startDirection))
                 {
+                    throw new InvalidOperationException($"Level '{level.id}' is missing startDirection.");
+                }
+
+                level.foodPositions ??= new List<PositionData>();
+                level.blockedPositions ??= new List<PositionData>();
+                level.breakableBlockedPositions ??= new List<PositionData>();
+                level.toggleBlockedTiles ??= new List<ToggleBlockedTileData>();
+                level.toggleSwitchTiles ??= new List<ToggleSwitchTileData>();
+
+                ValidateToggleData(level);
+            }
+        }
+
+        private static void ValidateToggleData(MovingGameLevelData level)
+        {
+            HashSet<int> groupIdsWithObstacles = new();
+
+            foreach (ToggleBlockedTileData tile in level.toggleBlockedTiles)
+            {
+                ValidatePosition(level, tile.x, tile.y, "toggleBlockedTiles");
+
+                if (tile.groupId <= 0)
+                {
                     throw new InvalidOperationException(
-                        $"Level '{level.id}' is missing startDirection.");
+                        $"Level '{level.id}' has toggle blocked tile with invalid groupId '{tile.groupId}'.");
                 }
 
-                if (level.foodPositions == null)
+                groupIdsWithObstacles.Add(tile.groupId);
+            }
+
+            foreach (ToggleSwitchTileData tile in level.toggleSwitchTiles)
+            {
+                ValidatePosition(level, tile.x, tile.y, "toggleSwitchTiles");
+
+                if (tile.groupId <= 0)
                 {
-                    level.foodPositions = new List<PositionData>();
+                    throw new InvalidOperationException(
+                        $"Level '{level.id}' has toggle switch tile with invalid groupId '{tile.groupId}'.");
                 }
 
-                if (level.blockedPositions == null)
+                if (!groupIdsWithObstacles.Contains(tile.groupId))
                 {
-                    level.blockedPositions = new List<PositionData>();
+                    throw new InvalidOperationException(
+                        $"Level '{level.id}' has toggle switch group '{tile.groupId}' without matching toggle obstacles.");
                 }
+            }
+        }
 
-                if (level.breakableBlockedPositions == null)
-                {
-                    level.breakableBlockedPositions = new List<PositionData>();
-                }
+        private static void ValidatePosition(MovingGameLevelData level, int x, int y, string source)
+        {
+            if (x < 0 || x >= level.width || y < 0 || y >= level.height)
+            {
+                throw new InvalidOperationException(
+                    $"Level '{level.id}' contains out-of-bounds position ({x}, {y}) in '{source}'.");
             }
         }
     }

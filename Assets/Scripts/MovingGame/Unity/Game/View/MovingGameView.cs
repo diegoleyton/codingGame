@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -51,8 +50,8 @@ namespace Flowbit.MovingGame.Unity
 
         private GridRenderer gridRenderer_;
         private Core.MovingGame game_;
-
         private EventDispatcher eventDispatcher_;
+        private GridPosition lastCharacterGridPosition_;
 
         /// <summary>
         /// Initializes the view with the given grid renderer and game.
@@ -62,6 +61,11 @@ namespace Flowbit.MovingGame.Unity
             gridRenderer_ = gridRenderer;
             game_ = game;
             eventDispatcher_ = GlobalServiceContainer.ServiceContainer.Get<EventDispatcher>();
+
+            if (game_ != null)
+            {
+                lastCharacterGridPosition_ = game_.GetCharacterPosition();
+            }
         }
 
         /// <summary>
@@ -74,6 +78,11 @@ namespace Flowbit.MovingGame.Unity
             RebuildFoodVisuals(true);
             UpdateCharacterImmediate();
             SetPetAnimationState(PetAnimationStateType.Idle);
+
+            if (game_ != null)
+            {
+                lastCharacterGridPosition_ = game_.GetCharacterPosition();
+            }
         }
 
         /// <summary>
@@ -91,16 +100,23 @@ namespace Flowbit.MovingGame.Unity
             if (character_ == null)
             {
                 RebuildFoodVisuals(false);
+                lastCharacterGridPosition_ = game_.GetCharacterPosition();
                 yield break;
             }
 
-            Vector3 targetPosition = GridToWorld(game_.GetCharacterPosition());
-            Quaternion targetRotation = DirectionToRotation(game_.GetCharacterDirection());
+            GridPosition startGridPosition = lastCharacterGridPosition_;
+            GridPosition endGridPosition = game_.GetCharacterPosition();
 
             Vector3 startPosition = character_.position;
+            Vector3 targetPosition = GridToWorld(endGridPosition);
+
             Quaternion startRotation = character_.rotation;
+            Quaternion targetRotation = DirectionToRotation(game_.GetCharacterDirection());
+
+            bool changedGridPosition = !startGridPosition.Equals(endGridPosition);
 
             bool shouldAnimateMovement = animateMovement_ &&
+                                         changedGridPosition &&
                                          (startPosition - targetPosition).sqrMagnitude > 0.0001f;
 
             bool shouldAnimateRotation = animateRotation_ &&
@@ -110,16 +126,17 @@ namespace Flowbit.MovingGame.Unity
 
             if (shouldAnimateMovement && shouldAnimateRotation)
             {
+                eventDispatcher_?.Send(new OnMovingGameMove());
                 duration = Mathf.Max(moveDurationSeconds_, rotateDurationSeconds_);
             }
             else if (shouldAnimateMovement)
             {
-                eventDispatcher_.Send(new OnMovingGameMove());
+                eventDispatcher_?.Send(new OnMovingGameMove());
                 duration = moveDurationSeconds_;
             }
             else if (shouldAnimateRotation)
             {
-                eventDispatcher_.Send(new OnMovingGameRotate());
+                eventDispatcher_?.Send(new OnMovingGameRotate());
                 duration = rotateDurationSeconds_;
             }
 
@@ -128,7 +145,9 @@ namespace Flowbit.MovingGame.Unity
                 character_.position = targetPosition;
                 character_.rotation = targetRotation;
                 RebuildFoodVisuals(false);
+                SendSwitchEventIfNeeded(changedGridPosition);
                 SetPetAnimationState(PetAnimationStateType.Idle);
+                lastCharacterGridPosition_ = endGridPosition;
                 yield break;
             }
 
@@ -168,7 +187,9 @@ namespace Flowbit.MovingGame.Unity
             character_.position = targetPosition;
             character_.rotation = targetRotation;
             RebuildFoodVisuals(false);
+            SendSwitchEventIfNeeded(changedGridPosition);
             SetPetAnimationState(PetAnimationStateType.Idle);
+            lastCharacterGridPosition_ = endGridPosition;
         }
 
         /// <summary>
@@ -208,9 +229,8 @@ namespace Flowbit.MovingGame.Unity
 
             if (stepAfterProcess.HasPosition() && stepAfterProcess.IsBreakable())
             {
-
                 SpawnBreakPrefab(stepAfterProcess.GetPosition());
-                eventDispatcher_.Send(new OnMovingGameBreak());
+                eventDispatcher_?.Send(new OnMovingGameBreak());
 
                 if (breakDelaySeconds_ > 0f)
                 {
@@ -219,7 +239,7 @@ namespace Flowbit.MovingGame.Unity
             }
             else
             {
-                eventDispatcher_.Send(new OnMovingGameAttack());
+                eventDispatcher_?.Send(new OnMovingGameAttack());
             }
 
             SetPetAnimationState(PetAnimationStateType.Idle);
@@ -317,7 +337,8 @@ namespace Flowbit.MovingGame.Unity
                 ? consumedFoodEffectRoot_
                 : transform;
 
-            eventDispatcher_.Send(new OnMovingGameGoalReached());
+            eventDispatcher_?.Send(new OnMovingGameGoalReached());
+
             GameObject effectObject = Instantiate(
                 consumedFoodEffectPrefab_,
                 GridToWorld(position),
@@ -377,6 +398,19 @@ namespace Flowbit.MovingGame.Unity
         private float EaseOutQuad(float t)
         {
             return 1f - ((1f - t) * (1f - t));
+        }
+
+        private void SendSwitchEventIfNeeded(bool changedGridPosition)
+        {
+            if (!changedGridPosition || game_ == null || eventDispatcher_ == null)
+            {
+                return;
+            }
+
+            if (game_.TryGetToggleSwitchTile(game_.GetCharacterPosition(), out ToggleSwitchTileState toggleSwitch))
+            {
+                eventDispatcher_.Send(new OnMovingGameSwitch(toggleSwitch.GroupId));
+            }
         }
     }
 }

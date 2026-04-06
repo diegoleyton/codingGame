@@ -17,3 +17,4 @@ MonoBehaviour:
   <BackButton>k__BackingField: {fileID: 808607406510788919, guid: ff805550f8ba04dfe982219efb4c1bbc, type: 3}
   <ComponentLoopAnimator>k__BackingField: {fileID: 5469796037845318584, guid: cfe2723724d8847daac7d680e568a187, type: 3}
   <GameSoundLibrary>k__BackingField: {fileID: 11400000, guid: 7fb244bc424174539914b6ba3699ed2f, type: 2}
+  <MovingGameSettings>k__BackingField: {fileID: 11400000, guid: 2cb5f0a5d0e104720b974fb271b10798, type: 2}

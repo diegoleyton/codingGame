@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Flowbit.MovingGame.Core
 {
@@ -15,19 +16,19 @@ namespace Flowbit.MovingGame.Core
         private readonly HashSet<GridPosition> startFoodPositions_;
         private readonly HashSet<GridPosition> blockedPositions_;
         private readonly HashSet<GridPosition> startBreakableBlockedPositions_;
+        private readonly Dictionary<GridPosition, ToggleBlockedObstacleState> startToggleBlockedByPosition_;
+        private readonly Dictionary<GridPosition, ToggleSwitchTileState> toggleSwitchesByPosition_;
 
         private GridPosition characterPosition_;
         private Direction characterDirection_;
         private HashSet<GridPosition> foodPositions_;
         private HashSet<GridPosition> breakableBlockedPositions_;
+        private Dictionary<GridPosition, ToggleBlockedObstacleState> toggleBlockedByPosition_;
         private HashSet<GridPosition> visitedPositions_;
         private bool hasWon_;
         private bool hasFailed_;
         private StepAfterProcess stepAfterProcess_;
 
-        /// <summary>
-        /// Creates a new moving game.
-        /// </summary>
         public MovingGame(
             int width,
             int height,
@@ -35,7 +36,9 @@ namespace Flowbit.MovingGame.Core
             Direction startCharacterDirection,
             IReadOnlyCollection<GridPosition> foodPositions,
             IReadOnlyCollection<GridPosition> blockedPositions = null,
-            IReadOnlyCollection<GridPosition> breakableBlockedPositions = null)
+            IReadOnlyCollection<GridPosition> breakableBlockedPositions = null,
+            IReadOnlyCollection<ToggleBlockedObstacleState> toggleBlockedObstacles = null,
+            IReadOnlyCollection<ToggleSwitchTileState> toggleSwitchTiles = null)
         {
             if (width <= 0)
             {
@@ -63,82 +66,62 @@ namespace Flowbit.MovingGame.Core
             blockedPositions_ = blockedPositions != null
                 ? new HashSet<GridPosition>(blockedPositions)
                 : new HashSet<GridPosition>();
+
             startBreakableBlockedPositions_ = breakableBlockedPositions != null
                 ? new HashSet<GridPosition>(breakableBlockedPositions)
                 : new HashSet<GridPosition>();
 
+            startToggleBlockedByPosition_ = toggleBlockedObstacles != null
+                ? toggleBlockedObstacles.ToDictionary(x => x.Position, x => x.Clone())
+                : new Dictionary<GridPosition, ToggleBlockedObstacleState>();
+
+            toggleSwitchesByPosition_ = toggleSwitchTiles != null
+                ? toggleSwitchTiles.ToDictionary(x => x.Position, x => x)
+                : new Dictionary<GridPosition, ToggleSwitchTileState>();
+
             ValidateFoodPositions();
             ValidateBlockedPositions();
+            ValidateToggleTiles();
 
             foodPositions_ = new HashSet<GridPosition>();
             breakableBlockedPositions_ = new HashSet<GridPosition>();
+            toggleBlockedByPosition_ = new Dictionary<GridPosition, ToggleBlockedObstacleState>();
             visitedPositions_ = new HashSet<GridPosition>();
 
             ResetGame();
         }
 
-        public int GetWidth()
+        public int GetWidth() => width_;
+        public int GetHeight() => height_;
+        public GridPosition GetCharacterPosition() => characterPosition_;
+        public Direction GetCharacterDirection() => characterDirection_;
+        public IReadOnlyCollection<GridPosition> GetFoodPositions() => foodPositions_;
+        public IReadOnlyCollection<GridPosition> GetBlockedPositions() => blockedPositions_;
+        public IReadOnlyCollection<GridPosition> GetBreakableBlockedPositions() => breakableBlockedPositions_;
+        public IReadOnlyCollection<GridPosition> GetVisitedPositions() => visitedPositions_;
+        public bool HasStepAfterProcess() => stepAfterProcess_.GetProcessType() != StepAfterProcessType.None;
+        public StepAfterProcess GetStepAfterProcess() => stepAfterProcess_;
+
+        public IReadOnlyCollection<ToggleBlockedObstacleState> GetToggleBlockedObstacles()
         {
-            return width_;
+            return toggleBlockedByPosition_.Values;
         }
 
-        public int GetHeight()
+        public IReadOnlyCollection<ToggleSwitchTileState> GetToggleSwitchTiles()
         {
-            return height_;
+            return toggleSwitchesByPosition_.Values;
         }
 
-        public GridPosition GetCharacterPosition()
+        public bool TryGetToggleBlockedObstacle(GridPosition position, out ToggleBlockedObstacleState state)
         {
-            return characterPosition_;
+            return toggleBlockedByPosition_.TryGetValue(position, out state);
         }
 
-        public Direction GetCharacterDirection()
+        public bool TryGetToggleSwitchTile(GridPosition position, out ToggleSwitchTileState state)
         {
-            return characterDirection_;
+            return toggleSwitchesByPosition_.TryGetValue(position, out state);
         }
 
-        public IReadOnlyCollection<GridPosition> GetFoodPositions()
-        {
-            return foodPositions_;
-        }
-
-        public IReadOnlyCollection<GridPosition> GetBlockedPositions()
-        {
-            return blockedPositions_;
-        }
-
-        public IReadOnlyCollection<GridPosition> GetBreakableBlockedPositions()
-        {
-            return breakableBlockedPositions_;
-        }
-
-        /// <summary>
-        /// Returns the visited positions.
-        /// </summary>
-        public IReadOnlyCollection<GridPosition> GetVisitedPositions()
-        {
-            return visitedPositions_;
-        }
-
-        /// <summary>
-        /// Returns whether there is a step after-process pending.
-        /// </summary>
-        public bool HasStepAfterProcess()
-        {
-            return stepAfterProcess_.GetProcessType() != StepAfterProcessType.None;
-        }
-
-        /// <summary>
-        /// Returns the current step after-process.
-        /// </summary>
-        public StepAfterProcess GetStepAfterProcess()
-        {
-            return stepAfterProcess_;
-        }
-
-        /// <summary>
-        /// Finalizes the current step after-process.
-        /// </summary>
         public void FinalizeStepAfterProcess()
         {
             if (stepAfterProcess_.GetProcessType() == StepAfterProcessType.Break &&
@@ -151,9 +134,6 @@ namespace Flowbit.MovingGame.Core
             ClearStepAfterProcess();
         }
 
-        /// <summary>
-        /// Clears the current step after-process.
-        /// </summary>
         public void ClearStepAfterProcess()
         {
             stepAfterProcess_ = StepAfterProcess.None();
@@ -161,7 +141,12 @@ namespace Flowbit.MovingGame.Core
 
         public bool IsBlocked(GridPosition position)
         {
-            return blockedPositions_.Contains(position) || breakableBlockedPositions_.Contains(position);
+            if (blockedPositions_.Contains(position) || breakableBlockedPositions_.Contains(position))
+            {
+                return true;
+            }
+
+            return toggleBlockedByPosition_.TryGetValue(position, out ToggleBlockedObstacleState state) && state.IsOn;
         }
 
         public bool IsBreakableBlocked(GridPosition position)
@@ -174,15 +159,8 @@ namespace Flowbit.MovingGame.Core
             return foodPositions_.Contains(position);
         }
 
-        public bool HasWon()
-        {
-            return hasWon_;
-        }
-
-        public bool HasFailed()
-        {
-            return hasFailed_;
-        }
+        public bool HasWon() => hasWon_;
+        public bool HasFailed() => hasFailed_;
 
         public void ResetGame()
         {
@@ -190,12 +168,14 @@ namespace Flowbit.MovingGame.Core
             characterDirection_ = startCharacterDirection_;
             foodPositions_ = new HashSet<GridPosition>(startFoodPositions_);
             breakableBlockedPositions_ = new HashSet<GridPosition>(startBreakableBlockedPositions_);
+            toggleBlockedByPosition_ = CloneToggleBlockedDictionary(startToggleBlockedByPosition_);
             visitedPositions_ = new HashSet<GridPosition> { startCharacterPosition_ };
             hasWon_ = false;
             hasFailed_ = false;
             stepAfterProcess_ = StepAfterProcess.None();
 
             ConsumeFoodAtCurrentPosition();
+            ProcessLandingTile(characterPosition_);
             UpdateWinState();
         }
 
@@ -212,8 +192,7 @@ namespace Flowbit.MovingGame.Core
             }
 
             ClearStepAfterProcess();
-
-            bool moved_ = false;
+            bool moved = false;
 
             for (int i = 0; i < steps; i++)
             {
@@ -233,9 +212,12 @@ namespace Flowbit.MovingGame.Core
 
                 characterPosition_ = nextPosition;
                 visitedPositions_.Add(characterPosition_);
+
                 ConsumeFoodAtCurrentPosition();
+                ProcessLandingTile(characterPosition_);
                 UpdateWinState();
-                moved_ = true;
+
+                moved = true;
 
                 if (hasWon_)
                 {
@@ -243,7 +225,7 @@ namespace Flowbit.MovingGame.Core
                 }
             }
 
-            if (moved_)
+            if (moved)
             {
                 stepAfterProcess_ = new StepAfterProcess(
                     StepAfterProcessType.Move,
@@ -313,7 +295,6 @@ namespace Flowbit.MovingGame.Core
             ClearStepAfterProcess();
 
             GridPosition forwardPosition = GetForwardPosition(characterPosition_, characterDirection_);
-
             if (!IsInsideBounds(forwardPosition))
             {
                 stepAfterProcess_ = new StepAfterProcess(
@@ -325,7 +306,6 @@ namespace Flowbit.MovingGame.Core
             }
 
             bool isBreakable = breakableBlockedPositions_.Contains(forwardPosition);
-
             stepAfterProcess_ = new StepAfterProcess(
                 StepAfterProcessType.Break,
                 forwardPosition,
@@ -338,6 +318,37 @@ namespace Flowbit.MovingGame.Core
             int x = position.GetX();
             int y = position.GetY();
             return x >= 0 && x < width_ && y >= 0 && y < height_;
+        }
+
+        private void ProcessLandingTile(GridPosition position)
+        {
+            if (toggleSwitchesByPosition_.TryGetValue(position, out ToggleSwitchTileState toggleSwitch))
+            {
+                ToggleGroup(toggleSwitch.GroupId);
+            }
+        }
+
+        private void ToggleGroup(int groupId)
+        {
+            foreach (ToggleBlockedObstacleState obstacle in toggleBlockedByPosition_.Values)
+            {
+                if (obstacle.GroupId == groupId)
+                {
+                    obstacle.Toggle();
+                }
+            }
+        }
+
+        private Dictionary<GridPosition, ToggleBlockedObstacleState> CloneToggleBlockedDictionary(
+            Dictionary<GridPosition, ToggleBlockedObstacleState> source)
+        {
+            Dictionary<GridPosition, ToggleBlockedObstacleState> clone = new();
+            foreach (KeyValuePair<GridPosition, ToggleBlockedObstacleState> pair in source)
+            {
+                clone[pair.Key] = pair.Value.Clone();
+            }
+
+            return clone;
         }
 
         private void ValidatePosition(GridPosition position, string paramName)
@@ -380,6 +391,44 @@ namespace Flowbit.MovingGame.Core
                     throw new ArgumentException(
                         "A position cannot be both a solid and breakable obstacle.",
                         nameof(startBreakableBlockedPositions_));
+                }
+            }
+        }
+
+        private void ValidateToggleTiles()
+        {
+            foreach (ToggleBlockedObstacleState obstacle in startToggleBlockedByPosition_.Values)
+            {
+                ValidateObstaclePosition(obstacle.Position);
+
+                if (obstacle.GroupId <= 0)
+                {
+                    throw new ArgumentException("Toggle obstacle group id must be greater than zero.");
+                }
+
+                if (blockedPositions_.Contains(obstacle.Position))
+                {
+                    throw new ArgumentException("A position cannot be both blocked and toggle-blocked.");
+                }
+
+                if (startBreakableBlockedPositions_.Contains(obstacle.Position))
+                {
+                    throw new ArgumentException("A position cannot be both breakable and toggle-blocked.");
+                }
+            }
+
+            foreach (ToggleSwitchTileState toggle in toggleSwitchesByPosition_.Values)
+            {
+                ValidatePosition(toggle.Position, nameof(toggleSwitchesByPosition_));
+
+                if (toggle.GroupId <= 0)
+                {
+                    throw new ArgumentException("Toggle switch group id must be greater than zero.");
+                }
+
+                if (startFoodPositions_.Contains(toggle.Position))
+                {
+                    throw new ArgumentException("A toggle switch tile cannot also contain food.");
                 }
             }
         }

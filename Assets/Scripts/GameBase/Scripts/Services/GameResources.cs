@@ -1,8 +1,8 @@
 using UnityEngine;
-using Flowbit.Utilities.Navigation;
 using Flowbit.GameBase.UI;
 using Flowbit.GameBase.Scenes;
 using Flowbit.GameBase.Audio;
+using Flowbit.GameBase.GamesSettings;
 
 namespace Flowbit.GameBase.Services
 {
@@ -41,5 +41,11 @@ namespace Flowbit.GameBase.Services
         /// </summary>
         [field: SerializeField]
         public GameSoundLibrary GameSoundLibrary { get; private set; }
+
+        /// <summary>
+        /// Gets the settings for moving game.
+        /// </summary>
+        [field: SerializeField]
+        public MovingGameSettings MovingGameSettings { get; private set; }
     }
 }

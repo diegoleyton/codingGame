@@ -1760,7 +1760,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af0a5142c4dfe4061ac8f8bfa5af42cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelsJson_: {fileID: 4900000, guid: 0602725c7363841ff99cd0dc99b8a16e, type: 3}
+  levelsJson_: {fileID: 4900000, guid: 11c60f2ada9bf403d8dfae089679a25d, type: 3}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -3757,6 +3757,8 @@ MonoBehaviour:
   visitedCellPrefab_: {fileID: 2927773417660818734, guid: 133336a1983d64226b52a5ec512b3901, type: 3}
   blockedCellPrefab_: {fileID: 2927773417660818734, guid: a7e43be8c533a418a96c9eb9a6b87148, type: 3}
   breakableBlockedCellPrefab_: {fileID: 2927773417660818734, guid: a8539335817c74388965936f9ac83fdd, type: 3}
+  groupedBlockedCellPrefab_: {fileID: 4955284160564529774, guid: 1dcf8b9326a1345019fcc4374ee7a45a, type: 3}
+  toggleSwitchCellPrefab_: {fileID: 2877896094695884451, guid: 91c10fd2c17414059a509c3e9747a6bc, type: 3}
   cellsRoot_: {fileID: 0}
   cellSize_: 1.3
   origin_: {x: -1.85, y: -0.96}

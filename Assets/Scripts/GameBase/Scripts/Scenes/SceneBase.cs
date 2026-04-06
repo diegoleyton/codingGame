@@ -58,7 +58,6 @@ namespace Flowbit.GameBase.Scenes
         /// </summary>
         public void Initialize(NavigationParams navigationParams)
         {
-            UnityEngine.Debug.Log("WAAAA");
             sceneParameters_ = navigationParams;
             InitializeBackButton();
             Initialize();

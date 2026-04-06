@@ -26,4 +26,20 @@ namespace Flowbit.GameBase.Definitions
     /// Event called when a character reaches a goal
     /// </summary>
     public sealed class OnMovingGameGoalReached : IEvent { }
+
+    /// <summary>
+    /// Event sent when the player steps on a toggle switch tile.
+    /// </summary>
+    public readonly struct OnMovingGameSwitch : IEvent
+    {
+        /// <summary>
+        /// Gets the group id associated with the switch.
+        /// </summary>
+        public int GroupId { get; }
+
+        public OnMovingGameSwitch(int groupId)
+        {
+            GroupId = groupId;
+        }
+    }
 }

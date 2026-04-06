@@ -21,7 +21,9 @@
         }
       ],
       "blockedPositions": [],
-      "breakableBlockedPositions": []
+      "breakableBlockedPositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 2,
@@ -42,7 +44,9 @@
         }
       ],
       "blockedPositions": [],
-      "breakableBlockedPositions": []
+      "breakableBlockedPositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 3,
@@ -63,7 +67,9 @@
         }
       ],
       "blockedPositions": [],
-      "breakableBlockedPositions": []
+      "breakableBlockedPositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 4,
@@ -84,7 +90,9 @@
         }
       ],
       "blockedPositions": [],
-      "breakableBlockedPositions": []
+      "breakableBlockedPositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 5,
@@ -105,7 +113,9 @@
         }
       ],
       "blockedPositions": [],
-      "breakableBlockedPositions": []
+      "breakableBlockedPositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 6,
@@ -126,7 +136,9 @@
         }
       ],
       "blockedPositions": [],
-      "breakableBlockedPositions": []
+      "breakableBlockedPositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 7,
@@ -152,7 +164,9 @@
           "y": 0
         }
       ],
-      "breakableBlockedPositions": []
+      "breakableBlockedPositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 8,
@@ -182,7 +196,9 @@
           "y": 1
         }
       ],
-      "breakableBlockedPositions": []
+      "breakableBlockedPositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 9,
@@ -212,7 +228,9 @@
           "y": 1
         }
       ],
-      "breakableBlockedPositions": []
+      "breakableBlockedPositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 10,
@@ -250,7 +268,9 @@
           "y": 2
         }
       ],
-      "breakableBlockedPositions": []
+      "breakableBlockedPositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 11,
@@ -292,7 +312,9 @@
           "y": 2
         }
       ],
-      "breakableBlockedPositions": []
+      "breakableBlockedPositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 12,
@@ -342,7 +364,9 @@
           "y": 3
         }
       ],
-      "breakableBlockedPositions": []
+      "breakableBlockedPositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 13,
@@ -368,7 +392,9 @@
           "x": 1,
           "y": 0
         }
-      ]
+      ],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 14,
@@ -403,7 +429,9 @@
           "x": 1,
           "y": 0
         }
-      ]
+      ],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 15,
@@ -438,7 +466,9 @@
           "x": 0,
           "y": 1
         }
-      ]
+      ],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 16,
@@ -485,7 +515,9 @@
           "x": 1,
           "y": 0
         }
-      ]
+      ],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 17,
@@ -528,7 +560,9 @@
           "x": 1,
           "y": 0
         }
-      ]
+      ],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 18,
@@ -579,7 +613,9 @@
           "x": 0,
           "y": 1
         }
-      ]
+      ],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 19,
@@ -604,7 +640,9 @@
         }
       ],
       "blockedPositions": [],
-      "breakableBlockedPositions": []
+      "breakableBlockedPositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 20,
@@ -634,7 +672,9 @@
           "y": 1
         }
       ],
-      "breakableBlockedPositions": []
+      "breakableBlockedPositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 21,
@@ -672,7 +712,9 @@
           "y": 2
         }
       ],
-      "breakableBlockedPositions": []
+      "breakableBlockedPositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 22,
@@ -723,7 +765,9 @@
           "x": 1,
           "y": 0
         }
-      ]
+      ],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 23,
@@ -770,7 +814,9 @@
           "x": 0,
           "y": 1
         }
-      ]
+      ],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 24,
@@ -812,7 +858,9 @@
           "y": 4
         }
       ],
-      "breakableBlockedPositions": []
+      "breakableBlockedPositions": [],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 25,
@@ -867,7 +915,9 @@
           "x": 4,
           "y": 3
         }
-      ]
+      ],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 26,
@@ -926,7 +976,9 @@
           "x": 3,
           "y": 4
         }
-      ]
+      ],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 27,
@@ -993,7 +1045,9 @@
           "x": 2,
           "y": 4
         }
-      ]
+      ],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 28,
@@ -1060,7 +1114,9 @@
           "x": 3,
           "y": 4
         }
-      ]
+      ],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 29,
@@ -1131,7 +1187,9 @@
           "x": 2,
           "y": 4
         }
-      ]
+      ],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
     },
     {
       "id": 30,
@@ -1205,6 +1263,95 @@
         {
           "x": 3,
           "y": 4
+        }
+      ],
+      "toggleBlockedTiles": [],
+      "toggleSwitchTiles": []
+    },
+    {
+      "id": 31,
+      "name": "Switch",
+      "difficulty": 6,
+      "hint": "Unlock color obstacles using switches",
+      "width": 5,
+      "height": 5,
+      "startPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "startDirection": "Up",
+      "foodPositions": [
+        {
+          "x": 0,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 4
+        }
+      ],
+      "blockedPositions": [],
+      "breakableBlockedPositions": [],
+      "toggleBlockedTiles": [
+        {
+          "x": 0,
+          "y": 2,
+          "groupId": 1,
+          "isOn": false
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "groupId": 2,
+          "isOn": false
+        },
+        {
+          "x": 0,
+          "y": 3,
+          "groupId": 1,
+          "isOn": true
+        },
+        {
+          "x": 1,
+          "y": 3,
+          "groupId": 1,
+          "isOn": true
+        },
+        {
+          "x": 3,
+          "y": 3,
+          "groupId": 2,
+          "isOn": true
+        },
+        {
+          "x": 4,
+          "y": 3,
+          "groupId": 2,
+          "isOn": true
+        },
+        {
+          "x": 1,
+          "y": 4,
+          "groupId": 1,
+          "isOn": true
+        },
+        {
+          "x": 3,
+          "y": 4,
+          "groupId": 2,
+          "isOn": true
+        }
+      ],
+      "toggleSwitchTiles": [
+        {
+          "x": 1,
+          "y": 1,
+          "groupId": 1
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "groupId": 2
         }
       ]
     }

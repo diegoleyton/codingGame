@@ -14,6 +14,8 @@ namespace Flowbit.MovingGame.Unity
         [SerializeField] private GameObject visitedCellPrefab_;
         [SerializeField] private GameObject blockedCellPrefab_;
         [SerializeField] private GameObject breakableBlockedCellPrefab_;
+        [SerializeField] private GameObject groupedBlockedCellPrefab_;
+        [SerializeField] private GameObject toggleSwitchCellPrefab_;
         [SerializeField] private Transform cellsRoot_;
 
         [Header("Layout")]
@@ -22,14 +24,14 @@ namespace Flowbit.MovingGame.Unity
         [SerializeField] private bool centerGrid_ = false;
 
         private readonly List<GameObject> spawnedCells_ = new List<GameObject>();
+        private readonly Dictionary<GridPosition, GameObject> cellObjectsByPosition_ = new();
+
         private int width_;
         private int height_;
 
-        private readonly Dictionary<GridPosition, GameObject> cellObjectsByPosition_ = new();
-
         public void RenderGrid(int width, int height)
         {
-            RenderGrid(width, height, null, null, null);
+            RenderGrid(width, height, null, null, null, null, null);
         }
 
         public void RenderGrid(
@@ -37,7 +39,7 @@ namespace Flowbit.MovingGame.Unity
             int height,
             IReadOnlyCollection<GridPosition> blockedPositions)
         {
-            RenderGrid(width, height, blockedPositions, null, null);
+            RenderGrid(width, height, blockedPositions, null, null, null, null);
         }
 
         public void RenderGrid(
@@ -46,18 +48,21 @@ namespace Flowbit.MovingGame.Unity
             IReadOnlyCollection<GridPosition> blockedPositions,
             IReadOnlyCollection<GridPosition> breakableBlockedPositions)
         {
-            RenderGrid(width, height, blockedPositions, breakableBlockedPositions, null);
+            RenderGrid(width, height, blockedPositions, breakableBlockedPositions, null, null, null);
         }
 
         /// <summary>
-        /// Renders a grid with solid obstacles, breakable obstacles, and visited cells.
+        /// Renders a grid with solid obstacles, breakable obstacles, visited cells,
+        /// grouped blocked cells, and toggle switches.
         /// </summary>
         public void RenderGrid(
             int width,
             int height,
             IReadOnlyCollection<GridPosition> blockedPositions,
             IReadOnlyCollection<GridPosition> breakableBlockedPositions,
-            IReadOnlyCollection<GridPosition> visitedPositions)
+            IReadOnlyCollection<GridPosition> visitedPositions,
+            IReadOnlyCollection<ToggleBlockedObstacleState> toggleBlockedObstacles,
+            IReadOnlyCollection<ToggleSwitchTileState> toggleSwitchTiles)
         {
             width_ = width;
             height_ = height;
@@ -71,15 +76,33 @@ namespace Flowbit.MovingGame.Unity
 
             HashSet<GridPosition> blockedLookup = blockedPositions != null
                 ? new HashSet<GridPosition>(blockedPositions)
-                : null;
+                : new HashSet<GridPosition>();
 
             HashSet<GridPosition> breakableLookup = breakableBlockedPositions != null
                 ? new HashSet<GridPosition>(breakableBlockedPositions)
-                : null;
+                : new HashSet<GridPosition>();
 
             HashSet<GridPosition> visitedLookup = visitedPositions != null
                 ? new HashSet<GridPosition>(visitedPositions)
-                : null;
+                : new HashSet<GridPosition>();
+
+            Dictionary<GridPosition, ToggleBlockedObstacleState> toggleBlockedLookup = new();
+            if (toggleBlockedObstacles != null)
+            {
+                foreach (ToggleBlockedObstacleState obstacle in toggleBlockedObstacles)
+                {
+                    toggleBlockedLookup[obstacle.Position] = obstacle;
+                }
+            }
+
+            Dictionary<GridPosition, ToggleSwitchTileState> toggleSwitchLookup = new();
+            if (toggleSwitchTiles != null)
+            {
+                foreach (ToggleSwitchTileState toggle in toggleSwitchTiles)
+                {
+                    toggleSwitchLookup[toggle.Position] = toggle;
+                }
+            }
 
             Transform parent = cellsRoot_ != null ? cellsRoot_ : transform;
 
@@ -90,47 +113,68 @@ namespace Flowbit.MovingGame.Unity
                     GridPosition gridPosition = new GridPosition(x, y);
                     Vector3 worldPosition = GridToWorld(gridPosition);
 
-                    bool isBlocked = blockedLookup != null && blockedLookup.Contains(gridPosition);
-                    bool isBreakableBlocked = breakableLookup != null && breakableLookup.Contains(gridPosition);
-                    bool isVisited = visitedLookup != null && visitedLookup.Contains(gridPosition);
+                    SpawnCell(cellPrefab_, worldPosition, parent, $"Cell_{x}_{y}", gridPosition);
 
-                    GameObject prefabToUse = cellPrefab_;
-
-                    if (isBreakableBlocked && breakableBlockedCellPrefab_ != null)
+                    if (visitedLookup.Contains(gridPosition) && visitedCellPrefab_ != null)
                     {
-                        prefabToUse = breakableBlockedCellPrefab_;
-                    }
-                    else if (isBlocked && blockedCellPrefab_ != null)
-                    {
-                        prefabToUse = blockedCellPrefab_;
-                    }
-                    else if (isVisited && visitedCellPrefab_ != null)
-                    {
-                        prefabToUse = visitedCellPrefab_;
+                        SpawnOverlay(
+                            visitedCellPrefab_,
+                            worldPosition,
+                            parent,
+                            $"VisitedCell_{x}_{y}");
                     }
 
-                    GameObject cell = Instantiate(prefabToUse, worldPosition, Quaternion.identity, parent);
+                    if (toggleSwitchLookup.TryGetValue(gridPosition, out ToggleSwitchTileState toggleSwitch) &&
+                        toggleSwitchCellPrefab_ != null)
+                    {
+                        GameObject toggleSwitchObject = SpawnOverlay(
+                            toggleSwitchCellPrefab_,
+                            worldPosition,
+                            parent,
+                            $"ToggleSwitch_{x}_{y}");
 
-                    if (isBreakableBlocked)
-                    {
-                        cell.name = $"BreakableBlockedCell_{x}_{y}";
-                    }
-                    else if (isBlocked)
-                    {
-                        cell.name = $"BlockedCell_{x}_{y}";
-                    }
-                    else if (isVisited)
-                    {
-                        cell.name = $"VisitedCell_{x}_{y}";
-                    }
-                    else
-                    {
-                        cell.name = $"Cell_{x}_{y}";
+                        ToggleSwitchCellView view = toggleSwitchObject.GetComponent<ToggleSwitchCellView>();
+                        if (view != null)
+                        {
+                            view.Initialize(toggleSwitch.GroupId);
+                        }
                     }
 
-                    cell.transform.localScale = new Vector3(cellSize_, cellSize_, 1f);
-                    spawnedCells_.Add(cell);
-                    cellObjectsByPosition_[gridPosition] = cell;
+                    if (blockedLookup.Contains(gridPosition) && blockedCellPrefab_ != null)
+                    {
+                        SpawnOverlay(
+                            blockedCellPrefab_,
+                            worldPosition,
+                            parent,
+                            $"BlockedCell_{x}_{y}");
+                    }
+
+                    if (breakableLookup.Contains(gridPosition) && breakableBlockedCellPrefab_ != null)
+                    {
+                        SpawnOverlay(
+                            breakableBlockedCellPrefab_,
+                            worldPosition,
+                            parent,
+                            $"BreakableBlockedCell_{x}_{y}");
+                    }
+
+                    if (toggleBlockedLookup.TryGetValue(gridPosition, out ToggleBlockedObstacleState groupedObstacle) &&
+                        groupedBlockedCellPrefab_ != null)
+                    {
+                        GameObject groupedBlockedObject = SpawnOverlay(
+                            groupedBlockedCellPrefab_,
+                            worldPosition,
+                            parent,
+                            $"GroupedBlockedCell_{x}_{y}");
+
+                        GroupedBlockedCellView view =
+                            groupedBlockedObject.GetComponent<GroupedBlockedCellView>();
+
+                        if (view != null)
+                        {
+                            view.Initialize(groupedObstacle.GroupId, groupedObstacle.IsOn);
+                        }
+                    }
                 }
             }
         }
@@ -163,7 +207,8 @@ namespace Flowbit.MovingGame.Unity
         }
 
         /// <summary>
-        /// Refreshes a single cell visual using the given state.
+        /// Refreshes a single classic cell visual using the given state.
+        /// This method is kept for compatibility with existing callers.
         /// </summary>
         public void RefreshCell(
             GridPosition gridPosition,
@@ -224,6 +269,37 @@ namespace Flowbit.MovingGame.Unity
 
             spawnedCells_.Add(cell);
             cellObjectsByPosition_[gridPosition] = cell;
+        }
+
+        private GameObject SpawnCell(
+            GameObject prefab,
+            Vector3 worldPosition,
+            Transform parent,
+            string objectName,
+            GridPosition gridPosition)
+        {
+            GameObject cell = Instantiate(prefab, worldPosition, Quaternion.identity, parent);
+            cell.name = objectName;
+            cell.transform.localScale = new Vector3(cellSize_, cellSize_, 1f);
+
+            spawnedCells_.Add(cell);
+            cellObjectsByPosition_[gridPosition] = cell;
+
+            return cell;
+        }
+
+        private GameObject SpawnOverlay(
+            GameObject prefab,
+            Vector3 worldPosition,
+            Transform parent,
+            string objectName)
+        {
+            GameObject cell = Instantiate(prefab, worldPosition, Quaternion.identity, parent);
+            cell.name = objectName;
+            cell.transform.localScale = new Vector3(cellSize_, cellSize_, 1f);
+
+            spawnedCells_.Add(cell);
+            return cell;
         }
 
         private Vector2 GetGridOffset()

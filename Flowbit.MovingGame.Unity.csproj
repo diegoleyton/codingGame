@@ -52,12 +52,14 @@
     <Compile Include="Assets/Scripts/MovingGame/Unity/MovingGameLevelsLibrary.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Game/MovingGameNavigationParams.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Game/View/MovingGameView.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/Game/View/GroupedBlockedCellView.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/LevelSelection/MovingGameLevelSelectorController.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Game/MovingGameController.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/LevelSelection/MovingGameAvailableInstructionsResolver.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Game/MovingGameCompletedPopupView.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Game/View/LevelSelectionButtonView.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Game/View/GridRenderer.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/Game/View/ToggleSwitchCellView.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Game/MovingGameCompletedPopupParams.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Game/MovingGameSceneController.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/LevelSelection/MovingGameLevelSelectionPopupView.cs" />

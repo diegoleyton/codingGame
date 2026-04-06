@@ -35,6 +35,7 @@ namespace Flowbit.MovingGame.Core
 
         /// <summary>
         /// Returns the positions of solid obstacles.
+        /// This includes only the classic always-blocking obstacles.
         /// </summary>
         IReadOnlyCollection<GridPosition> GetBlockedPositions();
 
@@ -47,6 +48,39 @@ namespace Flowbit.MovingGame.Core
         /// Returns the positions visited by the character.
         /// </summary>
         IReadOnlyCollection<GridPosition> GetVisitedPositions();
+
+        /// <summary>
+        /// Returns all toggleable blocked obstacles currently present in the level.
+        /// Each obstacle keeps its own on/off state.
+        /// </summary>
+        IReadOnlyCollection<ToggleBlockedObstacleState> GetToggleBlockedObstacles();
+
+        /// <summary>
+        /// Returns all toggle switch tiles currently present in the level.
+        /// </summary>
+        IReadOnlyCollection<ToggleSwitchTileState> GetToggleSwitchTiles();
+
+        /// <summary>
+        /// Tries to get the toggleable blocked obstacle at the given position.
+        /// </summary>
+        /// <param name="position">The position to query.</param>
+        /// <param name="state">
+        /// When this method returns, contains the obstacle state if one exists at the position;
+        /// otherwise, null.
+        /// </param>
+        /// <returns>True if a toggleable blocked obstacle exists at the given position; otherwise false.</returns>
+        bool TryGetToggleBlockedObstacle(GridPosition position, out ToggleBlockedObstacleState state);
+
+        /// <summary>
+        /// Tries to get the toggle switch tile at the given position.
+        /// </summary>
+        /// <param name="position">The position to query.</param>
+        /// <param name="state">
+        /// When this method returns, contains the switch state if one exists at the position;
+        /// otherwise, null.
+        /// </param>
+        /// <returns>True if a toggle switch tile exists at the given position; otherwise false.</returns>
+        bool TryGetToggleSwitchTile(GridPosition position, out ToggleSwitchTileState state);
 
         /// <summary>
         /// Returns whether there is a step after-process pending.
