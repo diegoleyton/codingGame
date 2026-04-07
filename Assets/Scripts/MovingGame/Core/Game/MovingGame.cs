@@ -334,7 +334,7 @@ namespace Flowbit.MovingGame.Core
             GridPosition skippedPosition = GetForwardPosition(characterPosition_, characterDirection_);
             GridPosition landingPosition = GetForwardPosition(skippedPosition, characterDirection_);
 
-            if (!CanJumpThrough(skippedPosition) || !CanJumpThrough(landingPosition))
+            if (!CanJumpThrough(skippedPosition) || !CanJumpLandOn(landingPosition))
             {
                 hasFailed_ = true;
                 return;
@@ -516,6 +516,16 @@ namespace Flowbit.MovingGame.Core
             }
 
             return !(toggleBlockedByPosition_.TryGetValue(position, out ToggleBlockedObstacleState state) && state.IsOn);
+        }
+
+        private bool CanJumpLandOn(GridPosition position)
+        {
+            if (!CanJumpThrough(position))
+            {
+                return false;
+            }
+
+            return !holePositions_.Contains(position);
         }
 
         private void ValidateObstaclePosition(GridPosition obstaclePosition)

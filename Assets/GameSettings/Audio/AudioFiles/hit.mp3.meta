@@ -6,20 +6,20 @@ AudioImporter:
   defaultSettings:
     serializedVersion: 2
     loadType: 1
-    sampleRateSetting: 1
+    sampleRateSetting: 2
     sampleRateOverride: 44100
     compressionFormat: 1
-    quality: 0.65
+    quality: 0.45
     conversionMode: 0
     preloadAudioData: 1
   platformSettingOverrides:
     Android:
       serializedVersion: 2
       loadType: 1
-      sampleRateSetting: 1
+      sampleRateSetting: 2
       sampleRateOverride: 44100
       compressionFormat: 1
-      quality: 0.65
+      quality: 0.45
       conversionMode: 0
       preloadAudioData: 1
   forceToMono: 1

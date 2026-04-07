@@ -1406,6 +1406,24 @@ public sealed class MovingGameTests
     }
 
     [Test]
+    public void JumpForward_WhenLandingCellIsHole_SetsFailed()
+    {
+        MovingGame game = new MovingGame(
+            width: 5,
+            height: 5,
+            startCharacterPosition: new GridPosition(0, 0),
+            startCharacterDirection: Direction.Right,
+            foodPositions: new[] { new GridPosition(4, 0) },
+            holePositions: new[] { new GridPosition(2, 0) });
+
+        game.JumpForward();
+
+        Assert.AreEqual(new GridPosition(0, 0), game.GetCharacterPosition());
+        Assert.IsTrue(game.HasFailed());
+        Assert.IsFalse(game.HasWon());
+    }
+
+    [Test]
     public void JumpForward_WhenSkippedCellIsBlocked_SetsFailed()
     {
         MovingGame game = new MovingGame(
