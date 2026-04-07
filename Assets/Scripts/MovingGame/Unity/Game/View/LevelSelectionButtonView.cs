@@ -14,6 +14,7 @@ namespace Flowbit.MovingGame.Unity
         [SerializeField] private Button button_;
         [SerializeField] private Text titleText_;
         [SerializeField] private Image dificultyImage_;
+        [SerializeField] private Image lockImage_;
 
         [SerializeField] private DificultyVisuals[] dificultyVisuals_;
 
@@ -34,6 +35,34 @@ namespace Flowbit.MovingGame.Unity
                         $"Duplicate UI mapping found for dificulty type {entry.Dificulty}");
                 }
                 dificultyVisualsMap_[entry.Dificulty] = entry;
+            }
+        }
+
+        /// <summary>
+        /// Shows or hides the lock state for this level button.
+        /// </summary>
+        public void SetLocked(bool isLocked)
+        {
+            if (lockImage_ != null)
+            {
+                lockImage_.enabled = isLocked;
+            }
+
+            if (button_ != null)
+            {
+                button_.interactable = !isLocked;
+            }
+
+            if (titleText_ != null)
+            {
+                titleText_.gameObject.SetActive(!isLocked);
+            }
+
+            if (dificultyImage_ != null)
+            {
+                Color color = dificultyImage_.color;
+                color.a = isLocked ? 0.45f : 1f;
+                dificultyImage_.color = color;
             }
         }
 

@@ -52,6 +52,9 @@
     <Compile Include="Assets/Scripts/Utilities/Core/Events/IEvent.cs" />
     <Compile Include="Assets/Scripts/Utilities/Core/Events/EventDispatcher.cs" />
     <Compile Include="Assets/Scripts/Utilities/Core/Services/ServiceContainer.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Core/Storage/DataLoadResult.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Core/Storage/PlayerPrefsDataStorage.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Core/Storage/IDataStorage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/Scripts/Utilities/Core/Flowbit.Utilities.Core.asmdef" />

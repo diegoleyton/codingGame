@@ -186,6 +186,13 @@ namespace Flowbit.MovingGame.Unity
             currentLevelCompleted_ = true;
             currentLevelFailed_ = false;
 
+            int nextLevelIndex = currentLevelIndex_ + 1;
+            if (nextLevelIndex < levelsLibrary_.GetLevelCount())
+            {
+                MovingGameLevelData nextLevelData = levelsLibrary_.GetLevelAt(nextLevelIndex);
+                eventDispatcher_.Send(new LevelUnlockedEvent(nextLevelData.id, nextLevelIndex));
+            }
+
             StopCompletedPopupCoroutine();
             showCompletedPopupCoroutine_ = StartCoroutine(ShowCompletedPopupRoutine());
         }

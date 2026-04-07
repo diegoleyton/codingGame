@@ -61,12 +61,14 @@
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/ScreenBlockerImage.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/Transitions/GameSceneTransitionBase.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/ProgramPanelView.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Scripts/Progress/ILevelProgressService.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Audio/AudioReactor.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Character/CharacterAnimation.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/ExecutionControlsView.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Audio/GameSoundLibrary.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/ComponentsLoopAnimator.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/SceneNavigationNodeResolver.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Scripts/Progress/LevelProgressService.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/MainSceneController.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/Transitions/PaperOpenTransitionOverlay.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/GameNavigationService.cs" />
@@ -77,6 +79,7 @@
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/GameStatusView.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/Transitions/PopupTransformTransition.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/IGameNavigationService.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Scripts/Progress/LevelProgressData.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/InstructionSelectionPanelView.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/GamesSettings/MovingGameSettings.cs" />
   </ItemGroup>

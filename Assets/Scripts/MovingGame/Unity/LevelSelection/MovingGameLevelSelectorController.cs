@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using Flowbit.GameBase.Services;
+using Flowbit.GameBase.Progress;
 using Flowbit.MovingGame.Core.Levels;
 using Flowbit.GameBase.Definitions;
 using Flowbit.GameBase.Scenes;
@@ -19,6 +20,7 @@ namespace Flowbit.MovingGame.Unity
         [SerializeField] private LevelSelectionButtonView levelButtonPrefab_;
 
         private IGameNavigationService navigationService_;
+        private ILevelProgressService levelProgressService_;
 
         protected override bool HasBackButton => true;
 
@@ -27,6 +29,7 @@ namespace Flowbit.MovingGame.Unity
             base.Start();
             var serviceContainer = GlobalServiceContainer.ServiceContainer;
             navigationService_ = serviceContainer.Get<IGameNavigationService>();
+            levelProgressService_ = serviceContainer.Get<ILevelProgressService>();
 
             if (levelsLibrary_ == null)
             {
@@ -63,7 +66,12 @@ namespace Flowbit.MovingGame.Unity
 
                 buttonView.SetTitle(levelData.name, levelIndex);
                 buttonView.SetDificulty(levelData.GetDificulty());
-                buttonView.SetOnClick(() => OpenLevelDetails(levelData, levelIndex));
+                bool isUnlocked = levelProgressService_.IsLevelUnlocked(levelIndex);
+                buttonView.SetLocked(!isUnlocked);
+                Action onClick = isUnlocked
+                    ? () => OpenLevelDetails(levelData, levelIndex)
+                    : null;
+                buttonView.SetOnClick(onClick);
             }
         }
 

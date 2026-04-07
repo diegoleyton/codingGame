@@ -2,9 +2,11 @@ using Flowbit.Utilities.Navigation;
 using Flowbit.Utilities.Core.Events;
 using Flowbit.Utilities.Core.Services;
 using Flowbit.Utilities.Coroutines;
+using Flowbit.Utilities.Storage;
 using Flowbit.Utilities.Unity.UI;
 using Flowbit.Utilities.Audio;
 using Flowbit.GameBase.Scenes;
+using Flowbit.GameBase.Progress;
 using Flowbit.GameBase.UI;
 using Flowbit.GameBase.Audio;
 using UnityEngine;
@@ -30,6 +32,7 @@ namespace Flowbit.GameBase.Services
             ServiceContainer = new ServiceContainer();
             EventDispatcher dispatcher = new EventDispatcher();
             ServiceContainer.Register(dispatcher);
+            InitializeProgressServices(dispatcher);
             var res = InitializeGameResources();
             InitializeScreenBLocker(res);
             CreateCoroutineService();
@@ -43,6 +46,12 @@ namespace Flowbit.GameBase.Services
             var res = Resources.Load<GameResources>("GameResources");
             ServiceContainer.Register(res);
             return res;
+        }
+
+        private void InitializeProgressServices(EventDispatcher dispatcher)
+        {
+            IDataStorage dataStorage = new PlayerPrefsDataStorage();
+            ServiceContainer.Register<ILevelProgressService>(new LevelProgressService(dispatcher, dataStorage));
         }
 
         private void InitializeNavigationService(EventDispatcher dispatcher, GameResources res)
