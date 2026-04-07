@@ -30,6 +30,7 @@ namespace Flowbit.GameBase.Services
         public ServiceInitializer()
         {
             ServiceContainer = new ServiceContainer();
+            PreventScreenSleep();
             EventDispatcher dispatcher = new EventDispatcher();
             ServiceContainer.Register(dispatcher);
             InitializeProgressServices(dispatcher);
@@ -124,6 +125,11 @@ namespace Flowbit.GameBase.Services
             var go = new GameObject("[CoroutineService]");
             GameObject.DontDestroyOnLoad(go);
             ServiceContainer.Register<ICoroutineService>(go.AddComponent<CoroutineService>());
+        }
+
+        private static void PreventScreenSleep()
+        {
+            Screen.sleepTimeout = SleepTimeout.NeverSleep;
         }
     }
 }
