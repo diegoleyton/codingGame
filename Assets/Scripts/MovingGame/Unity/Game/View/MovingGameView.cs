@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using Flowbit.GameBase.Character;
 using Flowbit.GameBase.Definitions;
 using Flowbit.GameBase.UI;
 using Flowbit.GameBase.Services;
@@ -38,7 +37,6 @@ namespace Flowbit.MovingGame.Unity
         [SerializeField] private float breakDelaySeconds_ = 0.25f;
 
         [Header("Jump")]
-        [SerializeField] private float jumpDelaySeconds_ = 0.2f;
         [SerializeField] private float jumpDurationSeconds_ = 0.35f;
         [SerializeField] private float jumpArcHeight_ = 0.45f;
 
@@ -267,7 +265,7 @@ namespace Flowbit.MovingGame.Unity
             Vector3 endPosition = GridToWorld(endGridPosition);
 
             eventDispatcher_?.Send(new OnMovingGameJump());
-            SetPetAnimationState(PetAnimationStateType.Walk);
+            SetPetAnimationState(PetAnimationStateType.Jump);
 
             float duration = jumpDurationSeconds_ > 0f ? jumpDurationSeconds_ : moveDurationSeconds_;
 
@@ -295,11 +293,6 @@ namespace Flowbit.MovingGame.Unity
             character_.position = endPosition;
             character_.rotation = DirectionToRotation(game_.GetCharacterDirection());
             RebuildFoodVisuals(false);
-
-            if (jumpDelaySeconds_ > 0f)
-            {
-                yield return new WaitForSeconds(jumpDelaySeconds_);
-            }
 
             SendSwitchEventIfNeeded(!lastCharacterGridPosition_.Equals(endGridPosition));
             SetPetAnimationState(PetAnimationStateType.Idle);

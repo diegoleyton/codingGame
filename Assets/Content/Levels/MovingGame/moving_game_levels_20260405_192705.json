@@ -2074,9 +2074,9 @@
         },
         {
             "id": 46,
-            "name": "Blue Switch",
+            "name": "Red Switch",
             "difficulty": 6,
-            "hint": "Step on the switch to open the blue gate.",
+            "hint": "Step on the switch to open the red gate.",
             "width": 4,
             "height": 1,
             "startPosition": {
@@ -2111,9 +2111,9 @@
         },
         {
             "id": 47,
-            "name": "Blue Switch 2",
+            "name": "Red Switch",
             "difficulty": 6,
-            "hint": "Be careful wiuth the multiple switches",
+            "hint": "Be careful with the multiple switches",
             "width": 5,
             "height": 4,
             "startPosition": {
@@ -3088,10 +3088,6 @@
                     "y": 2
                 },
                 {
-                    "x": 4,
-                    "y": 2
-                },
-                {
                     "x": 2,
                     "y": 1
                 }
@@ -3139,7 +3135,13 @@
                     "x": 3,
                     "y": 2,
                     "groupId": 2,
-                    "isOn": true
+                    "isOn": false
+                },
+                {
+                    "x": 4,
+                    "y": 2,
+                    "groupId": 2,
+                    "isOn": false
                 }
             ],
             "toggleSwitchTiles": [
@@ -3332,6 +3334,239 @@
                     "x": 0,
                     "y": 1,
                     "groupId": 3
+                }
+            ]
+        },
+        {
+            "id": 59,
+            "name": "Master Walk4",
+            "difficulty": 1,
+            "hint": "Use every skill you learned to clear the final route.",
+            "width": 5,
+            "height": 5,
+            "startPosition": {
+                "x": 0,
+                "y": 0
+            },
+            "startDirection": "Right",
+            "foodPositions": [
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 4
+                }
+            ],
+            "blockedPositions": [
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 3
+                },
+                {
+                    "x": 2,
+                    "y": 1
+                },
+                {
+                    "x": 3,
+                    "y": 1
+                },
+                {
+                    "x": 4,
+                    "y": 1
+                }
+            ],
+            "breakableBlockedPositions": [],
+            "holePositions": [
+                {
+                    "x": 2,
+                    "y": 4
+                }
+            ],
+            "toggleBlockedTiles": [
+                {
+                    "x": 0,
+                    "y": 3,
+                    "groupId": 1,
+                    "isOn": true
+                },
+                {
+                    "x": 1,
+                    "y": 0,
+                    "groupId": 2,
+                    "isOn": true
+                },
+                {
+                    "x": 1,
+                    "y": 2,
+                    "groupId": 3,
+                    "isOn": true
+                }
+            ],
+            "toggleSwitchTiles": [
+                {
+                    "x": 0,
+                    "y": 1,
+                    "groupId": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2,
+                    "groupId": 1
+                },
+                {
+                    "x": 1,
+                    "y": 4,
+                    "groupId": 2
+                },
+                {
+                    "x": 4,
+                    "y": 2,
+                    "groupId": 3
+                }
+            ]
+        },
+        {
+            "id": 60,
+            "name": "Master Walk 5",
+            "difficulty": 1,
+            "hint": "Use every skill you learned to clear the final route.",
+            "width": 5,
+            "height": 5,
+            "startPosition": {
+                "x": 0,
+                "y": 0
+            },
+            "startDirection": "Right",
+            "foodPositions": [
+                {
+                    "x": 3,
+                    "y": 0
+                },
+                {
+                    "x": 4,
+                    "y": 0
+                }
+            ],
+            "blockedPositions": [
+                {
+                    "x": 1,
+                    "y": 3
+                },
+                {
+                    "x": 1,
+                    "y": 2
+                },
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                }
+            ],
+            "breakableBlockedPositions": [
+                {
+                    "x": 3,
+                    "y": 4
+                },
+                {
+                    "x": 4,
+                    "y": 4
+                }
+            ],
+            "holePositions": [
+                {
+                    "x": 2,
+                    "y": 3
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": 1
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                }
+            ],
+            "toggleBlockedTiles": [
+                {
+                    "x": 3,
+                    "y": 1,
+                    "groupId": 3,
+                    "isOn": true
+                },
+                {
+                    "x": 4,
+                    "y": 1,
+                    "groupId": 3,
+                    "isOn": true
+                },
+                {
+                    "x": 3,
+                    "y": 2,
+                    "groupId": 1,
+                    "isOn": false
+                },
+                {
+                    "x": 4,
+                    "y": 2,
+                    "groupId": 1,
+                    "isOn": false
+                },
+                {
+                    "x": 3,
+                    "y": 3,
+                    "groupId": 2,
+                    "isOn": true
+                },
+                {
+                    "x": 4,
+                    "y": 3,
+                    "groupId": 2,
+                    "isOn": true
+                }
+            ],
+            "toggleSwitchTiles": [
+                {
+                    "x": 0,
+                    "y": 1,
+                    "groupId": 3
+                },
+                {
+                    "x": 0,
+                    "y": 2,
+                    "groupId": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3,
+                    "groupId": 1
+                },
+                {
+                    "x": 0,
+                    "y": 4,
+                    "groupId": 2
+                },
+                {
+                    "x": 1,
+                    "y": 4,
+                    "groupId": 1
+                },
+                {
+                    "x": 2,
+                    "y": 4,
+                    "groupId": 1
                 }
             ]
         }

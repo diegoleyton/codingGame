@@ -61,6 +61,7 @@
     <Compile Include="Assets/Scripts/MovingGame/Unity/Game/View/GridRenderer.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Game/View/ToggleSwitchCellView.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Game/MovingGameCompletedPopupParams.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/Game/Animations/PetAnimation.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Game/MovingGameSceneController.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/LevelSelection/MovingGameLevelSelectionPopupView.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/LevelSelection/MovingGameLevelSelectionPopupParams.cs" />

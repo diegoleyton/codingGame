@@ -848,8 +848,7 @@ MonoBehaviour:
   breakPrefab_: {fileID: 8238055016132422236, guid: 0372e0471efc345a4be5223cd86cd08c, type: 3}
   breakRoot_: {fileID: 0}
   breakDelaySeconds_: 0.5
-  jumpDelaySeconds_: 0.25
-  jumpDurationSeconds_: 0.55
+  jumpDurationSeconds_: 0.7
   jumpArcHeight_: 0.6
   moveDurationSeconds_: 0.5
   moveAnimationSeconds_: 0.3

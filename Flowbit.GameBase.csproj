@@ -59,7 +59,6 @@
     <Compile Include="Assets/Scripts/GameBase/Scripts/Audio/SoundId.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/UIAnimatedComponent.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/ScreenBlockerImage.cs" />
-    <Compile Include="Assets/Scripts/GameBase/Scripts/Character/PetAnimation.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/Transitions/GameSceneTransitionBase.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/ProgramPanelView.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Audio/AudioReactor.cs" />

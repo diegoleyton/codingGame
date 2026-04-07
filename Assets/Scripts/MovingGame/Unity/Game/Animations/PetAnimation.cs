@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Flowbit.GameBase.Character
+namespace Flowbit.MovingGame.Unity
 {
     /// <summary>
     /// Represents the supported pet animation states.
@@ -10,6 +10,7 @@ namespace Flowbit.GameBase.Character
         Idle = 0,
         Walk = 1,
         Attack = 2,
+        Jump = 3
     }
 
     /// <summary>
@@ -19,6 +20,8 @@ namespace Flowbit.GameBase.Character
     {
         private const string ATTACK_NAME = "attack";
         private const string WALK_NAME = "walk";
+
+        private const string JUMP_NAME = "jump";
 
         [SerializeField]
         private Animator animator;
@@ -52,6 +55,7 @@ namespace Flowbit.GameBase.Character
             }
 
             animator.SetBool(WALK_NAME, stateType == PetAnimationStateType.Walk);
+            animator.SetBool(JUMP_NAME, stateType == PetAnimationStateType.Jump);
 
             if (stateType == PetAnimationStateType.Attack)
             {
