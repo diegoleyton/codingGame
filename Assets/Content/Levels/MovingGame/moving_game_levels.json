@@ -4,9 +4,9 @@
     "levels": [
         {
             "id": 1,
-            "name": "Baby Step",
+            "name": "First Step",
             "difficulty": 1,
-            "hint": "Move forward once to grab the snack.",
+            "hint": "Move forward once to reach the food.",
             "width": 3,
             "height": 1,
             "startPosition": {
@@ -28,9 +28,9 @@
         },
         {
             "id": 2,
-            "name": "Two Paws",
+            "name": "Straight Ahead",
             "difficulty": 1,
-            "hint": "Keep moving in the same direction.",
+            "hint": "Keep moving in the same direction until you arrive.",
             "width": 4,
             "height": 1,
             "startPosition": {
@@ -52,9 +52,9 @@
         },
         {
             "id": 3,
-            "name": "Up We Go",
+            "name": "Upward Path",
             "difficulty": 1,
-            "hint": "Forward also works when facing up.",
+            "hint": "Forward works vertically too. Climb to the goal.",
             "width": 1,
             "height": 4,
             "startPosition": {
@@ -76,9 +76,9 @@
         },
         {
             "id": 4,
-            "name": "Tall Trail",
+            "name": "Tall Climb",
             "difficulty": 1,
-            "hint": "Walk straight to the top.",
+            "hint": "Stay on the same line and walk all the way up.",
             "width": 1,
             "height": 5,
             "startPosition": {
@@ -100,9 +100,9 @@
         },
         {
             "id": 5,
-            "name": "Down Down",
+            "name": "Downward Trail",
             "difficulty": 1,
-            "hint": "You can also go down",
+            "hint": "Face down and follow the column to the food.",
             "width": 1,
             "height": 5,
             "startPosition": {
@@ -126,7 +126,7 @@
             "id": 6,
             "name": "First Turn",
             "difficulty": 2,
-            "hint": "Rotate before you move.",
+            "hint": "Rotate before moving so the path lines up.",
             "width": 3,
             "height": 3,
             "startPosition": {
@@ -148,9 +148,9 @@
         },
         {
             "id": 7,
-            "name": "Turn And Walk",
+            "name": "Turn And Go",
             "difficulty": 2,
-            "hint": "Face up, then keep going.",
+            "hint": "One turn sets the route. Then keep walking.",
             "width": 4,
             "height": 4,
             "startPosition": {
@@ -172,9 +172,9 @@
         },
         {
             "id": 8,
-            "name": "Right Corner",
+            "name": "Corner Reach",
             "difficulty": 2,
-            "hint": "Make one turn to reach the corner.",
+            "hint": "Use a turn to reach the far corner.",
             "width": 4,
             "height": 4,
             "startPosition": {
@@ -196,9 +196,9 @@
         },
         {
             "id": 9,
-            "name": "Two Bends",
+            "name": "Two Turns",
             "difficulty": 2,
-            "hint": "You need more than one rotation here.",
+            "hint": "This route needs more than one rotation.",
             "width": 4,
             "height": 4,
             "startPosition": {
@@ -222,7 +222,7 @@
             "id": 10,
             "name": "Top Shelf",
             "difficulty": 2,
-            "hint": "Turn, walk, and turn again if needed.",
+            "hint": "Turn carefully and work your way to the upper goal.",
             "width": 5,
             "height": 4,
             "startPosition": {
@@ -244,9 +244,9 @@
         },
         {
             "id": 11,
-            "name": "Spin Practice",
+            "name": "Turnaround",
             "difficulty": 2,
-            "hint": "The goal is behind you and above you.",
+            "hint": "The food is not in front of you, so reorient first.",
             "width": 3,
             "height": 3,
             "startPosition": {
@@ -268,9 +268,9 @@
         },
         {
             "id": 12,
-            "name": "Ready To Navigate",
+            "name": "Open Route",
             "difficulty": 2,
-            "hint": "Movement and rotation together unlock every path.",
+            "hint": "Movement and rotation together can solve the whole board.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -294,7 +294,7 @@
             "id": 13,
             "name": "First Wall",
             "difficulty": 3,
-            "hint": "Walls cannot be crossed, so go around.",
+            "hint": "Walls cannot be crossed, so find the way around.",
             "width": 4,
             "height": 3,
             "startPosition": {
@@ -321,9 +321,9 @@
         },
         {
             "id": 14,
-            "name": "L Shape",
+            "name": "L-Corner",
             "difficulty": 3,
-            "hint": "The direct route is closed by a small corner wall.",
+            "hint": "The direct path is closed by a small corner wall.",
             "width": 4,
             "height": 4,
             "startPosition": {
@@ -356,7 +356,7 @@
             "id": 15,
             "name": "Narrow Gate",
             "difficulty": 3,
-            "hint": "Find the opening and pass through it.",
+            "hint": "Look for the opening and pass through it.",
             "width": 5,
             "height": 4,
             "startPosition": {
@@ -393,7 +393,7 @@
             "id": 16,
             "name": "Wall Hugger",
             "difficulty": 3,
-            "hint": "Follow the edge to get around the blocks.",
+            "hint": "Following the edge is the safest way through.",
             "width": 5,
             "height": 4,
             "startPosition": {
@@ -430,7 +430,7 @@
             "id": 17,
             "name": "Small Maze",
             "difficulty": 3,
-            "hint": "A few turns and a detour will solve it.",
+            "hint": "A short detour is enough if you plan the turns.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -479,7 +479,7 @@
             "id": 18,
             "name": "Cross Corridor",
             "difficulty": 3,
-            "hint": "Use the open corridor, not the blocked center.",
+            "hint": "The middle is blocked. Use the open corridor instead.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -530,9 +530,9 @@
         },
         {
             "id": 19,
-            "name": "Side Streets",
+            "name": "Side Route",
             "difficulty": 3,
-            "hint": "The center is blocked, so take the side path.",
+            "hint": "The center is closed, so the answer is on the side.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -587,9 +587,9 @@
         },
         {
             "id": 20,
-            "name": "Find the way",
+            "name": "Find The Opening",
             "difficulty": 3,
-            "hint": "Find the way to the goal",
+            "hint": "Read the board carefully and route around the walls.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -650,7 +650,7 @@
             "id": 21,
             "name": "First Jump",
             "difficulty": 4,
-            "hint": "Jump over the hole to land safely.",
+            "hint": "Jump over the hole and land on a safe tile.",
             "width": 5,
             "height": 3,
             "startPosition": {
@@ -688,7 +688,7 @@
             "id": 22,
             "name": "Jump Lane",
             "difficulty": 4,
-            "hint": "The center lane teaches a clean jump.",
+            "hint": "This level is all about lining up a clean jump.",
             "width": 5,
             "height": 3,
             "startPosition": {
@@ -724,9 +724,9 @@
         },
         {
             "id": 23,
-            "name": "Leap Then Turn",
+            "name": "Leap And Turn",
             "difficulty": 4,
-            "hint": "Jump first, then rotate to reach the food.",
+            "hint": "Jump first, then rotate to finish the path.",
             "width": 5,
             "height": 4,
             "startPosition": {
@@ -768,7 +768,7 @@
             "id": 24,
             "name": "Double Gap",
             "difficulty": 4,
-            "hint": "You can solve this with two separate jumps.",
+            "hint": "You need two separate jumps to complete this route.",
             "width": 5,
             "height": 3,
             "startPosition": {
@@ -817,7 +817,7 @@
             "id": 25,
             "name": "Upper Bridge",
             "difficulty": 4,
-            "hint": "Rotate, line up with the gap, and jump across.",
+            "hint": "Rotate into place, then jump across the gap.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -861,7 +861,7 @@
         },
         {
             "id": 26,
-            "name": "Landing Zone",
+            "name": "Safe Landing",
             "difficulty": 4,
             "hint": "Plan the jump so you land on an open cell.",
             "width": 5,
@@ -931,9 +931,9 @@
         },
         {
             "id": 27,
-            "name": "Find the Way",
+            "name": "Across The Gap",
             "difficulty": 4,
-            "hint": "Find the way the goal",
+            "hint": "The hole changes the route, but the goal is still reachable.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -997,9 +997,9 @@
         },
         {
             "id": 28,
-            "name": "Find the Way 2",
+            "name": "Split Route",
             "difficulty": 4,
-            "hint": "Find the way the goal",
+            "hint": "Walls and holes divide the board into sections.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -1065,7 +1065,7 @@
             "id": 29,
             "name": "Two Treats",
             "difficulty": 4,
-            "hint": "You win only after collecting both foods.",
+            "hint": "You only win after collecting both foods.",
             "width": 4,
             "height": 4,
             "startPosition": {
@@ -1093,7 +1093,7 @@
             "id": 30,
             "name": "Three Stops",
             "difficulty": 4,
-            "hint": "There are three goals, so your route matters.",
+            "hint": "There are three foods, so the order matters now.",
             "width": 4,
             "height": 4,
             "startPosition": {
@@ -1125,7 +1125,7 @@
             "id": 31,
             "name": "Leap For Lunch",
             "difficulty": 4,
-            "hint": "Jump to one goal, then continue to the second.",
+            "hint": "Jump to one food first, then continue to the next.",
             "width": 5,
             "height": 3,
             "startPosition": {
@@ -1167,7 +1167,7 @@
             "id": 32,
             "name": "Corner Cleanup",
             "difficulty": 4,
-            "hint": "Clear both corners before finishing the level.",
+            "hint": "Collect both foods before you run out of space.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -1221,7 +1221,7 @@
             "id": 33,
             "name": "Five Crumbs",
             "difficulty": 4,
-            "hint": "A long route is fine as long as you collect them all.",
+            "hint": "A longer route is fine as long as you collect them all.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -1268,9 +1268,9 @@
         },
         {
             "id": 34,
-            "name": "Find the Way",
+            "name": "Crumb Circuit",
             "difficulty": 4,
-            "hint": "A long route is fine as long as you collect them all.",
+            "hint": "Build a route that clears every food on the board.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -1342,9 +1342,9 @@
         },
         {
             "id": 35,
-            "name": "Find the Way 2",
+            "name": "Snack Sweep",
             "difficulty": 4,
-            "hint": "A long route is fine as long as you collect them all.",
+            "hint": "You need a full collection route, not just the shortest path.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -1424,9 +1424,9 @@
         },
         {
             "id": 36,
-            "name": "Find the Way 3",
+            "name": "Full Plate",
             "difficulty": 4,
-            "hint": "A long route is fine as long as you collect them all.",
+            "hint": "Plan a clean path that picks up every last food.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -1616,7 +1616,7 @@
             "id": 40,
             "name": "Break For Both",
             "difficulty": 5,
-            "hint": "Break the block, then collect both foods.",
+            "hint": "Break the barrier, then collect both foods.",
             "width": 5,
             "height": 3,
             "startPosition": {
@@ -1662,7 +1662,7 @@
             "id": 41,
             "name": "Break Then Jump",
             "difficulty": 5,
-            "hint": "Use break first, then line up a jump over the hole.",
+            "hint": "Break first, then line up the jump across the hole.",
             "width": 5,
             "height": 3,
             "startPosition": {
@@ -1710,9 +1710,9 @@
         },
         {
             "id": 42,
-            "name": "Crack The Maze",
+            "name": "Cracked Maze",
             "difficulty": 5,
-            "hint": "Some walls go around, one wall must be broken.",
+            "hint": "Some obstacles must be avoided, but one must be broken.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -1773,9 +1773,9 @@
         },
         {
             "id": 43,
-            "name": "Crack The Maze 2",
+            "name": "Cracked Maze II",
             "difficulty": 5,
-            "hint": "Walls must be broken and don't forget to jump",
+            "hint": "Break the right wall and remember to use the jump.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -1868,9 +1868,9 @@
         },
         {
             "id": 44,
-            "name": "Crack The Maze 3",
+            "name": "Cracked Maze III",
             "difficulty": 5,
-            "hint": "Walls must be broken and don't forget to jump",
+            "hint": "Breaking and jumping both matter if you want every food.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -1971,9 +1971,9 @@
         },
         {
             "id": 45,
-            "name": "Crack The Maze 4",
+            "name": "Cracked Maze IV",
             "difficulty": 5,
-            "hint": "Walls must be broken and don't forget to jump",
+            "hint": "This route mixes breakables, gaps, and a full food clear.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -2076,7 +2076,7 @@
             "id": 46,
             "name": "Red Switch",
             "difficulty": 6,
-            "hint": "Step on the switch to open the red gate.",
+            "hint": "Step on the switch to open the matching gate.",
             "width": 4,
             "height": 1,
             "startPosition": {
@@ -2111,9 +2111,9 @@
         },
         {
             "id": 47,
-            "name": "Red Switch",
+            "name": "Switch Pressure",
             "difficulty": 6,
-            "hint": "Be careful with the multiple switches",
+            "hint": "Use the switch at the right moment to open the route.",
             "width": 5,
             "height": 4,
             "startPosition": {
@@ -2186,7 +2186,7 @@
             "id": 48,
             "name": "Switchback Path",
             "difficulty": 6,
-            "hint": "Hit the switch, then return through the opened route.",
+            "hint": "Trigger the gate, then come back through the new opening.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -2242,9 +2242,9 @@
         },
         {
             "id": 49,
-            "name": "Switchback Path 2",
+            "name": "Switchback Loop",
             "difficulty": 6,
-            "hint": "Hit the switch, then return through the opened route.",
+            "hint": "Hit the switch, loop around, and use the opened path.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -2322,9 +2322,9 @@
         },
         {
             "id": 50,
-            "name": "Switchback Path 3",
+            "name": "Switchback Harvest",
             "difficulty": 6,
-            "hint": "Hit the switch, then return through the opened route.",
+            "hint": "Open the route, then collect both foods before leaving.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -2426,7 +2426,7 @@
             "id": 51,
             "name": "Gatekeeper",
             "difficulty": 6,
-            "hint": "The switch controls a whole gate, not just one tile.",
+            "hint": "One switch can control an entire gate.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -2533,7 +2533,7 @@
             "id": 52,
             "name": "Switch, Jump, Snack",
             "difficulty": 6,
-            "hint": "Open the gate, then combine movement with a jump.",
+            "hint": "Open the gate, then combine jumping and collection.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -2649,9 +2649,9 @@
         },
         {
             "id": 53,
-            "name": "Switch, Jump, Snack  2",
+            "name": "Switch, Jump, Snack II",
             "difficulty": 6,
-            "hint": "Open the gate, then combine movement with a jump.",
+            "hint": "The gate is only part of the solution. The rest is route planning.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -2863,7 +2863,7 @@
             "id": 55,
             "name": "Twin Gates",
             "difficulty": 6,
-            "hint": "Open one gate, then the other, to finish the route.",
+            "hint": "Open one gate, then the other, to reach the end.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -2947,9 +2947,9 @@
         },
         {
             "id": 56,
-            "name": "Master Walk",
+            "name": "Master Route",
             "difficulty": 6,
-            "hint": "Use every skill you learned to clear the final route.",
+            "hint": "Use every core mechanic to clear the board.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -3058,9 +3058,9 @@
         },
         {
             "id": 57,
-            "name": "Master Walk 2",
+            "name": "Master Route II",
             "difficulty": 6,
-            "hint": "Use every skill you learned to clear the final route.",
+            "hint": "This puzzle asks for a cleaner plan across all mechanics.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -3194,9 +3194,9 @@
         },
         {
             "id": 58,
-            "name": "Master Walk 3",
+            "name": "Triple Gate",
             "difficulty": 6,
-            "hint": "Use every skill you learned to clear the final route.",
+            "hint": "Three gate groups turn this board into a timing puzzle.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -3339,9 +3339,9 @@
         },
         {
             "id": 59,
-            "name": "Master Walk4",
-            "difficulty": 1,
-            "hint": "Use every skill you learned to clear the final route.",
+            "name": "Triple Gate Harvest",
+            "difficulty": 6,
+            "hint": "Manage the gates carefully while collecting both foods.",
             "width": 5,
             "height": 5,
             "startPosition": {
@@ -3433,9 +3433,9 @@
         },
         {
             "id": 60,
-            "name": "Master Walk 5",
-            "difficulty": 1,
-            "hint": "Use every skill you learned to clear the final route.",
+            "name": "Final Delivery",
+            "difficulty": 6,
+            "hint": "Break, jump, switch gates, and collect both foods to finish the set.",
             "width": 5,
             "height": 5,
             "startPosition": {

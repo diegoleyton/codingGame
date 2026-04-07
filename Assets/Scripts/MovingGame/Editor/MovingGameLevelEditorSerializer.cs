@@ -11,7 +11,7 @@ namespace Flowbit.MovingGame.Editor
     internal static class MovingGameLevelEditorSerializer
     {
         public const string DefaultLevelsAssetPath =
-            "Assets/Content/Levels/MovingGame/moving_game_levels_20260405_192705.json";
+            "Assets/Content/Levels/MovingGame/moving_game_levels.json";
 
         public static MovingGameLevelsFileData Load(string assetPath)
         {

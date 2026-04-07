@@ -88,8 +88,21 @@ namespace Flowbit.MovingGame.Editor
         private void OnEnable()
         {
             EnsureEditorAssetsLoaded();
+            levelsAssetPath_ = ResolveLevelsAssetPath();
 
             if (fileData_ == null)
+            {
+                ReloadLevels();
+            }
+        }
+
+        private void OnFocus()
+        {
+            string resolvedAssetPath = ResolveLevelsAssetPath();
+            bool assetPathChanged = !string.Equals(levelsAssetPath_, resolvedAssetPath, StringComparison.Ordinal);
+            levelsAssetPath_ = resolvedAssetPath;
+
+            if (assetPathChanged || fileData_ == null)
             {
                 ReloadLevels();
             }
@@ -483,6 +496,7 @@ namespace Flowbit.MovingGame.Editor
 
         private void SaveLevels()
         {
+            levelsAssetPath_ = ResolveLevelsAssetPath();
             NormalizeFile();
             List<string> errors = MovingGameLevelEditorValidator.ValidateFile(fileData_);
 
@@ -500,6 +514,7 @@ namespace Flowbit.MovingGame.Editor
         {
             try
             {
+                levelsAssetPath_ = ResolveLevelsAssetPath();
                 fileData_ = MovingGameLevelEditorSerializer.Load(levelsAssetPath_);
                 NormalizeFile();
                 selectedLevelIndex_ = Mathf.Clamp(selectedLevelIndex_, 0, Mathf.Max(0, fileData_.levels.Count - 1));
@@ -527,6 +542,7 @@ namespace Flowbit.MovingGame.Editor
 
         private void PingLevelsAsset()
         {
+            levelsAssetPath_ = ResolveLevelsAssetPath();
             UnityEngine.Object asset = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(levelsAssetPath_);
             if (asset != null)
             {
@@ -855,6 +871,20 @@ namespace Flowbit.MovingGame.Editor
                 fontSize = 8,
                 normal = { textColor = Color.white }
             };
+        }
+
+        private string ResolveLevelsAssetPath()
+        {
+            if (movingGameSettings_ != null && movingGameSettings_.LevelsJson != null)
+            {
+                string assetPath = AssetDatabase.GetAssetPath(movingGameSettings_.LevelsJson);
+                if (!string.IsNullOrWhiteSpace(assetPath))
+                {
+                    return assetPath;
+                }
+            }
+
+            return MovingGameLevelEditorSerializer.DefaultLevelsAssetPath;
         }
 
         private Color GetGroupColor(int groupId)

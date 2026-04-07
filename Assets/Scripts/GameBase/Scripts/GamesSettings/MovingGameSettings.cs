@@ -13,8 +13,14 @@ namespace Flowbit.GameBase.GamesSettings
         order = 0)]
     public sealed class MovingGameSettings : ScriptableObject
     {
+        [SerializeField] private TextAsset levelsJson_;
         [SerializeField] private Color defaultGroupColor_ = Color.white;
         [SerializeField] private List<GroupColorEntry> groupColors_ = new();
+
+        /// <summary>
+        /// Gets the configured levels JSON asset for the moving game.
+        /// </summary>
+        public TextAsset LevelsJson => levelsJson_;
 
         /// <summary>
         /// Gets the configured color for a group id, or the default color when not found.

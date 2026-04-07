@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e223e4b56dc9492fb9ae9e4a47e4ba3, type: 3}
   m_Name: MovingGameSettings
   m_EditorClassIdentifier: 
+  levelsJson_: {fileID: 4900000, guid: 11c60f2ada9bf403d8dfae089679a25d, type: 3}
   defaultGroupColor_: {r: 1, g: 1, b: 1, a: 1}
   groupColors_:
   - <GroupId>k__BackingField: 1

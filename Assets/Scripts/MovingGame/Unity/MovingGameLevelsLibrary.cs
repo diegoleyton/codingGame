@@ -1,4 +1,5 @@
 using System;
+using Flowbit.GameBase.Services;
 using Flowbit.MovingGame.Core.Levels;
 using UnityEngine;
 
@@ -9,8 +10,6 @@ namespace Flowbit.MovingGame.Unity
     /// </summary>
     public sealed class MovingGameLevelsLibrary : MonoBehaviour
     {
-        [SerializeField] private TextAsset levelsJson_;
-
         private MovingGameLevelsFileData levelsFileData_;
 
         /// <summary>
@@ -18,13 +17,19 @@ namespace Flowbit.MovingGame.Unity
         /// </summary>
         public void Load()
         {
-            if (levelsJson_ == null)
+            TextAsset levelsJson = GlobalServiceContainer
+                .ServiceContainer
+                .Get<GameResources>()
+                .MovingGameSettings
+                .LevelsJson;
+
+            if (levelsJson == null)
             {
-                throw new InvalidOperationException("Levels JSON asset is not assigned.");
+                throw new InvalidOperationException("Levels JSON asset is not assigned in MovingGameSettings.");
             }
 
             levelsFileData_ =
-                MovingGameLevelsParser.Parse(levelsJson_.text);
+                MovingGameLevelsParser.Parse(levelsJson.text);
         }
 
         /// <summary>
