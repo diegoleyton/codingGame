@@ -20,9 +20,20 @@ namespace Flowbit.GameBase.UI
             navigationService_ = serviceContainer.Get<IGameNavigationService>();
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                GoBack();
+            }
+        }
+
         public void GoBack()
         {
-            navigationService_.Back();
+            if (root_.activeInHierarchy && root_.activeSelf)
+            {
+                navigationService_.Back();
+            }
         }
 
         public void EnableBackButton(bool enabled)
