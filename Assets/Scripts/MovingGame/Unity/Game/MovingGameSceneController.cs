@@ -6,6 +6,7 @@ using Flowbit.Utilities.Core.Events;
 using Flowbit.GameBase.Definitions;
 using Flowbit.GameBase.Services;
 using Flowbit.GameBase.Scenes;
+using Flowbit.EngineController;
 using Flowbit.Utilities.Unity.UI;
 
 namespace Flowbit.MovingGame.Unity
@@ -28,6 +29,7 @@ namespace Flowbit.MovingGame.Unity
 
         private EventDispatcher eventDispatcher_;
         private IGameNavigationService navigationService_;
+        private GameRankingResult currentRankingResult_;
         private int currentLevelIndex_;
         private bool currentLevelCompleted_;
         private bool currentLevelFailed_;
@@ -121,6 +123,7 @@ namespace Flowbit.MovingGame.Unity
             currentLevelCompleted_ = false;
             currentLevelFailed_ = false;
             currentLevelIndex_ = levelIndex;
+            currentRankingResult_ = default;
 
             movingGameController_.LoadLevel(levelData);
             eventDispatcher_.Send(new LevelLoadedEvent(levelData.id, levelIndex));
@@ -185,6 +188,13 @@ namespace Flowbit.MovingGame.Unity
         {
             currentLevelCompleted_ = true;
             currentLevelFailed_ = false;
+            TryRefreshCurrentRankingResult();
+
+            eventDispatcher_?.Send(new LevelRankingRecordedEvent(
+                levelCompletedEvent.LevelId,
+                currentLevelIndex_,
+                currentRankingResult_.StarCount,
+                currentRankingResult_.MaxStars));
 
             int nextLevelIndex = currentLevelIndex_ + 1;
             if (nextLevelIndex < levelsLibrary_.GetLevelCount())
@@ -201,6 +211,7 @@ namespace Flowbit.MovingGame.Unity
         {
             currentLevelCompleted_ = false;
             currentLevelFailed_ = true;
+            TryRefreshCurrentRankingResult();
             StopCompletedPopupCoroutine();
         }
 
@@ -210,6 +221,7 @@ namespace Flowbit.MovingGame.Unity
             BlockScreen();
             yield return new WaitForSeconds(completedPopupDelaySeconds_);
             UnblockScreen();
+            TryRefreshCurrentRankingResult();
 
             int nextLevelIndex = currentLevelIndex_ + 1;
             bool hasNextLevel = nextLevelIndex < levelsLibrary_.GetLevelCount();
@@ -223,6 +235,7 @@ namespace Flowbit.MovingGame.Unity
                 new MovingGameCompletedPopupParams(
                     nextLevelTitle: nextLevelTitle,
                     hasNextLevel: hasNextLevel,
+                    rankingResult: currentRankingResult_,
                     onContinue: hasNextLevel ? LoadNextLevel : BackToLevelSelector,
                     onRetry: RetryLevel,
                     onClose: BackToLevelSelector));
@@ -263,6 +276,19 @@ namespace Flowbit.MovingGame.Unity
                 : levelData.name;
 
             return $"{levelIndex + 1}. {levelName}";
+        }
+
+        private void TryRefreshCurrentRankingResult()
+        {
+            if (movingGameController_ == null)
+            {
+                return;
+            }
+
+            if (movingGameController_.TryGetCurrentRankingResult(out GameRankingResult rankingResult))
+            {
+                currentRankingResult_ = rankingResult;
+            }
         }
     }
 }

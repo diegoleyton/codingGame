@@ -49,12 +49,14 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.26f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets/Scripts/MovingGame/Unity/Game/View/MovingGameRankingHudView.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/MovingGameLevelsLibrary.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Game/MovingGameNavigationParams.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Game/View/MovingGameView.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Game/View/GroupedBlockedCellView.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/LevelSelection/MovingGameLevelSelectorController.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Game/MovingGameController.cs" />
+    <Compile Include="Assets/Scripts/MovingGame/Unity/Game/Ranking/MovingGameTimeRankingTracker.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/LevelSelection/MovingGameAvailableInstructionsResolver.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Game/MovingGameCompletedPopupView.cs" />
     <Compile Include="Assets/Scripts/MovingGame/Unity/Game/View/LevelSelectionButtonView.cs" />

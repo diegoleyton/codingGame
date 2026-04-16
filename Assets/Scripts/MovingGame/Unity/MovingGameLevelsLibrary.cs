@@ -42,6 +42,15 @@ namespace Flowbit.MovingGame.Unity
         }
 
         /// <summary>
+        /// Returns the shared ranking metadata loaded from the levels file.
+        /// </summary>
+        public MovingGameRankingMetadataData GetRankingMetadata()
+        {
+            EnsureLoaded();
+            return levelsFileData_.rankingMetadata;
+        }
+
+        /// <summary>
         /// Returns the level data at the given index.
         /// </summary>
         public MovingGameLevelData GetLevelAt(int index)

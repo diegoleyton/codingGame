@@ -39,6 +39,10 @@ namespace Flowbit.EngineController
         private Coroutine stepCoroutine_;
         private bool programDirty_;
         private bool pauseRequested_;
+        private bool instructionEditingAvailable_;
+        private bool? lastInstructionEditingAvailability_;
+        private IGameRankingTracker rankingTracker_;
+        private GameRankingResult currentRankingResult_;
 
         // Represents the instruction whose resulting state is currently shown in the game view.
         // -1 means "no selected instruction state".
@@ -149,6 +153,31 @@ namespace Flowbit.EngineController
             game_.ResetGame();
             runner_.ResetExecution();
             programDirty_ = false;
+            RestartRankingTracker();
+
+            RefreshViewImmediate();
+            SetInitialState();
+            RefreshResultView();
+            RefreshExecutionControlsView();
+            OnGameReset();
+        }
+
+        /// <summary>
+        /// Stops the current execution and returns to the editable initial state
+        /// without restarting the ranking tracker.
+        /// </summary>
+        public void StopExecutionAndReturnToEdit()
+        {
+            StopRunningImmediately();
+
+            if (game_ == null || runner_ == null)
+            {
+                return;
+            }
+
+            game_.ResetGame();
+            runner_.ResetExecution();
+            programDirty_ = false;
 
             RefreshViewImmediate();
             SetInitialState();
@@ -173,6 +202,7 @@ namespace Flowbit.EngineController
 
             game_.ResetGame();
             CreateNewProgram();
+            RestartRankingTracker();
 
             RefreshViewImmediate();
             SetInitialState();
@@ -260,6 +290,15 @@ namespace Flowbit.EngineController
         }
 
         /// <summary>
+        /// Creates the ranking tracker for the currently loaded game.
+        /// Return null if the game does not expose a ranking.
+        /// </summary>
+        protected virtual IGameRankingTracker CreateRankingTracker(TGame game)
+        {
+            return null;
+        }
+
+        /// <summary>
         /// Loads a new game instance into the controller.
         /// </summary>
         protected void LoadGame(TGame game)
@@ -277,6 +316,7 @@ namespace Flowbit.EngineController
             }
 
             game_ = game;
+            InitializeRankingTracker(game_);
             CreateNewProgram();
             programPanelView_?.SetInstructionSelectedCallback(JumpToInstructionState);
 
@@ -437,6 +477,18 @@ namespace Flowbit.EngineController
 
         protected virtual void OnGameReset() { }
 
+        protected virtual void OnInstructionEditingAvailabilityChanged(bool isAvailable) { }
+
+        /// <summary>
+        /// Called whenever the current ranking result changes.
+        /// </summary>
+        protected virtual void OnRankingUpdated(GameRankingResult result) { }
+
+        /// <summary>
+        /// Called every frame so derived controllers can update view-specific state.
+        /// </summary>
+        protected virtual void UpdateController(float deltaTime) { }
+
         private void CreateNewProgram()
         {
             currentProgram_ = new ProgramDefinition<TInstruction>();
@@ -508,6 +560,11 @@ namespace Flowbit.EngineController
         private bool IsRunning()
         {
             return runCoroutine_ != null || stepCoroutine_ != null;
+        }
+
+        private void Update()
+        {
+            UpdateController(Time.unscaledDeltaTime);
         }
 
         private bool ShouldEnableInstructions()
@@ -694,10 +751,15 @@ namespace Flowbit.EngineController
 
         private void RefreshExecutionControlsView()
         {
+            bool shouldEnableInstructions = ShouldEnableInstructions();
+            instructionEditingAvailable_ = shouldEnableInstructions;
+
             if (programPanelView_ != null)
             {
-                programPanelView_.EnableInstructions(ShouldEnableInstructions());
+                programPanelView_.EnableInstructions(shouldEnableInstructions);
             }
+
+            NotifyInstructionEditingAvailabilityChangedIfNeeded(shouldEnableInstructions);
 
             if (executionControlsView_ == null)
             {
@@ -771,9 +833,62 @@ namespace Flowbit.EngineController
                 OnAvailableInstructionClicked);
         }
 
+        private void NotifyInstructionEditingAvailabilityChangedIfNeeded(bool isAvailable)
+        {
+            if (lastInstructionEditingAvailability_ == isAvailable)
+            {
+                return;
+            }
+
+            lastInstructionEditingAvailability_ = isAvailable;
+            OnInstructionEditingAvailabilityChanged(isAvailable);
+        }
+
         private void OnAvailableInstructionClicked(TInstruction instructionType)
         {
             AddInstructionToCurrentProgram(instructionType);
+        }
+
+        private void InitializeRankingTracker(TGame game)
+        {
+            rankingTracker_ = CreateRankingTracker(game);
+            RefreshRankingResult();
+        }
+
+        private void RestartRankingTracker()
+        {
+            rankingTracker_?.Restart();
+            RefreshRankingResult();
+        }
+
+        private void RefreshRankingResult()
+        {
+            if (rankingTracker_ == null)
+            {
+                currentRankingResult_ = default;
+                return;
+            }
+
+            currentRankingResult_ = rankingTracker_.GetCurrentResult();
+            OnRankingUpdated(currentRankingResult_);
+        }
+
+        public bool TryGetCurrentRankingResult(out GameRankingResult result)
+        {
+            if (rankingTracker_ == null)
+            {
+                result = default;
+                return false;
+            }
+
+            RefreshRankingResult();
+            result = currentRankingResult_;
+            return currentRankingResult_.IsValid;
+        }
+
+        protected bool IsInstructionEditingAvailable()
+        {
+            return instructionEditingAvailable_;
         }
     }
 }

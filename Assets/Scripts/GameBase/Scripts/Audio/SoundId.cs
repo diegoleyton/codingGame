@@ -22,5 +22,7 @@ public enum SoundId
     ProgramStep,
     ProgramStop,
     MovingGameSwitch,
-    MovingGameJump
+    MovingGameJump,
+    StarFillLoop,
+    StarFillComplete
 }

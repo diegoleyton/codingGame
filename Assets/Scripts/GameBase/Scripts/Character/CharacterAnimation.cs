@@ -11,6 +11,7 @@ namespace Flowbit.GameBase.Character
         Idle = 0,
         Think = 1,
         Celebrate = 2,
+        Look = 3,
     }
 
     /// <summary>
@@ -43,16 +44,6 @@ namespace Flowbit.GameBase.Character
             }
         }
 
-        private void Start()
-        {
-            RefreshStateObjectsFromAnimator();
-        }
-
-        private void Update()
-        {
-            RefreshStateObjectsFromAnimator();
-        }
-
         /// <summary>
         /// Requests a new animation state in the Animator.
         /// </summary>
@@ -67,8 +58,10 @@ namespace Flowbit.GameBase.Character
 
             animator.SetBool(THINKING_PARAMETER_NAME, stateType == CharacterAnimationStateType.Think);
             animator.SetBool(IS_CELEBRATING_NAME, stateType == CharacterAnimationStateType.Celebrate);
+            ApplyObjectsForState(stateType);
         }
 
+        /*
         private void RefreshStateObjectsFromAnimator()
         {
             if (animator == null)
@@ -105,7 +98,7 @@ namespace Flowbit.GameBase.Character
 
             stateType = default;
             return false;
-        }
+        }*/
 
         private void ApplyObjectsForState(CharacterAnimationStateType stateType)
         {

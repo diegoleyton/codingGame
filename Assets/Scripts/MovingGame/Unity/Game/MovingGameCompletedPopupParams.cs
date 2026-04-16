@@ -1,4 +1,5 @@
 using System;
+using Flowbit.EngineController;
 using Flowbit.Utilities.Navigation;
 
 namespace Flowbit.MovingGame.Unity
@@ -15,12 +16,14 @@ namespace Flowbit.MovingGame.Unity
         public MovingGameCompletedPopupParams(
             string nextLevelTitle,
             bool hasNextLevel,
+            GameRankingResult rankingResult,
             Action onContinue,
             Action onRetry,
             Action onClose)
         {
             NextLevelTitle = nextLevelTitle;
             HasNextLevel = hasNextLevel;
+            RankingResult = rankingResult;
             OnContinue = onContinue;
             OnRetry = onRetry;
             OnClose = onClose;
@@ -35,6 +38,11 @@ namespace Flowbit.MovingGame.Unity
         /// Gets whether there is a next level available.
         /// </summary>
         public bool HasNextLevel { get; }
+
+        /// <summary>
+        /// Gets the ranking result for the completed attempt.
+        /// </summary>
+        public GameRankingResult RankingResult { get; }
 
         /// <summary>
         /// Gets the action executed when continue is pressed.

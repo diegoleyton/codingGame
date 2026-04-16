@@ -66,6 +66,9 @@ namespace Flowbit.MovingGame.Unity
 
                 buttonView.SetTitle(levelData.name, levelIndex);
                 buttonView.SetDificulty(levelData.GetDificulty());
+                buttonView.SetStars(
+                    levelProgressService_.GetBestStarCount(levelIndex),
+                    levelsLibrary_.GetRankingMetadata()?.maxStars ?? 4);
                 bool isUnlocked = levelProgressService_.IsLevelUnlocked(levelIndex);
                 buttonView.SetLocked(!isUnlocked);
                 Action onClick = isUnlocked

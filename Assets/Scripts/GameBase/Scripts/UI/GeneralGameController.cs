@@ -41,5 +41,10 @@ namespace Flowbit.MovingGame.Unity
         {
             eventDispatcher_.Send(new OnProgramStopped());
         }
+
+        protected override void OnInstructionEditingAvailabilityChanged(bool isAvailable)
+        {
+            eventDispatcher_?.Send(new OnInstructionEditingAvailabilityChanged(isAvailable));
+        }
     }
 }

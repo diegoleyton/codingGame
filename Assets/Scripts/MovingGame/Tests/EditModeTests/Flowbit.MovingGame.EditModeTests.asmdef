@@ -4,7 +4,8 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "Flowbit.MovingGame.Core"
+        "Flowbit.MovingGame.Core",
+        "Flowbit.GameBase"
     ],
     "includePlatforms": [
         "Editor"

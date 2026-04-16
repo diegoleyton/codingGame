@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-
 namespace Flowbit.MovingGame.Core.Levels
 {
     /// <summary>
@@ -35,6 +34,19 @@ namespace Flowbit.MovingGame.Core.Levels
 
         private static void Validate(MovingGameLevelsFileData fileData)
         {
+            fileData.rankingMetadata ??= new MovingGameRankingMetadataData();
+            fileData.rankingMetadata.maxStars = Math.Max(1, fileData.rankingMetadata.maxStars);
+            fileData.rankingMetadata.baseTimeConstantSeconds =
+                Math.Max(0f, fileData.rankingMetadata.baseTimeConstantSeconds);
+            fileData.rankingMetadata.thinkTimePerDifficultySeconds =
+                Math.Max(0f, fileData.rankingMetadata.thinkTimePerDifficultySeconds);
+            fileData.rankingMetadata.instructionTimePerStepSeconds =
+                Math.Max(0.1f, fileData.rankingMetadata.instructionTimePerStepSeconds);
+            fileData.rankingMetadata.penaltyWindowBaseSeconds =
+                Math.Max(0f, fileData.rankingMetadata.penaltyWindowBaseSeconds);
+            fileData.rankingMetadata.penaltyWindowPerDifficultySeconds =
+                Math.Max(0f, fileData.rankingMetadata.penaltyWindowPerDifficultySeconds);
+
             for (int i = 0; i < fileData.levels.Count; i++)
             {
                 MovingGameLevelData level = fileData.levels[i];
@@ -65,6 +77,7 @@ namespace Flowbit.MovingGame.Core.Levels
                 level.holePositions ??= new List<PositionData>();
                 level.toggleBlockedTiles ??= new List<ToggleBlockedTileData>();
                 level.toggleSwitchTiles ??= new List<ToggleSwitchTileData>();
+                level.targetInstructionCount = Math.Max(1, level.targetInstructionCount);
 
                 ValidatePositions(level, level.foodPositions, "foodPositions");
                 ValidatePositions(level, level.blockedPositions, "blockedPositions");

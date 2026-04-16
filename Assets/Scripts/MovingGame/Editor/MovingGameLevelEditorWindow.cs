@@ -228,6 +228,9 @@ namespace Flowbit.MovingGame.Editor
         {
             detailsScroll_ = EditorGUILayout.BeginScrollView(detailsScroll_);
 
+            DrawRankingMetadataPanel();
+
+            EditorGUILayout.Space(10f);
             EditorGUILayout.LabelField("Level Details", EditorStyles.boldLabel);
 
             EditorGUI.BeginChangeCheck();
@@ -235,6 +238,7 @@ namespace Flowbit.MovingGame.Editor
             level.name = EditorGUILayout.TextField("Name", level.name);
             level.hint = EditorGUILayout.TextField("Hint", level.hint);
             level.difficulty = EditorGUILayout.IntSlider("Difficulty", level.difficulty, 1, 6);
+            level.targetInstructionCount = Mathf.Max(1, EditorGUILayout.IntField("Target Instructions", level.targetInstructionCount));
 
             int width = Mathf.Clamp(EditorGUILayout.IntField("Width", level.width), 1, 5);
             int height = Mathf.Clamp(EditorGUILayout.IntField("Height", level.height), 1, 5);
@@ -333,6 +337,40 @@ namespace Flowbit.MovingGame.Editor
             EditorGUILayout.LabelField($"Holes: {level.holePositions.Count}");
             EditorGUILayout.LabelField($"Toggle Obstacles: {level.toggleBlockedTiles.Count}");
             EditorGUILayout.LabelField($"Toggle Switches: {level.toggleSwitchTiles.Count}");
+            EditorGUILayout.LabelField($"Target Instructions: {level.targetInstructionCount}");
+            EditorGUILayout.LabelField($"Base Time: {CalculateBaseTimeSeconds(level):0.0}s");
+            EditorGUILayout.LabelField($"Penalty Window: {CalculatePenaltyWindowSeconds(level):0.0}s");
+            EditorGUILayout.LabelField($"Time Limit: {CalculateTimeLimitSeconds(level):0.0}s");
+        }
+
+        private void DrawRankingMetadataPanel()
+        {
+            if (fileData_ == null)
+            {
+                return;
+            }
+
+            fileData_.rankingMetadata ??= new MovingGameRankingMetadataData();
+
+            EditorGUILayout.LabelField("Ranking Metadata", EditorStyles.boldLabel);
+            EditorGUI.BeginChangeCheck();
+            fileData_.rankingMetadata.maxStars =
+                Mathf.Clamp(EditorGUILayout.IntField("Max Stars", fileData_.rankingMetadata.maxStars), 1, 4);
+            fileData_.rankingMetadata.baseTimeConstantSeconds =
+                Mathf.Max(0f, EditorGUILayout.FloatField("Base Time Constant", fileData_.rankingMetadata.baseTimeConstantSeconds));
+            fileData_.rankingMetadata.thinkTimePerDifficultySeconds =
+                Mathf.Max(0f, EditorGUILayout.FloatField("Think Time / Difficulty", fileData_.rankingMetadata.thinkTimePerDifficultySeconds));
+            fileData_.rankingMetadata.instructionTimePerStepSeconds =
+                Mathf.Max(0.1f, EditorGUILayout.FloatField("Instruction Time / Step", fileData_.rankingMetadata.instructionTimePerStepSeconds));
+            fileData_.rankingMetadata.penaltyWindowBaseSeconds =
+                Mathf.Max(0f, EditorGUILayout.FloatField("Penalty Window Base", fileData_.rankingMetadata.penaltyWindowBaseSeconds));
+            fileData_.rankingMetadata.penaltyWindowPerDifficultySeconds =
+                Mathf.Max(0f, EditorGUILayout.FloatField("Penalty Window / Difficulty", fileData_.rankingMetadata.penaltyWindowPerDifficultySeconds));
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                ClearStatus();
+            }
         }
 
         private void ApplyBrush(MovingGameLevelData level, int x, int y)
@@ -559,6 +597,19 @@ namespace Flowbit.MovingGame.Editor
                 fileData_.version = 1;
             }
 
+            fileData_.rankingMetadata ??= new MovingGameRankingMetadataData();
+            fileData_.rankingMetadata.maxStars = Mathf.Clamp(fileData_.rankingMetadata.maxStars, 1, 4);
+            fileData_.rankingMetadata.baseTimeConstantSeconds =
+                Mathf.Max(0f, fileData_.rankingMetadata.baseTimeConstantSeconds);
+            fileData_.rankingMetadata.thinkTimePerDifficultySeconds =
+                Mathf.Max(0f, fileData_.rankingMetadata.thinkTimePerDifficultySeconds);
+            fileData_.rankingMetadata.instructionTimePerStepSeconds =
+                Mathf.Max(0.1f, fileData_.rankingMetadata.instructionTimePerStepSeconds);
+            fileData_.rankingMetadata.penaltyWindowBaseSeconds =
+                Mathf.Max(0f, fileData_.rankingMetadata.penaltyWindowBaseSeconds);
+            fileData_.rankingMetadata.penaltyWindowPerDifficultySeconds =
+                Mathf.Max(0f, fileData_.rankingMetadata.penaltyWindowPerDifficultySeconds);
+
             fileData_.levels ??= new List<MovingGameLevelData>();
 
             foreach (MovingGameLevelData level in fileData_.levels)
@@ -748,6 +799,7 @@ namespace Flowbit.MovingGame.Editor
                 name = $"Level {id}",
                 hint = "Describe the goal for this level.",
                 difficulty = 1,
+                targetInstructionCount = 3,
                 width = 5,
                 height = 5,
                 startPosition = new PositionData { x = 0, y = 0 },
@@ -769,6 +821,7 @@ namespace Flowbit.MovingGame.Editor
                 name = source.name,
                 hint = source.hint,
                 difficulty = source.difficulty,
+                targetInstructionCount = source.targetInstructionCount,
                 width = source.width,
                 height = source.height,
                 startPosition = new PositionData { x = source.startPosition.x, y = source.startPosition.y },
@@ -892,6 +945,49 @@ namespace Flowbit.MovingGame.Editor
             return movingGameSettings_ != null
                 ? movingGameSettings_.GetColorForGroupId(groupId)
                 : Color.white;
+        }
+
+        private float CalculateBaseTimeSeconds(MovingGameLevelData level)
+        {
+            if (level == null)
+            {
+                return 0f;
+            }
+
+            MovingGameRankingMetadataData rankingMetadata =
+                fileData_?.rankingMetadata ?? new MovingGameRankingMetadataData();
+
+            int difficulty = Mathf.Max(1, level.difficulty);
+            int targetInstructionCount = Mathf.Max(1, level.targetInstructionCount);
+
+            return Mathf.Max(0f, rankingMetadata.baseTimeConstantSeconds) +
+                   (difficulty * Mathf.Max(0f, rankingMetadata.thinkTimePerDifficultySeconds)) +
+                   (targetInstructionCount * Mathf.Max(0.1f, rankingMetadata.instructionTimePerStepSeconds));
+        }
+
+        private float CalculatePenaltyWindowSeconds(MovingGameLevelData level)
+        {
+            if (level == null)
+            {
+                return 0f;
+            }
+
+            MovingGameRankingMetadataData rankingMetadata =
+                fileData_?.rankingMetadata ?? new MovingGameRankingMetadataData();
+
+            return Mathf.Max(
+                0.1f,
+                Mathf.Max(0f, rankingMetadata.penaltyWindowBaseSeconds) +
+                (Mathf.Max(1, level.difficulty) * Mathf.Max(0f, rankingMetadata.penaltyWindowPerDifficultySeconds)));
+        }
+
+        private float CalculateTimeLimitSeconds(MovingGameLevelData level)
+        {
+            MovingGameRankingMetadataData rankingMetadata =
+                fileData_?.rankingMetadata ?? new MovingGameRankingMetadataData();
+
+            return CalculateBaseTimeSeconds(level) +
+                   ((Mathf.Max(1, rankingMetadata.maxStars) - 1) * CalculatePenaltyWindowSeconds(level));
         }
 
         private void DrawGroupBadge(Rect rect, int groupId, Color badgeColor, string prefix)

@@ -451,7 +451,7 @@ namespace Flowbit.MovingGame.Unity
 
         private float EaseOutQuad(float t)
         {
-            return 1f - ((1f - t) * (1f - t));
+            return 1f - (1f - t);
         }
 
         private void SendSwitchEventIfNeeded(bool changedGridPosition)

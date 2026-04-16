@@ -68,6 +68,7 @@
     <Compile Include="Assets/Scripts/GameBase/Scripts/Audio/GameSoundLibrary.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/ComponentsLoopAnimator.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/SceneNavigationNodeResolver.cs" />
+    <Compile Include="Assets/Scripts/GameBase/Scripts/UI/StarDisplayView.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Progress/LevelProgressService.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/UI/MainSceneController.cs" />
     <Compile Include="Assets/Scripts/GameBase/Scripts/Scenes/Transitions/PaperOpenTransitionOverlay.cs" />

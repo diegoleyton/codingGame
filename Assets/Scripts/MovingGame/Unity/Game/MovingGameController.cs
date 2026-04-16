@@ -8,9 +8,7 @@ using Flowbit.EngineController;
 using Flowbit.MovingGame.Core;
 using Flowbit.MovingGame.Core.Instructions;
 using Flowbit.MovingGame.Core.Levels;
-using Flowbit.Utilities.Core.Events;
 using Flowbit.GameBase.Definitions;
-using Flowbit.GameBase.Services;
 using Flowbit.Engine.Instructions;
 
 namespace Flowbit.MovingGame.Unity
@@ -26,6 +24,7 @@ namespace Flowbit.MovingGame.Unity
         [Header("View References")]
         [SerializeField] private MovingGameView movingGameView_;
         [SerializeField] private GridRenderer gridRenderer_;
+        [SerializeField] private MovingGameRankingHudView rankingHudView_;
 
         private IAvailableInstructionsResolver<InstructionType> availableInstructionsResolver_;
 
@@ -35,6 +34,8 @@ namespace Flowbit.MovingGame.Unity
         private MovingGameLevelData currentLevelData_;
         private bool completedEventSent_;
         private bool failedEventSent_;
+        private float elapsedEditSeconds_;
+        private MovingGameTimeRankingTracker rankingTracker_;
 
         /// <summary>
         /// Resolver used by the base controller to determine which instructions
@@ -60,11 +61,13 @@ namespace Flowbit.MovingGame.Unity
             currentLevelData_ = levelData;
             completedEventSent_ = false;
             failedEventSent_ = false;
+            elapsedEditSeconds_ = 0f;
 
             ResolveAvailableInstructions(levelData.id);
 
             game_ = CreateGameFromLevelData(levelData);
             LoadGame(game_);
+            RefreshElapsedTimeView();
         }
 
         /// <summary>
@@ -78,6 +81,45 @@ namespace Flowbit.MovingGame.Unity
             }
 
             return CreateGameFromLevelData(currentLevelData_);
+        }
+
+        protected override IGameRankingTracker CreateRankingTracker(IMovingGame game)
+        {
+            if (currentLevelData_ == null)
+            {
+                rankingTracker_ = null;
+                return null;
+            }
+
+            rankingTracker_ = new MovingGameTimeRankingTracker(
+                currentLevelData_,
+                levelsLibrary_.GetRankingMetadata());
+            rankingTracker_.SetElapsedSeconds(elapsedEditSeconds_);
+            return rankingTracker_;
+        }
+
+        protected override void OnInstructionEditingAvailabilityChanged(bool isAvailable)
+        {
+            base.OnInstructionEditingAvailabilityChanged(isAvailable);
+            RefreshElapsedTimeView();
+        }
+
+        protected override void UpdateController(float deltaTime)
+        {
+            base.UpdateController(deltaTime);
+
+            if (currentLevelData_ == null)
+            {
+                return;
+            }
+
+            if (IsInstructionEditingAvailable() && deltaTime > 0f)
+            {
+                elapsedEditSeconds_ += deltaTime;
+            }
+
+            rankingTracker_?.SetElapsedSeconds(elapsedEditSeconds_);
+            RefreshElapsedTimeView();
         }
 
         /// <summary>
@@ -218,6 +260,23 @@ namespace Flowbit.MovingGame.Unity
             }
 
             availableInstructionsResolver_ = new MovingGameAvailableInstructionsResolver(levels);
+        }
+
+        private void RefreshElapsedTimeView()
+        {
+            if (rankingHudView_ == null)
+            {
+                return;
+            }
+
+            rankingHudView_.SetElapsedTime(FormatTime(elapsedEditSeconds_));
+        }
+
+        private static string FormatTime(float elapsedSeconds)
+        {
+            int minutes = Mathf.FloorToInt(elapsedSeconds / 60f);
+            float seconds = elapsedSeconds - (minutes * 60f);
+            return $"{minutes:00}:{seconds:00.0}";
         }
 
         private Core.MovingGame CreateGameFromLevelData(MovingGameLevelData levelData)

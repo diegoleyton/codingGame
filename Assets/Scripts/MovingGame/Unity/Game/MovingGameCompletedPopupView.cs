@@ -1,11 +1,14 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using Flowbit.GameBase.Character;
 using Flowbit.GameBase.Scenes;
 using Flowbit.GameBase.Services;
 using Flowbit.GameBase.Definitions;
+using Flowbit.GameBase.UI;
 using Flowbit.Utilities.Core.Events;
+using Flowbit.Utilities.Unity.UI;
 
 namespace Flowbit.MovingGame.Unity
 {
@@ -19,8 +22,11 @@ namespace Flowbit.MovingGame.Unity
         [SerializeField] private Button continueButton_;
         [SerializeField] private Button retryButton_;
         [SerializeField] private Button closeButton_;
+        [SerializeField] private Text elapsedTimeText_;
+        [SerializeField] private StarDisplayView starsView_;
 
         [SerializeField] private CharacterAnimation characterAnimation_;
+        [SerializeField] private UIComponentAnimatorController UIAnimationController_;
 
         private Action onContinueAction_;
         private Action onRetryAction_;
@@ -66,6 +72,32 @@ namespace Flowbit.MovingGame.Unity
                 closeButton_.onClick.AddListener(OnClosePressed);
             }
 
+            if (elapsedTimeText_ != null)
+            {
+                elapsedTimeText_.text = popupParams.RankingResult.SummaryText;
+            }
+
+            if (characterAnimation_ != null)
+            {
+                characterAnimation_.SetState(CharacterAnimationStateType.Look);
+            }
+
+            if (starsView_ != null)
+            {
+                starsView_.gameObject.SetActive(true);
+                starsView_.StopAllCoroutines();
+                starsView_.SetStars(0, popupParams.RankingResult.MaxStars);
+                StartCoroutine(PlayStarsSequence(
+                    popupParams.RankingResult.StarCount,
+                    popupParams.RankingResult.MaxStars));
+            }
+        }
+
+        private IEnumerator PlayStarsSequence(int starCount, int maxStars)
+        {
+            yield return StartCoroutine(starsView_.PlayRevealAnimation(starCount, maxStars));
+            UIAnimationController_.GoToFinalState();
+
             if (characterAnimation_ != null)
             {
                 characterAnimation_.SetState(CharacterAnimationStateType.Celebrate);
@@ -88,5 +120,6 @@ namespace Flowbit.MovingGame.Unity
         {
             onCloseAction_?.Invoke();
         }
+
     }
 }

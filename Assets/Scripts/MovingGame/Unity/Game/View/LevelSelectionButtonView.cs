@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Flowbit.GameBase.UI;
 using Flowbit.MovingGame.Core.Levels;
 
 namespace Flowbit.MovingGame.Unity
@@ -15,6 +16,7 @@ namespace Flowbit.MovingGame.Unity
         [SerializeField] private Text titleText_;
         [SerializeField] private Image dificultyImage_;
         [SerializeField] private Image lockImage_;
+        [SerializeField] private StarDisplayView starDisplayView_;
 
         [SerializeField] private DificultyVisuals[] dificultyVisuals_;
 
@@ -64,6 +66,11 @@ namespace Flowbit.MovingGame.Unity
                 color.a = isLocked ? 0.45f : 1f;
                 dificultyImage_.color = color;
             }
+
+            if (starDisplayView_ != null)
+            {
+                starDisplayView_.gameObject.SetActive(!isLocked);
+            }
         }
 
         /// <summary>
@@ -93,6 +100,19 @@ namespace Flowbit.MovingGame.Unity
             }
 
             dificultyImage_.color = dificultyVisual.Color;
+        }
+
+        /// <summary>
+        /// Sets the current persisted star result shown in the button.
+        /// </summary>
+        public void SetStars(int starCount, int maxStars)
+        {
+            if (starDisplayView_ == null)
+            {
+                return;
+            }
+
+            starDisplayView_.SetStars(starCount, maxStars);
         }
 
         /// <summary>

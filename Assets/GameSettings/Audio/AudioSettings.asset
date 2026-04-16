@@ -41,8 +41,6 @@ MonoBehaviour:
     _soundAsset: {fileID: 11400000, guid: 0473c7439a5584fe990ce9404bf914f5, type: 2}
   - _key: 10
     _soundAsset: {fileID: 11400000, guid: 48441057652ab42738c6a252e04e9ce6, type: 2}
-  - _key: 6
-    _soundAsset: {fileID: 11400000, guid: 705c7df5c14a34e9cbe3dff1325d3ba9, type: 2}
   - _key: 7
     _soundAsset: {fileID: 11400000, guid: b21f98c92da214544ba9d54cbf2987ac, type: 2}
   - _key: 12
@@ -51,5 +49,9 @@ MonoBehaviour:
     _soundAsset: {fileID: 11400000, guid: acf22be719a4b4375a58b66d4402bb40, type: 2}
   - _key: 19
     _soundAsset: {fileID: 11400000, guid: b1c2d3e4f5a6478899aabbccddeeff00, type: 2}
+  - _key: 20
+    _soundAsset: {fileID: 11400000, guid: c5f6d8e7a1b24f1bb2e7e7c1d39a5a10, type: 2}
+  - _key: 21
+    _soundAsset: {fileID: 11400000, guid: 8c7b53cf0f4d44d7adbb7ae4b0a18e31, type: 2}
   <AudioPool>k__BackingField: {fileID: 6223451992814651929, guid: 83f6ee944f0a84a82b6109a64832aa9f, type: 3}
   <MusicTransitionTime>k__BackingField: 1

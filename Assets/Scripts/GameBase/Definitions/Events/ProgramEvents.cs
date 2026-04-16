@@ -34,4 +34,17 @@ namespace Flowbit.GameBase.Definitions
     /// Event called when we go to a program step
     /// </summary>
     public sealed class OnProgramStopped : IEvent { }
+
+    /// <summary>
+    /// Event called when the instruction editing UI becomes available or unavailable.
+    /// </summary>
+    public sealed class OnInstructionEditingAvailabilityChanged : IEvent
+    {
+        public OnInstructionEditingAvailabilityChanged(bool isAvailable)
+        {
+            IsAvailable = isAvailable;
+        }
+
+        public bool IsAvailable { get; }
+    }
 }

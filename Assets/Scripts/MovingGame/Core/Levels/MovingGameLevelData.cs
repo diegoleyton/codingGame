@@ -13,6 +13,7 @@ namespace Flowbit.MovingGame.Core.Levels
         public string name;
         public int difficulty;
         public string hint;
+        public int targetInstructionCount;
         public int width;
         public int height;
         public PositionData startPosition;

@@ -23,6 +23,42 @@ namespace Flowbit.MovingGame.Editor
                 return errors;
             }
 
+            if (fileData.rankingMetadata == null)
+            {
+                errors.Add("Ranking metadata is missing.");
+                return errors;
+            }
+
+            if (fileData.rankingMetadata.maxStars <= 0)
+            {
+                errors.Add("Ranking metadata maxStars must be greater than 0.");
+            }
+
+            if (fileData.rankingMetadata.baseTimeConstantSeconds < 0f)
+            {
+                errors.Add("Ranking metadata base time constant must be 0 or greater.");
+            }
+
+            if (fileData.rankingMetadata.thinkTimePerDifficultySeconds < 0f)
+            {
+                errors.Add("Ranking metadata think time per difficulty must be 0 or greater.");
+            }
+
+            if (fileData.rankingMetadata.instructionTimePerStepSeconds <= 0f)
+            {
+                errors.Add("Ranking metadata instruction time per step must be greater than 0.");
+            }
+
+            if (fileData.rankingMetadata.penaltyWindowBaseSeconds < 0f)
+            {
+                errors.Add("Ranking metadata penalty window base must be 0 or greater.");
+            }
+
+            if (fileData.rankingMetadata.penaltyWindowPerDifficultySeconds < 0f)
+            {
+                errors.Add("Ranking metadata penalty window per difficulty must be 0 or greater.");
+            }
+
             HashSet<int> ids = new();
 
             for (int i = 0; i < fileData.levels.Count; i++)
@@ -64,6 +100,11 @@ namespace Flowbit.MovingGame.Editor
             if (level.width <= 0 || level.width > 5 || level.height <= 0 || level.height > 5)
             {
                 errors.Add("Width and height must be between 1 and 5.");
+            }
+
+            if (level.targetInstructionCount <= 0)
+            {
+                errors.Add("Target instruction count must be greater than 0.");
             }
 
             if (level.startPosition == null)
@@ -194,6 +235,7 @@ namespace Flowbit.MovingGame.Editor
             level.name ??= string.Empty;
             level.hint ??= string.Empty;
             level.startDirection ??= "Right";
+            level.targetInstructionCount = System.Math.Max(1, level.targetInstructionCount);
         }
 
         private static void AddUnique(HashSet<string> occupied, string key, string label, List<string> errors)

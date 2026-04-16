@@ -17,6 +17,8 @@ namespace Flowbit.Utilities.Audio
         private readonly IAudioSourcePool _oneShotPool;
         private readonly ILoopingAudioSourcePool _loopingPool;
         private readonly ICoroutineService _coroutineService;
+        private readonly Dictionary<int, float> _loopBaseVolumes = new();
+        private readonly Dictionary<int, float> _loopVolumeMultipliers = new();
 
         private Coroutine _loopTransitionCoroutine;
         private LoopTransition _activeLoopTransition;
@@ -93,6 +95,7 @@ namespace Flowbit.Utilities.Audio
             PrepareClip(clip);
 
             int audioId = Convert.ToInt32(key);
+            _loopBaseVolumes[audioId] = volume;
             AudioSource source = _loopingPool.GetOrCreateSource(audioId);
             if (source == null)
             {
@@ -102,7 +105,7 @@ namespace Flowbit.Utilities.Audio
             source.Stop();
             source.clip = clip;
             source.loop = true;
-            source.volume = volume;
+            source.volume = GetScaledLoopVolume(audioId, volume);
             source.pitch = pitch;
             source.Play();
 
@@ -170,6 +173,7 @@ namespace Flowbit.Utilities.Audio
             }
 
             const double scheduleLeadTimeSeconds = 0.05d;
+            _loopBaseVolumes[toAudioId] = toVolume;
 
             double dspNow = AudioSettings.dspTime;
             double dspStartTime = dspNow + scheduleLeadTimeSeconds;
@@ -193,8 +197,8 @@ namespace Flowbit.Utilities.Audio
                 toAudioId: toAudioId,
                 fromSource: fromSource,
                 toSource: toSource,
-                fromStartVolume: fromSource.volume,
-                toTargetVolume: toVolume,
+                fromStartVolume: GetScaledLoopVolume(fromAudioId, GetLoopBaseVolume(fromAudioId, fromSource.volume)),
+                toTargetVolume: GetScaledLoopVolume(toAudioId, toVolume),
                 durationSeconds: durationSeconds,
                 dspStartTime: dspStartTime);
 
@@ -225,6 +229,7 @@ namespace Flowbit.Utilities.Audio
             }
 
             _loopingPool.ReleaseSource(audioId);
+            ClearLoopState(audioId);
             return true;
         }
 
@@ -235,6 +240,50 @@ namespace Flowbit.Utilities.Audio
         {
             CancelActiveLoopTransition();
             _loopingPool.StopAndReleaseAll();
+            _loopBaseVolumes.Clear();
+            _loopVolumeMultipliers.Clear();
+        }
+
+        /// <summary>
+        /// Sets a volume multiplier for an active or future loop.
+        /// </summary>
+        /// <param name="key">The sound key to adjust.</param>
+        /// <param name="multiplier">The non-negative volume multiplier.</param>
+        /// <returns>True if the multiplier was applied or stored; otherwise false.</returns>
+        public bool SetLoopVolumeMultiplier(TKey key, float multiplier)
+        {
+            int audioId = Convert.ToInt32(key);
+            float clampedMultiplier = Mathf.Max(0f, multiplier);
+            _loopVolumeMultipliers[audioId] = clampedMultiplier;
+
+            bool updated = false;
+
+            if (_activeLoopTransition != null)
+            {
+                if (_activeLoopTransition.FromAudioId == audioId)
+                {
+                    _activeLoopTransition.FromStartVolume =
+                        GetScaledLoopVolume(audioId, GetLoopBaseVolume(audioId, _activeLoopTransition.FromSource.volume));
+                    updated = true;
+                }
+
+                if (_activeLoopTransition.ToAudioId == audioId)
+                {
+                    _activeLoopTransition.ToTargetVolume =
+                        GetScaledLoopVolume(audioId, GetLoopBaseVolume(audioId, _activeLoopTransition.ToTargetVolume));
+                    updated = true;
+                }
+            }
+
+            if (_loopingPool.TryGetSource(audioId, out AudioSource source) &&
+                source != null &&
+                _loopBaseVolumes.TryGetValue(audioId, out float baseVolume))
+            {
+                source.volume = GetScaledLoopVolume(audioId, baseVolume);
+                updated = true;
+            }
+
+            return updated || _loopBaseVolumes.ContainsKey(audioId);
         }
 
         private IEnumerator RunLoopTransition(LoopTransition transition)
@@ -282,6 +331,7 @@ namespace Flowbit.Utilities.Audio
                 transition.FromSource.volume = 0f;
                 transition.ToSource.volume = transition.ToTargetVolume;
                 _loopingPool.ReleaseSource(transition.FromAudioId);
+                ClearLoopState(transition.FromAudioId);
             }
 
             CleanupTransitionState();
@@ -322,6 +372,7 @@ namespace Flowbit.Utilities.Audio
             if (_activeLoopTransition.ToAudioId != _activeLoopTransition.FromAudioId)
             {
                 _loopingPool.ReleaseSource(_activeLoopTransition.ToAudioId);
+                ClearLoopState(_activeLoopTransition.ToAudioId);
             }
 
             _activeLoopTransition = null;
@@ -419,14 +470,41 @@ namespace Flowbit.Utilities.Audio
             return true;
         }
 
+        private void ClearLoopState(int audioId)
+        {
+            _loopBaseVolumes.Remove(audioId);
+        }
+
+        private float GetLoopBaseVolume(int audioId, float fallbackVolume)
+        {
+            if (_loopBaseVolumes.TryGetValue(audioId, out float baseVolume))
+            {
+                return baseVolume;
+            }
+
+            return fallbackVolume;
+        }
+
+        private float GetScaledLoopVolume(int audioId, float baseVolume)
+        {
+            float multiplier = 1f;
+
+            if (_loopVolumeMultipliers.TryGetValue(audioId, out float configuredMultiplier))
+            {
+                multiplier = configuredMultiplier;
+            }
+
+            return Mathf.Max(0f, baseVolume * multiplier);
+        }
+
         private sealed class LoopTransition
         {
             public int FromAudioId { get; }
             public int ToAudioId { get; }
             public AudioSource FromSource { get; }
             public AudioSource ToSource { get; }
-            public float FromStartVolume { get; }
-            public float ToTargetVolume { get; }
+            public float FromStartVolume { get; set; }
+            public float ToTargetVolume { get; set; }
             public float DurationSeconds { get; }
             public double DspStartTime { get; }
 
